@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Weather Value="http://192.168.1.2:8000/UtilityNoLogin/renderWeather/">
+	<Times>
+		<Time Value="09:30"> </Time>
+	</Times>
+</Weather> 

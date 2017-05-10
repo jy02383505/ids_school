@@ -1,0 +1,133 @@
+<!--zjh-->
+<include file="Public/header" />
+
+<link rel="stylesheet" href="__PUBLIC__/layer/skin/layer.css">
+<link rel="stylesheet" href="__PUBLIC__/layer/skin/layer.ext.css">
+
+<script src="__PUBLIC__/script/jquery/jquery.min.js"></script>
+<script src="__PUBLIC__/layer/layer.js"></script>
+
+<script language="javascript" type="text/javascript" src="__PUBLIC__/My97DatePicker/WdatePicker.js"></script>
+
+<ol class="breadcrumb">
+	<li><a href="{:U('School/homeworkList')}">作业管理</a></li>
+	<li class="active">完成情况统计</li>
+</ol>
+
+<div id="" class="row well ">
+	<div class="col-md-9">
+		<form class="form-inline edit-form" role="form" method="get" action="">
+			<table class="table">
+				<tbody>
+					<tr>
+						<td width="80">
+                            <select class="form-control input-sm" name="banjiId" id="banjiId">
+                                <option value="">班级</option>
+                                <volist name="banjis" id="vo">
+                                    <eq name="vo.id" value="$banjiId">
+                                        <option value="{$vo.id}" selected>{$vo.name}</option>
+                                    <else/>
+                                        <option value="{$vo.id}">{$vo.name}</option>
+                                    </eq>
+                                </volist>
+                            </select>
+						</td>
+						<td width="80">
+                            <select class="form-control input-sm" name="subjectId" id="subjectId">
+                                <option value="">科目</option>
+                                <volist name="subjects" id="vo">
+                                    <eq name="vo.id" value="$subjectId">
+                                        <option value="{$vo.id}" selected>{$vo.name}</option>
+                                    <else/>
+                                        <option value="{$vo.id}">{$vo.name}</option>
+                                    </eq>
+                                </volist>
+                            </select>
+						</td>
+                        <td class="text-right" width="90">开始时间</td>
+                        <td width="100">
+                        	<input type="text" class="form-control input-sm" name="starttime" value="{$starttime}" style="width:100px;" onClick="WdatePicker()">
+                        </td>
+                        <td class="text-right" width="90">结束时间</td>
+                         <td width="100" >
+                        	<input type="text" class="form-control input-sm" name="endtime" value="{$endtime}" style="width:100px;" onClick="WdatePicker()">
+                        </td> 
+                        
+                        
+                        <td>
+                        	<button type="submit" class="btn btn-primary btn-sm">开始统计</button>
+
+                        </td>
+					</tr>
+				</tbody>
+			</table>
+		</form>
+	</div>
+	<div class="col-md-3 text-right">
+		<table class="table">
+			<tbody>
+				<tr>
+					<td style="border:0;">
+                    
+                    	<a href="{:U("School/homeworkList")}"><button type="button" class="btn btn-info btn-sm">返回作业管理</button></a>
+                        
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+    
+</div>
+
+
+	<div class="data-list">
+        <table class="table table-hover list-tbl">
+            <thead>
+                <tr>
+                    <!-- <th width="36"><input type="checkbox" class="select-all" title="全选/全不选"></th> -->
+                    <th width="60" style="display:none;">#ID</th>
+                    <th width="300" >作业</th>
+                    <th width="100">学生数</th>
+                    <th width="100">已提交</th>
+                    <th width="100">未提交</th>
+                    <th width="140">开始时间</th>
+                    <th width="140">结束时间</th>
+                    <th ></th>
+                    <th width="200"></th>
+                </tr>
+            </thead>
+            <tbody>
+            
+                <volist name="datas" id="vo">
+                <tr>
+                    <!-- <td><input type="checkbox"></td> -->
+                    <td style="display:none;">{$vo.id}</td>
+                    <td>{$vo.description|mb_substr=###,0,20,'utf-8'}</td>
+                    <td>{$vo.studentCount}</td>
+                    <td><a href="" title="{$vo.isSubmitList}">{$vo.submitNumber}</a></td>
+                    <td><a href="" title="{$vo.noSubmitNumList}">{$vo.noSubmitNum}</a></td>
+                    <td>{$vo.begintime}</td>
+                    <td>{$vo.endtime}</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                
+                
+                </volist>
+            </tbody>
+        </table>
+        <table class="table">
+            <tr>
+                <td>
+                    <!-- <input type="checkbox" class="select-all" title="全选/全不选">
+                    <button type="button" class="btn btn-default btn-sm multi-del" style="margin-left:30px;">批量删除</button> -->
+                    &nbsp;
+                </td>
+                <td class="page-box text-right" width="80%">{$page}</td>
+            </tr>
+        </table>
+    </div>
+
+
+

@@ -1,0 +1,258 @@
+<include file="Public/header" />
+<link rel="stylesheet" href="__PUBLIC__/script/uploadify/uploadify.css">
+<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+<script src="__PUBLIC__/script/jquery/jquery.min.js"></script>
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="__PUBLIC__/bootstrap/bootstrap.min.js"></script>
+
+
+<style>
+#storeVideoUp .btn-default, #storeVideoUp .btn-default:hover, #storeVideoUp .btn-default:active, #storeVideoUp .btn-default:visited{background-color:#fff;border-color:#ccc;padding:3px 10px 4px;font-size:14px;outline:0;}
+</style>
+
+<script>
+	$('.form_datetime1').datetimepicker({
+        language:  'zh-CN',
+        weekStart: 1,
+        todayBtn:  1,
+		autoclose: 1,
+		todayHighlight: 1,
+		startView: 1,
+		minView: 0,
+		maxView: 1,
+		forceParse: 0
+    });
+	$('.form_datetime2').datetimepicker({
+        language:  'zh-CN',
+        weekStart: 1,
+        todayBtn:  1,
+		autoclose: 1,
+		todayHighlight: 1,
+		startView: 1,
+		minView: 0,
+		maxView: 1,
+		forceParse: 0
+    });
+</script>
+
+<ol class="breadcrumb">
+	<li><a href="{:U('School/rateList')}">评比结果管理</a></li>
+	<li class="active">
+        <switch name="ACTION_NAME" >
+        <case value="addRateResult" break="1">添加</case>
+        <case value="editRateResult">修改</case>
+        <default />添加
+        </switch>
+        评比结果
+    </li>
+</ol>
+<form id="editForm" class="form-horizontal" role="form" method="post" action="__SELF__">
+
+
+    
+    
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="name">评比标题</label>
+		<div class="col-sm-3">
+			<input class="form-control input-sm" type="text" name="subject" id="subject" value="{$datas.subject}">
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="content">名次</label>
+		<div class="col-sm-1">
+			<input class="form-control input-sm" type="text" name="rank" id="rank" value="{$datas.rank}">
+		</div>
+	</div>
+    
+	<div class="form-group ">
+		<label class="col-sm-2 control-label " for="status">班级</label>
+		<div class="col-sm-1">
+
+            <select class="form-control input-sm" name="banjiId" id="banjiId">
+                <option value="">所有班级</option>
+                <volist name="banjis" id="vo">
+                    <eq name="vo.id" value="$banjiId">
+                        <option value="{$vo.id}" selected>{$vo.name}</option>
+                    <else/>
+                        <option value="{$vo.id}">{$vo.name}</option>
+                    </eq>
+                </volist>
+            </select>
+		</div>
+        <div class="col-sm-2"><span class="help-block"></span></div>
+	</div> 
+
+	<div class="form-group">
+    	<div class="row">
+            <label class="col-sm-2 control-label" for="">图标</label>
+            <div class="col-sm-5">
+                <div class="up-image-box" style="position:relative;">
+                    <button id="file_upload_photo" class="btn btn-default" name="file_upload_photo" type="file"></button>
+                    <label class="col-sm-2 control-label hide" for="" style="margin-left:20px;" ><button type="button" class="btn btn-link btn-sm" id="btnSet" data-toggle="modal" data-target="#resourceModal"> <i class="glyphicon glyphicon-upload"></i> 从已上传中选择</button></label>
+    				
+                    <div id="uploadfyQueueList1"></div> 
+                    <div class="showimg clearfix" style="clear:both;">
+                        <notempty name="datas['icon']">
+                            <span><img height="80" src="{$datas.icon}" /></span>
+                        </notempty>
+                    </div>
+                    <input type="hidden" name="photo" class="gcovers" value="{$datas.icon}">
+                    <input type="hidden" name="photo" id="photoPath" value="{$datas.icon}">
+                </div>
+            </div>
+        </div>
+    	<div class="row">
+        
+         </div>       
+	</div>
+<script language="javascript" type="text/javascript" src="__PUBLIC__/My97DatePicker/WdatePicker.js"></script>
+	<div class="form-group" >
+          <label class="col-sm-2 control-label">评比日期</label>
+          <div class="col-sm-1">
+             <input class="form-control form_datetime2" name="rateDate" id="rateDate" type="text" placeholder="评比日期" style="width:160px;" value="{$datas.starttime}" onClick="WdatePicker()"><!--readonly会导致validate验证无效-->
+				<script type="text/javascript">
+                $(".form_datetime2").datetimepicker({format: 'yyyy-mm-dd'});
+                </script>
+          </div>
+	</div>
+
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="">&nbsp;</label>
+		<div class="col-sm-4">
+			<input type="hidden" name="id" value="{$datas.Id}">
+			<button type="submit" class="btn btn-info btn-sm">保存更改</button>&nbsp;&nbsp;
+			<button type="reset" class="btn btn-default btn-sm">取消</button>
+		</div>
+	</div>
+</form>
+
+
+<!--zjh add start 模态对话框-->
+<include file="Public/resourceBox" />
+<include file="Public/systemLayoutBox" />
+<!--zjh add end 模态对话框-->
+
+
+<include file="Public/jsLoader" />
+<script type="text/javascript" src="__PUBLIC__/script/uploadify/jquery.uploadify.js"></script>
+<script type="text/javascript" charset="utf-8" src="__PUBLIC__/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="__PUBLIC__/ueditor/ueditor.all.js"> </script>
+<script type="text/javascript" charset="utf-8" src="__PUBLIC__/ueditor/lang/zh-cn/zh-cn.js"></script>
+<script type="text/javascript">
+$(function($) {
+	
+	var banjiId = "{$banjiId}";
+	$('button[type="reset"]').click(function(){
+		window.location.href = '__URL__/rateList/type/rateResultList/banjiId/'+banjiId;
+	});
+		
+	// Uploadify 批量上传
+	initUpload();
+	function initUpload(){
+		$('#file_upload_photo').uploadify({
+			'debug' : false,
+			'multi' : false,
+			'fileObjName' : 'myUpfile',
+			'fileTypeDesc' : '图片',
+			'fileTypeExts' : '*.jpeg; *.jpg; *.png; *.bmp',
+			'buttonText' : '<i class="icon-upload"></i>上传图片',
+			'width' : 100,
+			'buttonClass' : 'uploadify',
+			'swf'      : '__PUBLIC__/script/uploadify/uploadify.swf',
+			'formData'     : {dataType : 'image', savename :'', isMyUpRoot : 1,appModel:'school',School_IsDBWrite:1,School_ResType:'image',School_resModel:'student',School_PId:0,School_PName:'学生照片',School_MyName:''},//'formData'     : {dataType : 'image', savename : 'logo', isMyUpRoot : 1},
+			'uploader' : '{:U("Ajaxschool/uploadify_rate_icon")}',
+			'queueID'  : 'uploadfyQueueList1',
+			'removeCompleted' : true,
+			'removeTimeout' : 3,
+			'overrideEvents' : ['onUploadSuccess', 'onSelectError'],
+			'onSelectError' : function(file, errorCode, errorMsg) {
+				//console.log(errorCode);
+				//console.log(errorMsg);
+				switch (errorCode) {
+					case -110:
+						alert('【文件上传失败提示】\n\n ' + file.name + ' : 文件大小超过最大上传限制50MB！\n\n 请示使用 [ 大文件上传 ] 工具进行上传.');
+						break;
+					case -130:
+						alert('【文件上传失败提示】\n\n ' + file.name + ' : 文件类型不正确.');
+						break;
+				}
+			},
+			'onUploadSuccess' : function(file, data, response) {
+				var re = $.parseJSON(data);
+				if (re.stat*1) {
+					//alert(re.savePath);
+					$('#' + file.id).find('.data').html('<span class="text-success">&nbsp;上传成功</span>');
+					$('#file_upload_photo').closest('div.up-image-box').find(".showimg").first().html('<span><img src="' + re.url + '?' + Math.random() + '" /></span>');
+					$('#file_upload_photo').closest('div.up-image-box').find(".gcovers").first().val(re.resourceid);
+					$('#photoPath').val(re.url);//图片路径存储在表单，数据库中将存它
+				} else {
+					$('#' + file.id).addClass('text-danger').find('.data').html('<span>&nbsp;'+re.msg+'</span>');
+					$('#' + file.id).find('.uploadify-progress-bar').first().css({width : 0});
+				}
+			}
+		});
+	}
+
+});
+</script>
+
+
+<script type="text/javascript" src="__PUBLIC__/script/jquery/jquery.validate.min.js"></script>
+<script type="text/javascript">
+$(function($) {
+	
+	$('#editForm').validate({
+		errorElement : 'span',
+		errorClass : 'help-block',
+		focusInvalid : true,  
+        rules : {  
+        	subject : {  
+                required : true,
+            },
+        	banjiId : {  
+                required : true,
+            },
+        	rateDate : {  
+				required : true,
+            },
+			rank : {
+				required : true,
+			},
+        },  
+        messages : {
+        	subject : {  
+                required : "评比标题必填.",
+            },
+        	banjiId : {  
+                required : "班级必选.",
+            },
+        	rateDate : {  
+                required : "评比日期必填.",
+            },
+        	rank : {  
+                required : "评比名次必填.",
+            },
+        },  
+
+        highlight : function(element) {  
+            $(element).closest('.form-group').addClass('has-error');  
+        },  
+
+        success : function(label) {  
+            label.closest('.form-group').removeClass('has-error');  
+            label.remove();  
+        },  
+
+        errorPlacement : function(error, element) {  
+            element.parent('div').append(error);  
+        },  
+		submitHandler: function(form) {
+			form.submit();
+		}
+	});
+});
+</script>
+
+
+<include file="Public/footer" />

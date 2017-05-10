@@ -1,0 +1,71 @@
+<include file="Public/header" />
+
+<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+<script src="__PUBLIC__/script/jquery/jquery.min.js"></script>
+
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="__PUBLIC__/bootstrap/bootstrap.min.js"></script>
+<script src="__PUBLIC__/jquery-datetimepicker/js/jquery.datetimepicker.full.min.js"></script>
+
+<style>
+.help-block{
+    color: maroon;
+}
+</style>
+<ol class="breadcrumb">
+	<li><a href="{:U('School/lessonTime')}">课程时间</a></li>
+	<li class="active"> 设置 </li>
+</ol>
+<div style="clear:both;width:100%;height:60px;"></div>
+<form id="editForm" class="form-horizontal" role="form" method="post" action="__SELF__">
+    <div class="form-group">
+        <code class="col-sm-offset-2">注：设置时间完成后，请单击空白处，即可生效</code>
+    </div>
+    <volist name="data" id="vo">
+    	<div class="form-group">
+    		<label class="col-sm-1 control-label " for=""></label>
+     		<div class="col-sm-1">
+    			<p class="form-control-static">{$vo.name}</p>
+    		</div>       
+    		<div class="col-sm-1">
+    			<input class="form-control input-sm starttime thetime lessonTimepicker" type="text" name="starttime" attr-type="0" attr-number="{$vo.number}" value="{$vo.starttime}" attr-id="{$vo.id}" data-name="starttime">
+    		</div>
+    		<div class="col-sm-1">
+    			<input class="form-control input-sm endtime thetime lessonTimepicker" type="text" name="endtime" attr-type="0" attr-number="{$vo.number}" value="{$vo.endtime}" attr-id="{$vo.id}" data-name="endtime">
+    		</div>
+            <div class="col-sm-2"><span class="help-block"></span></div>
+    	</div>
+    </volist>
+</form>
+
+<include file="Public/footer" />
+
+<script>
+$(function(){
+    $('.lessonTimepicker').datetimepicker({
+        autoclose: false,
+        datepicker: false,
+        format: 'H:i:00',
+        step: 5,
+    });
+
+    $('.lessonTimepicker').focus(function(){
+        origin_value = $(this).val();
+    })
+
+    $('.lessonTimepicker').blur(function(){
+        var attr_id = $(this).attr('attr-id');
+        var data_name = $(this).attr('data-name');
+        var data_value = $(this).val();
+        var help_block = $(this).parent().siblings().find('.help-block');
+        if(data_value != origin_value){
+            $.post('{:U("lessonTime")}', {attr_id: attr_id, data_name: data_name, data_value: data_value}, function(data){
+                help_block.text(data);
+                setTimeout(function(){
+                    help_block.text('');
+            }, 1500)
+            })
+        }
+    })
+})
+</script>

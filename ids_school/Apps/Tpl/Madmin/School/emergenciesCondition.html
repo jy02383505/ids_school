@@ -1,0 +1,164 @@
+<include file="Public/header" />
+
+<ol class="breadcrumb">
+	<li><a href="{:U('School/schoolList')}">紧急事件管理</a></li>
+	<li class="active">
+        <switch name="ACTION_NAME" >
+        <case value="addBanji" break="1"></case>
+        <case value="editBanji"></case>
+        <default />
+        </switch>
+        触发条件设置
+    </li>
+</ol>
+
+<form id="editForm" class="form-horizontal" role="form" method="post" action="__SELF__">
+	  
+	<div class="form-group">
+		<label class="col-sm-2 control-label " for="name"><span class="required">*</span>PM2.5阈值</label>
+		<div class="col-sm-1">
+			<input class="form-control input-sm" type="text" name="pm25" id="pm25" value="{$datas.pm25}" placeholder=''>
+		</div>
+        <div class="col-sm-2"><span class="help-block"></span></div>
+	</div>
+    
+	<div class="form-group">
+		<label class="col-sm-2 control-label " for="name"><span class="required">*</span>温度阈值</label>
+		<div class="col-sm-1">
+			<input class="form-control input-sm" type="text" name="temperature" id="temperature" value="{$datas.temperature}" placeholder=''>
+		</div>
+        <div class="col-sm-2"><span class="help-block"></span></div>
+	</div>
+
+	<div class="form-group">
+		<label class="col-sm-2 control-label " for="name"><span class="required">*</span>甲醛阈值</label>
+		<div class="col-sm-1">
+			<input class="form-control input-sm" type="text" name="methanal" id="methanal" value="{$datas.methanal}" placeholder=''>
+		</div>
+        <div class="col-sm-2"><span class="help-block"></span></div>
+	</div>  
+
+   
+   
+	<div class="form-group" style="margin-top:20px;">
+		<label class="col-sm-2 control-label" for="">&nbsp;</label>
+		<div class="col-sm-4">
+			<input type="hidden" name="uuid" value="{$uuid}">
+			<input type="hidden" name="id" value='<empty name="id">{:I('get.id',0,'intval');}</empty>'>  
+			<button type="submit" class="btn btn-info btn-sm">保存更改</button>&nbsp;&nbsp;
+			<button type="reset" class="btn btn-info btn-sm">取消</button>
+		</div>
+	</div>
+    
+</form>
+
+
+<!--zjh add start 模态对话框-->
+<!--zjh add end 模态对话框-->
+
+
+
+<include file="Public/jsLoader" />
+
+<script type="text/javascript" src="__PUBLIC__/script/jquery/jquery.validate.min.js"></script>
+<script type="text/javascript">
+$(function($) {
+	
+	// 判断英文字符
+	jQuery.validator.addMethod("isEnglish", function(value, element) {       
+         return this.optional(element) || /^[A-Za-z]+$/.test(value);       
+    }, "只能包含英文字符。");
+	
+	
+	$('#editForm').validate({
+		errorElement : 'span',
+		errorClass : 'help-block',
+		focusInvalid : true,  
+        rules : {  
+			pm25:{
+				required: true,//名称带方括号验证不了
+				number:true,
+			},
+        	temperature : {  
+                required : true,
+				number:true,
+            },
+        	methanal : {  
+                required : true,
+				number:true,
+            },
+			
+        },  
+        messages : {
+			pm25 :{
+				required :"PM2.5必须填写",
+				number:"必须是数字",	
+			},
+        	temperature : {  
+                required : "温度必须填写",
+				number:"必须是数字",	
+            },
+        	methanal : {  
+                required : "甲醛值必须填写",
+				number:"必须是数字",	
+            },
+
+		},  
+
+        highlight : function(element) {  
+            $(element).closest('.form-group').addClass('has-error');  
+        },  
+
+        success : function(label) {  
+            label.closest('.form-group').removeClass('has-error');  
+            label.remove();  
+        },  
+
+        errorPlacement : function(error, element) {  
+            element.parent('div').append(error);  
+        },  
+		submitHandler: function(form) {
+			form.submit();
+		}
+	});
+});
+</script>
+
+
+<script type="text/javascript">
+$(function($) {
+	var data_id = "{$datas.id}";
+	
+	$('button[type="reset"]').click(function(){
+		window.location.href = '__URL__/emergenciesCondition';
+	});
+	
+
+
+
+	
+
+	
+});
+</script>
+
+
+<script>
+$(document).ready(function() {
+
+	
+});
+</script>
+
+<script>
+$(document).ready(function() {
+
+
+	
+});
+</script>
+
+
+<include file="Public/footer" />
+
+

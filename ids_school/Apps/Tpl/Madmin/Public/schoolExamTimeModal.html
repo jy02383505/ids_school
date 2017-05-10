@@ -1,0 +1,190 @@
+<!-------考试时间模态对话框---------->
+<div class="modal fade" id="examTimeModal" draggable='true' style="margin-top:200px;" tabindex='-1'>
+    <div class="modal-dialog modal-lg">
+    	<div class="modal-content">
+    		<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">考试时间</h4>
+			</div>
+			<div class="modal-body" >
+				<div class="form-group " style="width:100%;margin-bottom:0px;">
+                    <table class="table hide" style="border:none;">
+                    <tbody>
+                    <tr>
+                    <td width="120" >
+                        <select class="form-control input-sm" name="modal_examtime_gradeId" id="modal_examtime_gradeId">
+                            <option value="">请选择时间</option>
+                            <volist name="dateArr" id="vo">
+                                <eq name="vo.id" value="$thedate">
+                                    <option value="{$vo}" selected>{$vo}</option>
+                                <else/>
+                                    <option value="{$vo}">{$vo}</option>
+                                </eq>
+                            </volist>
+                        </select>
+                    </td>                    
+                    <td>
+                    	<button type="button" class="btn btn-info btn-sm" id="btn_modal_examtime_seach">搜索</button>
+                    </td>
+                    </tr>
+                    </tbody>
+                    </table>
+                </div>  
+            
+            
+                <div class="col-sm-12  pre-scrollable" style="clear:both;height:300px;">
+					<div class="row "><br></div>
+                    <div id="modal_examtime_list">
+                    	<volist name="examTimes" id="vo">
+                        	<div class="form-group">
+                                <div class="col-md-12">
+                                    <label style="font-size:16px;background-color:#E0E0E0;padding:6px 10px 2px 10px;">{$vo.thedate}<!--日期：年月日--></label>
+                                </div>
+                            </div>
+ 							<div class="form-group">     
+                            	<!--某一天的各时间段：开始时间-结束时间-->                      
+                                <volist name="vo.timearr" id="voo">
+                                    <?php                            	
+                                        //当时期相等，并且此日期下的开始时间和结束时间相等
+                                        if ( $vo['thedate']==$thedate && $voo['stime'] == $stime && $voo['etime']==$etime )
+                                        {
+                                            $ck=" checked";
+                                        }else{
+                                            $ck=" ";
+                                        }
+                                    ?>
+
+                                        <div class="col-md-3">
+                                            <label><input type="<eq name='examTimeModalSelType' value='radio'>radio<else/>checkbox</eq>" value="{$vo.id}" name="examtime" tName='{$voo.stime}'  <?php echo $ck;?> attr-stime="{$voo.stime}" attr-etime="{$voo.etime}" attr-starttime="{$voo.starttime}" attr-endtime="{$voo.endtime}" class='this_examtime' >{$vo.space} {$voo.stime} - {$voo.etime}</label>
+                                        </div>
+
+                                </volist>
+							</div>
+
+                    	</volist>
+                        
+
+					</div>
+				</div>
+                <div style="clear:both;width:100%;height:1px;"></div>
+			</div>
+			<div class="modal-footer">
+            	<div class="col-sm-8 " style="text-align:left;" id="examtime_dialog_message">{$examtime_dialog_message}</div>
+                <div class="col-sm-2"><neq name='examTimeModalSelType' value='radio'><label class="control-label "><input type="checkbox" name="checkall_examtime_modal" id="checkall_examtime_modal" value="1"/>全选</label></neq></div>
+            	<div class="col-sm-2">
+				<button type="button" class="btn btn-primary" data-dismiss="modal">确定</button>
+                </div>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-------考试时间模态对话框---------->
+
+<script language="javascript">
+$(document).ready(function() {
+	
+	var examTimeModalSelType = "<eq name='examTimeModalSelType' value='radio'>radio<else/>checkbox</eq>";//单选还是复选
+	
+	//点击登陆，post提交
+	$('#btn_modal_examtime_seach').click(function(){
+		$('#btn_modal_examtime_seach').text('正在载入...');
+		
+		$('#examtime_dialog_message').html("正在载入...");
+		
+		var banjiId = $("#modal_examtime_banjiId").val();
+		var subjectId = $("#modal_examtime_subjectId").val();
+		var keyType = $("#modal_examtime_key_type").val();
+		var keyboard = $("#modal_examtime_keyboard").val();
+
+		var subjects;
+
+		var examtime_list2 = "";
+		//$("#modal_examtime_list").html("");
+		$.ajax({
+			url:'__GROUP__/Ajaxschool/getExamTime',
+			type:'post',
+			data:"banjiId="+banjiId+"&keyboard="+keyboard+"&keyType="+keyType+"&subjectId="+subjectId,
+			async:true,//false为同步
+			dataType:'json',
+			success:function(re) {
+				if (re.stat * 1 > 0){
+					//alert(re.stat);
+					//alert(re.data);
+					
+					$("#modal_examtime_list").html("");
+					var datas = re.data;//返回数据：re:stat,array
+					
+					for(var i=0;i<datas.length;i++){
+						var subject = datas[i];
+
+						//科目下有教师才显示科目名
+						if(subject.teacherCount){
+                        	a = '<div class="form-group"><div class="col-md-12"><label style="font-size:16px;background-color:#E0E0E0;padding:6px 10px 2px 10px;">';
+							a = a + subject.subjectName + "（" +subject.teacherCount +"）";
+							a = a + '</label></div></div>';
+						
+							examtime_list2 += a;
+							
+							//teacher_list +="<div><div class='col-md-2'><label>-----</label></div></div>";
+							
+							//科目下的教师
+							for(var ii=0;ii<subject.teacherCount;ii++){
+								var obj = subject['teacherList'][ii];//这里获取数组内每个对象。
+							//	alert(obj.id + obj.name);
+								examtime_list2 += "<div class='col-md-2'><label><input type='"+teacherModalSelType+"' name='teacherIdStr2[]' tName='"+ obj.name +"' value='"+ obj.id +"' class='this_teacher'>"+obj.name+"</label></div>";	   
+							}
+						}
+					}					
+					
+					$("#modal_examtime_list").html(teacher_list2);
+					
+					//此处必须通过id指定到局部的input，否则影响切换
+					$('#modal_examtime_list input').iCheck({
+						checkboxClass: 'icheckbox_flat-green',
+						radioClass: 'iradio_flat-green',
+						increaseArea: '20%' // optional
+					});
+					
+					//这儿必须绑定一下，否则点选后无反应
+					/*$('.this_teacher').on('ifChecked', function(event){
+						var val = $(this).val();
+						alert("val="+val);
+					});*/
+					if (var_bindInModelexamtime){
+						bindInModelexamtime();//此函数放在调用对话框的页面定义，可参考editUser.html模板中
+					}
+					
+					
+				}else{
+						
+				}
+
+			},
+			error:function() {
+				alert('由于网络异常导致操作失败，请刷新页面重试....');
+			}
+		}); 
+				
+		$('#btn_modal_examtime_seach').text('搜索');
+		$('#examtime_dialog_message').html("载入完成...");
+		setTimeout(function(){
+			$('#examtime_dialog_message').html("");
+		}, 1000);
+
+		
+		
+		
+	});
+	
+
+	
+	
+});
+</script>
+
+
+
+
+
+
+

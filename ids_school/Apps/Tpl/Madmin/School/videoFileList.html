@@ -1,0 +1,201 @@
+
+<include file="Public/header" />
+
+<ol class="breadcrumb">
+	<li><a href="{:U('School/videoList')}">视频管理</a></li>
+	<li ><a href="{:U('School/videoList',array('type'=>'videoGroupList','banjiId'=>$banjiId))}">{$group.name}</a></li>
+    <li class="active">视频列表</li>
+</ol>
+
+<div id="" class="row well">
+	<div class="col-md-9" style="padding-top:5px;">
+		<table class="table">
+			<tbody>
+				<tr>
+                    <td style="border:0;">
+                        视频集：{$group.name}
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        班级：{$banjiName}
+					</td>
+				</tr>
+			</tbody>
+		</table> 
+		
+	</div>
+	<div class="col-md-3 text-right">
+		<table class="table">
+			<tbody>
+				<tr>
+                    <td style="border:0;">
+						<a href="__URL__/addVideo/groupId/{$groupId}" type="button" class="btn btn-info btn-sm" id="addVideoList">添加视频</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<div class="data-list">
+	<table class="table table-hover list-tbl">
+        <form name="listform" id="listform" action="" method="get">
+        	<input type="hidden" name="dotype" id="dotype" value="list">
+            <input type="hidden" name="ids" id="ids" value="">     
+		<thead>
+			<tr>
+				<th width="36"><input type="checkbox" class="select-all" title="全选/全不选"></th>
+				<th width="60" class="hide">#ID</th>
+                <th>视频标题</th>
+				<th>视频名称</th>
+                <th>下载</th>
+                <th width="160">更新时间</th>
+				<th width="200">操作</th>
+			</tr>
+
+			</tr>
+		</thead>
+		<tbody>
+        
+			<!-- 文件列表 -->
+			<volist name="videos" id="file">
+                    <tr>
+                    	<td><input type="checkbox" name="pid" id="pid" value="{$file.id}"></td>
+                        <td class="hide">
+                            {$file.id}
+                        </td>
+                        <td>
+                            {$file.title}
+                        </td>
+                        <td>
+                            <div class="resinfo" data-id="{$file.id}" data-type="file">
+                            <notempty name="file.filename">
+                            <span class="ftype-icon">
+							<i class="icon-film"></i>
+                            <span class="resname">{$file.filename}</span>
+                            </notempty>
+				            </div>
+                        </td>                 
+                        <td>
+                            <if condition="$file[canDownload] eq '1'">
+                                <a href="/{$file[filePath]}">下载</a>
+                            <else/>
+                                文件不存在
+                            </if>
+                        </td>
+                        <td><?php echo  date("Y-m-d h:i:s",$file['operationTime']);?></td>
+                        <td>
+                            <!--<a class="oper edit" href="__URL__/addVideo/id/{$file.id}"><span class="glyphicon glyphicon-plus" aria-hidden="true" title="添加视频"></span></a>-->
+        				    <a class="oper edit" href="__URL__/editVideo/id/{$file.id}" title="编辑"><i class="icon-pencil"></i></a>
+                            <a href="javascript:void(0);" class="oper del" data-id="{$file.id}" title="删除"><i class="icon-trash"></i></a>
+                        </td>
+                    </tr>
+			</volist>
+		</tbody>
+	</table>
+	<table class="table">
+		<tr>
+			<td>
+				<input type="checkbox" class="select-all" title="全选/全不选">
+				<button type="button" class="btn btn-default btn-sm multi-del" style="margin-left:30px;">批量删除</button>
+				&nbsp;
+			</td>
+			<td class="page-box text-right" width="80%">{$page}</td>
+		</tr>
+        </form>
+	</table>
+</div>
+
+<!-- <div class="pic-box" style="width:400"></div> -->
+
+<include file="Public/jsLoader" />
+<script type="text/javascript" src="__PUBLIC__/script/uploadify/jquery.uploadify.js"></script>
+
+
+<script type="text/javascript">
+$(function($){
+
+	//删除一条
+	$('.del').click( function() {
+		var resId = $(this).attr('data-id')*1, that = this,
+			resType = $(this).closest('li').find('.resinfo').first().attr('data-type'),
+			postData = null;
+		
+		
+		if (resId > 0) {
+			
+			$.kw.confirm('确认要删除吗？', function() {
+				
+				if (resType == 'dir') {
+					postData = {dids : resId};
+				} else {
+					postData = {fids : resId};
+				}
+				//alert(resId);
+				
+				$.ajax({
+					type:'POST',
+					url:'__URL__/delOneVideo',
+					data:postData,
+					async:false,
+					dataType:'json',
+					beforeSend:function() {
+						
+					},
+					success:function(re) {
+						if (re.stat*1) {
+							
+							$.kw.alert('操作成功！', '', function() {
+								//$(that).parents('li').remove();
+								window.location.href="__SELF__";
+								if (resType == 'dir') {
+									var treeObj = $.fn.zTree.getZTreeObj("reslist");
+									var node = treeObj.getNodeByParam("id", resId, null);
+									treeObj.removeNode(node);
+									dynamicCalcHeight();
+								}
+							});
+						} else {
+							$.kw.alert("err");
+							//$.kw.alert(re.msg);
+						}
+					},
+					error:function() {
+						$.kw.alert('操作失败！请重试……');
+					}
+				});
+			});
+		} else {
+			$.kw.alert('页面数据错误！请刷新重试……');
+		}
+	});
+	
+	
+	//批量删除
+	$('.multi-del').click(function() {
+			var chk_value =[]; 
+			$('input[name="pid"]:checked').each(function(){ 
+				chk_value.push($(this).val()); 
+				
+			}); 
+			
+			//alert(chk_value.length==0 ?'你还没有选择任何内容！':chk_value);
+			//alert(chk_value.length==0 ?'你还没有选择任何内容！':chk_value); //1,2,3,4,5格式
+			
+			if (chk_value.length==0){
+				$.kw.alert('未选择');
+				return;
+			}else{
+				$.kw.confirm('确认要删除所选择的记录吗？', function() {
+					$("#dotype").val("multi-del");
+					$("#ids").val(chk_value);//放到隐藏表单提交				
+					$("#listform").submit();
+					$("#dotype").val("list");	
+					$("#ids").val("");
+			
+				});
+			}
+	});	
+	//批量删除 end
+	
+});
+</script>
+<include file="Public/footer" />

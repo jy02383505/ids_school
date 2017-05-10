@@ -1,0 +1,66 @@
+<!--zjh-->
+<include file="Public/header" />
+
+<ol class="breadcrumb">
+	<li><a href="{:U('School/albumList')}">相册管理</a></li>
+	<li class="active">班级选择</li>
+</ol>
+
+<div class="data-list">
+	<table class="table table-hover list-tbl">
+		<thead>
+			<tr>
+				<!-- <th width="36"><input type="checkbox" class="select-all" title="全选/全不选"></th> -->
+				<th width="100">班级名称</th>
+                <th width="100">相册数量</th>
+                <th></th>
+				<th width="140">操作</th>
+			</tr>
+		</thead>
+		<tbody>
+
+
+            
+        
+			<volist name="banjis" id="vo">
+			<tr>
+				<!-- <td><input type="checkbox"></td> -->
+				<td>{$vo.name}</td>
+                <td>{$vo.albumnum}</td>
+                <td></td>
+				<td>
+                	<php>//	if (checkAccess('school', 'homeworkSubmit')) {	</php>
+						<a class="oper edit" href="__URL__/albumList/type/albumList/banjiId/{$vo.id}" attr-data-id="{$vo.id}" title="" style="cursor:pointer"><i class="glyphicon glyphicon-cog"></i></a>
+                    <php>//	}	</php>
+                    
+
+				</td>
+			</tr>
+			</volist>
+		</tbody>
+	</table>
+	<table class="table">
+		<tr>
+			<td>
+				<!-- <input type="checkbox" class="select-all" title="全选/全不选">
+				<button type="button" class="btn btn-default btn-sm multi-del" style="margin-left:30px;">批量删除</button> -->
+				&nbsp;
+			</td>
+			<td class="page-box text-right" width="80%">{$page}</td>
+		</tr>
+	</table>
+</div>
+
+<include file="Public/jsLoader" />
+<script type="text/javascript">
+$(function($){
+	
+	$('.del').click(function() {
+		var targetUrl = $.trim($(this).attr('data-url'));
+		$.kw.confirm('确认要删除该记录吗？', function() {
+			window.location.href = targetUrl;
+		});
+	});
+});
+</script>
+<include file="Public/footer" />

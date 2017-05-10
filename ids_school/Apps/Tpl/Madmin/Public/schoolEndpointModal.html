@@ -1,0 +1,216 @@
+<!-------终端模态对话框 可复选---------->
+<div class="modal fade" id="endpointModal" draggable='true' style="margin-top:200px;" tabindex='-1'>
+    <div class="modal-dialog modal-lg">
+    	<div class="modal-content">
+    		<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">终端选择</h4>
+			</div>
+            
+			<div class="modal-body" >
+                <!-- <div class="form-group " style="width:100%;margin-bottom:0px;">
+                    <table class="table table-striped" style="border:none;">
+                    <tbody>
+                    <tr>
+                    <td width="160">
+                        <select class="form-control input-sm" name="modal_endpoint_type" id="modal_endpoint_type">
+                            <option value="">全部类型</option>
+                    		<option value="name">x86</option>
+                            <option value="code">安卓</option>
+                        </select>
+                    </td>
+                    <td width="200">
+                        <select class="form-control input-sm" name="modal_endpoint_groupid" id="modal_endpoint_groupid">
+                            <option value="">所有终端组</option>
+                            <volist name="endpointGroups" id="vo">
+                                <eq name="vo.id" value="$groupId">
+                                    <option value="{$vo.groupclassid}" selected>{$vo.space} {$vo.groupname}</option>
+                                <else/>
+                                    <option value="{$vo.groupclassid}">{$vo.space} {$vo.groupname}</option>
+                                </eq>
+                            </volist>
+                        </select>
+                    </td>
+                    <td width="100">
+                    <input type="text" class="form-control input-sm" name="keyboard" id="modal_endpoint_keyboard" value="" style="width:182px;">
+                    </td>
+
+                    <td>
+                    	<button type="button" class="btn btn-info btn-sm" id="btn_modal_endpoint_seach">搜索</button>
+                    </td>
+                    </tr>
+                    </tbody>
+                    </table>
+                </div> -->  
+                
+                
+                
+                
+                
+                <div class="col-sm-12  pre-scrollable" style="clear:both;height:300px;">
+					<div class="row "><br></div>
+                    <div id="modal_endpoint_list">
+                    	<?php
+                            $endpointIdArray = array();
+                            $endpointIdArray = explode(',',$datas['endpointId']);
+                    	?>
+                        
+<!--                         <volist name="endpointGroups" id="voo">
+                            <php> 
+                            if (!empty($voo['has_children'])) { 
+                            </php>
+                            
+                            <php>
+                            } else { 
+                            </php>
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <label>{$voo.groupname}</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <volist name="endpoint_list" id="vo">
+                                    <?php
+                                                    
+                                        if ( in_array($vo['tid'],$endpointIdArray) )
+                                        {
+                                            $ck="checked='checked'";
+                                        }else{
+                                            $ck="";
+                                        }
+                                    ?>
+                                    <if condition="$vo['touchEndPoint_GroupClassId'] == $voo['groupclassid'] ">
+                                        <div class="col-md-2">
+                                            <label><input type="<eq name='endpointModalSelType' value='radio'>radio<else/>checkbox</eq>" value="{$vo.tid}"  name="endpointIdStr[]" id="chk_endpoint_{$vo.tid}" tName='<empty name="vo.touchEndPointName">{$vo.touchMainId}<else />{$vo.touchEndPointName}</empty>'  <?php echo $ck;?> class='chk_endpoint' >{$vo.space}  <empty name="vo.touchEndPointName">{$vo.touchMainId}<else />{$vo.touchEndPointName}</empty></label>
+                                        </div>
+                                    </if>
+                                </volist>
+                                
+                            </div>
+                            <php> } </php>
+                        </volist> -->
+                        <!-- addRoom:展示所有终端 updated by lym at 2016-11-10 09:26:24 -->
+                        <!-- editRoom:展示所有终端，并将已经指定过的终端对应的复选框勾选 -->
+                        <volist name="groups" id="voo">
+                        	<div class="form-group">
+                                <div class="col-md-12">
+                                    <label>{$voo.groupname}</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <volist name="voo[endpoints]" id="vo">
+                                    <?php
+                                        $ck = in_array($vo['tid'], $endpointIdArray) ? 'checked' : '';
+                                    ?>
+                                    <div class="col-md-2">
+                                        <label>
+                                            <input type="<eq name='endpointModalSelType' value='radio'>radio<else/>checkbox</eq>" value="{$vo.tid}"  name="endpointIdStr[]" id="chk_endpoint_{$vo.tid}" tName='<empty name="vo.touchEndPointName">{$vo.touchMainId}<else />{$vo.touchEndPointName}</empty>'  <?php echo $ck;?> class='chk_endpoint' >{$vo.space}  <empty name="vo.touchEndPointName">{$vo.touchMainId}<else />{$vo.touchEndPointName}</empty>
+                                        </label>
+                                    </div>
+                                </volist>
+                                
+                            </div>
+                        </volist>
+					</div>
+				</div>
+                <div style="clear:both;width:100%;height:1px;"></div>
+			</div>
+			<div class="modal-footer">
+            	<div class="col-sm-8 " style="text-align:left;" id="endpoint_dialog_message">{$endpoint_dialog_message}</div>
+            	<div class="col-sm-4">
+                	<button type="button" class="btn btn-primary" data-dismiss="modal">确定</button>
+            	</div>
+				
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-------终端模态对话框---------->
+
+<script language="javascript">
+$(document).ready(function() {
+	
+	var endpointModalSelType = "<eq name='endpointModalSelType' value='radio'>radio<else/>checkbox</eq>";//单选还是复选
+	
+	//点击登陆，post提交
+	$('#btn_modal_endpoint_seach').click(function(){
+		$('#btn_modal_endpoint_seach').text('正在载入...');
+		//alert("准备加载");
+		$('#endpoint_dialog_message').html("正在载入...");
+		
+		var et = $("#modal_endpoint_type").val();
+		var groupClassId = $("#modal_endpoint_groupid").val();
+		var keyboard = $("#modal_endpoint_keyboard").val();
+		
+		//alert(endpointModalSelType);
+		//alert(groupClassId);
+		
+		var endpoint_list = "";
+		//$("#modal_endpoint_list").html("");
+		$.ajax({
+			url:'__GROUP__/Ajaxschool/endpoints',
+			type:'post',
+			data:"et="+et+"&keyboard="+keyboard+"&groupClassId="+groupClassId,
+			async:true,//false为同步
+			dataType:'json',
+			success:function(re) {
+				if (re.stat * 1 > 0){
+					$("#modal_endpoint_list").html("");
+					var datas = re.data;//返回数据：re:stat,array
+					//alert(re.stat);
+					//服务端返回的第一个元素是stat=0或1，实际有用的数据放在第二个元素（是一个数组）
+					for(var i=0;i<datas.length;i++){
+					   var obj = datas[i];//这里获取数组内每个对象。
+					   //alert(obj.id+" "+obj.name);
+					   endpoint_list += "<div class='col-md-12'><label><input type='"+endpointModalSelType+"' name='endpointIdStr[]' tName='"+ obj.touchEndPointName +"' value='"+ obj.tid +"' class='chk_endpoint'> " + obj.touchMainId + "--" + obj.touchEndPointName+"</label></div>";
+					}
+					$("#modal_endpoint_list").html(endpoint_list);
+					
+					//此处必须通过id指定到局部的input，否则影响切换
+					$('#modal_endpoint_list input').iCheck({
+						checkboxClass: 'icheckbox_flat-green',
+						radioClass: 'iradio_flat-green',
+						increaseArea: '20%' // optional
+					});
+					
+					//这儿必须绑定一下，否则点选后无反应
+					/*$('.chk_endpoint').on('ifChecked', function(event){
+						var val = $(this).val();
+						alert("val="+val);
+					});*/
+					    
+					if (var_bindInModelEndpoint){
+						bindInModelEndpoint();//此函数放在调用对话框的页面定义，可参考editUser.html模板中
+					}
+					
+					
+				}else{
+						
+				}
+
+			},
+			error:function() {
+				alert('由于网络异常导致操作失败，请刷新页面重试....');
+			}
+		}); 
+				
+		$('#btn_modal_endpoint_seach').text('搜索');
+		$('#endpoint_dialog_message').html("载入完成...");
+		setTimeout(function(){
+			$('#endpoint_dialog_message').html("");
+		}, 1000);
+
+		
+		
+		
+	});
+});
+</script>
+
+<script>
+$(document).ready(function() {
+
+});
+</script>
+
+

@@ -1,0 +1,209 @@
+<include file="Public/header" />
+<link rel="stylesheet" href="__PUBLIC__/script/uploadify/uploadify.css">
+<style>
+#storeVideoUp .btn-default, #storeVideoUp .btn-default:hover, #storeVideoUp .btn-default:active, #storeVideoUp .btn-default:visited{background-color:#fff;border-color:#ccc;padding:3px 10px 4px;font-size:14px;outline:0;}
+</style>
+<ol class="breadcrumb">
+	<li><a href="{:U('School/videoList')}">视频管理</a></li>
+	<li class="active">
+        <switch name="ACTION_NAME" >
+        <case value="addAlbum" break="1">添加</case>
+        <case value="editAlbum">修改</case>
+        <default />添加
+        </switch>视频
+    
+    </li>
+</ol>
+<style>
+    .row {margin:0 0 10px 0;}
+</style>
+   
+<input type="hidden" name="banjiId" id="banjiId" value="{$banjiId}" >
+<input type="hidden" name="videoGroupId" id="videoGroupId" value="{$videoGroupId}" >
+<div class="row">
+            <div class="col-md-1"><b>视频标题：</b></div>
+            <div class="col-md-4">
+                {$datas.name}
+            </div>
+            <div class="col-md-1"><b>所属班级：</b></div>
+            <div class="col-md-4">
+                {$datas.banjiName}
+            </div>
+            <div class="col-md-2"><a href="__URL__/videoList/type/videoGroupList/banjiId/{$banjiId}" type="button" class="btn btn-info btn-sm"><b>返回视频集</b></a></div>       
+</div>   
+
+
+<include file="Public/header" />
+<link rel="stylesheet" href="__PUBLIC__/script/uploadify/uploadify.css">
+<link rel="stylesheet" href="__PUBLIC__/script/zTree_v3/css/metroStyle/metroStyle.css">
+<!-- <link rel="stylesheet" href="__PUBLIC__/script/zTree_v3/css/zTreeStyle/zTreeStyle.css"> -->
+<link rel="stylesheet" href="__PUBLIC__/script/plupload2/jquery.ui.plupload/flick/jquery-ui.css" type="text/css" />
+<link rel="stylesheet" href="__PUBLIC__/script/plupload2/jquery.ui.plupload/css/jquery.ui.plupload.css" type="text/css" />
+<style>
+/* .ztree *{font-family:"Helvetica Neue", Helvetica, Microsoft Yahei, Hiragino Sans GB, WenQuanYi Micro Hei, sans-serif;}
+.ztree li span.button.root_open{background-position:-107px -63px;}
+.ztree li span.button.root_close{background-position:-128px -63px;}
+.ztree li span.button{background:url(__PUBLIC__/images/metro04.png) no-repeat;}
+.ztree li span.button.chk{width:16px;height:16px;position:relative;top:-1px;}
+.ztree li span.button.chk.checkbox_false_full{background-position:-3px -3px;}
+.ztree li span.button.chk.checkbox_false_full_focus{background-position:-3px -24px;}
+.ztree li span.button.chk.checkbox_true_full{background-position:-25px -3px;}
+.ztree li span.button.chk.checkbox_true_full_focus{background-position:-25px -24px;}
+.ztree li span.button.chk.checkbox_true_part{background-position:-25px -46px;}
+.ztree li span.button.chk.checkbox_true_part_focus{background-position:-25px -66px;} */
+
+.ui-icon, .ui-widget-content .ui-icon-circle-check{background-image: url("__PUBLIC__/script/plupload2/jquery.ui.plupload/flick/images/ui-icons_0073ea_256x240.png")}
+</style>
+
+<style type="text/css">
+	.uploadify{display:inline-block;line-height:30px;}
+	.ui-widget, .plupload_wrapper, .plupload_header_title, .plupload_header_text{font-family: "Helvetica Neue", Helvetica, Microsoft Yahei, Hiragino Sans GB, WenQuanYi Micro Hei, sans-serif;}
+	.plupload_logo{background-position:-40px 0;}
+	.plupload_header_title{line-height:22px;}
+	.ui-widget-header{font-weight:normal;}
+	.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default{font-weight:normal;}
+	.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default{color:#333;}
+	.plupload_message strong{line-height:18px;}
+	.plupload_message i{line-height:22px;margin-left:18px;}
+	.ui-widget-header .ui-state-error{border:1px solid #a94442;}
+	.ui-state-error, .ui-widget-content .ui-state-error{border-bottom:1px solid #a94442;}
+	.ui-progressbar-value{background:#dff0d8;}
+	.ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus{border:1px solid #1abc9c;background:#1abc9c;color:#fff;}
+	
+	.res-box .col-md-3, .res-box .col-md-9{padding:0;}
+	.res-box .res-tree{border-right:1px solid #ddd;}
+	.res-box .res-window .tool-bar{height:60px;line-height:60px;background:#f5f5f5;border-bottom:1px solid #ddd;/* overflow:hidden; */}
+	.res-box .res-window .tool-bar .breadcrumb{margin:0;background:none;padding:0 4px;}
+	.res-box .res-window .tool-bar .breadcrumb .sel:before{content:none;}
+	.res-box .res-window .tool-bar .btn-sm{padding:4px 10px 3px;font-size:14px;font-weight:500;}
+	.res-box .res-window .tool-bar .btn-default:hover{background-color:#fff;border-color:#ccc;}
+	.res-list{position:relative;}
+	.res-list li{height:auto;line-height:48px;border-bottom:1px solid #ddd;padding:0 10px;position:relative;}
+	.res-list li span.ftype-icon{display:inline-block;width:32px;}
+	.res-list li span.resname{padding:6px 0;}
+	.res-list li .res-image-box{position:absolute;top:1px;left:100%;margin-left:10px;width:480px;height:300px;line-height:300px;text-align:center;background:rgba(0, 0, 0, 0.5);border-radius:4px;z-index:99;}
+	.res-list li .res-image-box img{max-width:460px;height:280px;}
+	.res-list li span.resname input{display:inline-block;width:180px;}
+	.res-list li:hover{background:#f5f5f5;}
+	.res-list li i{font-size:14px;color:#333}
+	/* .res-list li i.icon-folder-close{font-size:22px;color:#aabb00;position:relative;top:3px;} */
+	.res-list li i.icon-folder-close{font-size:18px;color:#333;position:relative;top:3px;}
+	.res-list li .opers {height:48px;}
+	.res-list li .opers a{display:inline-block;width:32px;height:32px;line-height:32px;text-align:center;color:#aaa;}
+	.res-list li .opers a i{font-size:16px;color:#a1a1a1;}
+	.res-list li .opers a:hover i{color:#16a085;}
+	.cbx-block{display:inline-block;width:28px;margin:0 5px 0 10px;position:relative;}
+	.resinfo{display:inline-block;cursor:pointer;position:relative;}
+	.resinfo.mouseover{color:#16a085}
+	.resinfo.mouseover i{color:#16a085}
+	.my-check{position:absolute;top:15px;left:-2px;width:16px;height:16px;background:#fff url(__PUBLIC__/images/icheck.png) -2px -3px;cursor:pointer;z-index:99;}
+	.jl-tooltip-arrow{position:absolute;width:0;height:0;border-color:transparent;border-style:solid;top:25px;left:-5px;margin-top:-5px;border-width:5px 5px 5px 0;border-right-color:rgba(0, 0, 0, 0.5);}
+	.smy-checked{background-position:-23px -3px;}
+	.addResDescBox a.jl-btn-cancel{display:block;position:absolute;bottom:6px;right:6px;width:20px;height:20px;border-radius:10px;-moz-border-radius:10px;-webkit-border-radius:10px;text-align:center;line-height:20px;}
+	.addResDescBox a.jl-btn-cancel i{font-size:16px;}
+	.addResDescBox a.jl-btn-cancel:hover{background:rgba(51, 51, 51, 0.3)}
+	.addResDescBox a.jl-btn-cancel:hover i{color:#16a085}
+</style>
+<div class="row res-box">
+	<input type="hidden" id="currCategoryId" value="{$files.id}"/>
+
+	<div class="col-md-13 res-window">
+		<div class="row tool-bar">
+			<div class="col-md-5" style="line-height:59px;">
+				
+			</div>
+			<div class="col-md-7 text-right">
+				<form class="form-inline">
+					<button id="hugeFileUp" class="btn btn-default" type="button" style="display:inline-block;height:30px;line-height:16px;"><i class="icon-upload-alt"></i>&nbsp;大0文件上传</button>
+					<div class="help-tips" style="position:relative;display:inline-block;font-size:18px;height:30px;line-height:30px;margin-left:8px;top:4px;">
+						<i class="icon-question-sign"></i>
+						<div class="text-left" style="position:absolute;top:36px;right:-10px;width:225px;font-size:12px;line-height:18px;background:#f0f0f0;border:1px solid #e0e0e0;padding:8px;border-radius:3px;-moz-border-radius:3px;-webkit-border-radius:3px;display:none;z-index:99;">
+							<ul style="margin:0;list-style-type:disc;list-style-position:inside;">
+								<li>大文件上传：允许上传50MB以上的文件.</li>
+							</ul>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	
+		<ul class="res-list">
+			<!-- 文件列表 -->
+            <notempty name="files.filename">
+            	<volist name="files" id="vo">
+				<li class="clearfix res-file-{$vo.filetype}">
+					<div class="resinfo" data-id="{$vo.id}" data-type="files">
+						<span class="ftype-icon">
+								<i class="icon-film"></i>
+						</span>
+						<span class="resname">{$vo.filename}</span>
+					</div>
+					<div class="opers fr">
+						<a href="javascript:void(0);" class="del" data-id="{$vo.id}" title="删除"><i class="icon-trash"></i></a>
+					</div>
+				</li>
+                </volist>
+            </notempty> 
+		</ul>
+	</div>
+</div>
+
+<div id="upArea"></div>
+<div class="my-cover" style="display:none;"></div>
+
+<div id="PLUploader">
+	<span id="clsBtn" style="font-size:26px;position:absolute;top:-4px;right:2px;cursor:pointer;z-index:1005;" title="关闭"><i class="icon-remove-sign"></i></span>
+	<div id="uploader">
+		<p>Your browser doesn't have Flash, Silverlight or HTML5 support.</p>
+	</div>
+</div>
+
+<div id="addResDescBox" style="position:relative;margin-left:45px;background-color:#f0f0f0;padding:10px;margin-bottom:10px;line-height:24px;display:none;" class="row border-radius4">
+	<div class="col-md-1 text-right" style="width: 56px;"><span>说明</span></div>
+	<div class="col-md-9" style=""><textarea class="form-control" rows="3"></textarea></div>
+	<div class="col-md-2" style="">
+		<button type="button" class="btn btn-info btn-xs jl-btn-save">保存</button>
+		<button type="button" class="btn btn-default btn-xs jl-btn-cancel">取消</button>
+		<p class="bg-danger border-radius4 jl-help-text" style="display:none;margin-top:8px;padding-left:10px;">没有输入任何内容，无法保存！</p>
+	</div>
+	<a href="javascript:void(0);" class="jl-btn-cancel" title="收起"><i class="icon-angle-up"></i></a>
+</div>
+
+<!-- <div class="pic-box" style="width:400"></div> -->
+
+<include file="Public/jsLoader" />
+<script type="text/javascript" src="__PUBLIC__/script/uploadify/jquery.uploadify.js"></script>
+
+<!-- plupload上传插件脚本 -->
+<script type="text/javascript" src="__PUBLIC__/script/plupload2/plupload.full.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/script/plupload2/jquery.ui.plupload/flick/jquery-ui.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/script/plupload2/jquery.ui.plupload/jquery.ui.plupload.js"></script>
+<script type="text/javascript" src="__PUBLIC__/script/plupload2/i18n/zh_CN.js"></script>
+
+
+<script type="text/javascript">
+$(document).ready(function() {
+	var banjiId = parseInt($("#banjiId").val());//班级id
+	var videoGroupId = parseInt($("#videoGroupId").val());//视频集id
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+});
+</script>
+<include file="Public/footer" />

@@ -1,0 +1,217 @@
+<!--zjh-->
+<include file="Public/header" />
+
+<ol class="breadcrumb">
+	<li><a href="{:U('School/ComparisonResults')}">班级评比</a></li>
+	<li class="active">评比项目列表</li>
+</ol>
+
+<div id="" class="row well">
+	<div class="col-md-9">
+		<table class="table">
+			<tbody>
+				<tr>
+                	<td style="border:0;text-align:left;">班级名称：
+                    {$banjiName}
+                    </td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="col-md-3 text-right">
+		<table class="table">
+			<tbody>
+				<tr>
+					<td style="border:0;">
+                    
+                        
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+
+<input type="hidden" name="banjiId" id="banjiId" value="{$banjiId}">
+<div class="data-list">
+	<table class="table table-hover list-tbl">
+		<thead>
+			<tr>
+				<th width="36" class="hide"><input type="checkbox" class="select-all" title="全选/全不选"></th>
+				<th width="60" class="hide">#ID</th>
+				<th >评比项目</th>
+                <th >学生</th>
+                <th >班级</th>
+                <th ></th>
+				<th width="200" >操作</th>
+			</tr>
+		</thead>
+		<tbody>
+			<volist name="datas" id="vo">
+			<tr>
+				<td class="hide"><input type="checkbox" value='{$vo.id}'></td>
+				<td class="hide">{$vo.id}</td>
+				<td>{$vo.name}</td>
+                <td data-student-id = '{$vo.studentId}' >{$vo.studentName}</td>
+                <td>{$vo.banjiName}</td>
+				<td></td>
+                <td  data-member-list="{$vo.studentId}" data-item-id="{$vo.id}">
+                	<button type="button" class="btn btn-primary btn-sm btn_set" ><i class="glyphicon glyphicon-cog"></i> 设置</button>
+                </td>
+			</tr>
+			</volist>
+		</tbody>
+	</table>
+	<table class="table">
+		<tr>
+			<td>
+            <!--
+				<input type="checkbox" class="select-all" title="全选/全不选">
+				<button type="button" class="btn btn-default btn-sm multi-del" style="margin-left:30px;">批量删除</button>
+				&nbsp;-->
+			</td>
+			<td class="page-box text-right" width="80%">{$page}</td>
+		</tr>
+	</table>
+    
+</div>
+
+<include file="Public/jsLoader" />
+
+<!--zjh add start 模态对话框-->
+<include file="Public/schoolStudentOneBanjiModel" />
+<!--zjh add end 模态对话框-->   
+    
+    
+<script type="text/javascript">
+$(function($){
+	/*
+	$('.del').click(function() {
+		var targetUrl = $.trim($(this).attr('data-url'));
+		$.kw.confirm('确认要删除该记录吗？', function() {
+			window.location.href = targetUrl;
+		});
+	});
+	*/
+	var curItemId = 0;//当前班级评比项目Id，用于向班级学生选择弹窗传值
+	
+	$('.del').click(function() {
+		var nid = $(this).attr('data-id')*1;
+		delNews(nid);
+	});
+	
+	$('.multi-del').click(function() {
+		var checkedItems = $('.list-tbl tbody').first().find(':checkbox:checked'),
+			nids = new Array();
+		if (checkedItems.size() <= 0) {
+			$.kw.alert('没有选择操作对象！');
+			return false;
+		} else {
+			$.each(checkedItems, function (i, o) {
+				nids.push($(o).val()*1);
+			});
+			delNews(nids.join(','));
+		}
+	});
+	
+	function delNews(nids) {
+		$.kw.confirm('确定要删除吗？', function() {
+			$.ajax({
+				type:'POST',
+				url:'__URL__/ComparisonResultsDel',
+				data:{'nids' : nids},
+				async:false,
+				dataType:'json',
+				beforeSend:function() {
+					
+				},
+				success:function(re) {
+					if (re.stat*1) {
+						$.kw.alert('操作成功！', '', function() {
+							window.location.reload();
+						});
+					} else {
+						$.kw.alert(re.msg);
+					}
+				},
+				error:function() {
+					$.kw.alert('操作失败！请刷新页面后重试……');
+				}
+			});
+		});
+	}	
+	
+	/**
+	 * 设置按钮，选择学生
+	*/
+	$('.btn_set').click(function(){
+		curMemberList = $(this).parent().attr("data-member-list");//当前的评比项目下的学生id，可能是0个、1个或多个
+		curItemId = $(this).parent().attr("data-item-id");//当前班级评比项目Id，每次点设置按钮都重新设置此隐藏表单值
+		
+		//alert(curItemId);
+	//	alert(curMemberList);
+	//	alert("curDay=" + curDay + " ;banjiId="+banjiId + " ;curMemberList=" + curMemberList);
+		
+		//将当前班级评比项目下的学生提前在弹窗中选中
+		var arr=new Array();
+		arr=curMemberList.split(',');//注split可以用字符或字符串分割
+		
+		$("#studentOneBanjiModal .chk_student").iCheck('uncheck');
+		for(var i=0;i<arr.length;i++)
+		{
+			//alert(arr[i]);
+			$("#studentOneBanjiModal .chk_student:checkbox").each(function () {
+				if ($(this).val() == arr[i]){
+					$(this).iCheck('check');
+				}
+			});
+		}
+		
+		$('#studentOneBanjiModal').modal({ keyboard: false });   // initialized with no keyboard
+		$('#studentOneBanjiModal').modal('show');                // 初始化后立即调用 show 方法
+	});	
+	
+	//对话框：关闭
+	$('#studentOneBanjiModal').on('hide.bs.modal', function () {
+		var members =  new Array();
+		$("#studentOneBanjiModal .chk_student:checkbox").each(function () {
+			if ($(this).prop("checked")){
+				members.push($(this).val()); 
+			}
+		});
+		var banjiId = $("#banjiId").val();//班级ID alert("banjiId="+banjiId);
+		//alert("members="+members);//学生ID，逗号分隔
+		//alert(curItemId);
+		//这儿需要的话可以弹出confirm询问一下是否更新
+		//return;
+		//提交保存
+		$.ajax({
+			url:'__URL__/ComparisonResultsSet',
+			type:'post',
+			data:"doType=set&banjiId="+banjiId+"&members="+members+"&curItemId="+curItemId+"&cache="+Math.random(),
+			async:true,//false为同步
+			dataType:'json',
+			success:function(re) {
+				//alert(re);
+				if (re.stat * 1 > 0){
+					//var datas = re.data;
+					//alert(re.data);
+					//alert("msg="+re.msg);
+					window.location.reload();
+				//	var tmp = "#memberList_"+curDay;
+					//alert(tmp);
+				//	$(tmp).html(re.data);
+				}else{
+					alert("msg1="+re.msg);	
+				}
+			},
+			error:function() {
+				alert('由于网络异常导致操作失败，请刷新页面重试....');
+			}
+		}); 
+	})
+	
+});
+</script>
+<include file="Public/footer" />

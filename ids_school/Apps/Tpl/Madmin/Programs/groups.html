@@ -1,0 +1,341 @@
+<include file="Public/header" />
+
+		<script>
+			var root = "__ROOT__";
+		</script>
+
+<ol class="breadcrumb">
+	<li><a href="__URL__/index">节目管理</a></li>
+	<li class="active">栏目组列表</li>
+</ol>
+
+<style type="text/css">
+	#write_check_message{display:none;border:0px #FF0000 solid;overflow:hidden;}/*附加消息输入框，默认隐藏*/
+</style>
+
+<div id="pluginsInfo" class="row well">
+	<div class="col-md-10">
+		<form class="form-inline edit-form" role="form" method="get" action="__SELF__">
+			<table class="table">
+				<tbody>
+					<tr>
+                    
+						<td class="text-right" width="90"><b>所属节目：</b></td>
+						<td>
+							{$program.program_name}
+						</td>
+                        <td class="text-right" width="90"><b>审核状态：</b></td>
+						<td width="100">
+                            <select class="form-control input-sm" name="checked" id="checked">
+                                <in name="checked" value="ds,ys,bh">
+								<option value="">全部</option>
+                                <option value="ds" <eq name="checked" value="ds">selected</eq> >待审核</option>
+                                <option value="ys" <eq name="checked" value="ys">selected</eq> >已审核</option>
+                                <option value="bh" <eq name="checked" value="bh">selected</eq> >已驳回</option>
+                                <else/>
+								<option value="" selected >全部</option>
+                                <option value="ds" >待审核</option>
+                                <option value="ys" >已审核</option>
+                                <option value="bh" >已驳回</option>                                
+                                </in>
+                             </select>
+						</td>
+						<td class="text-right" width="90"><b>模板：</b></td>
+						<td>
+							<volist name="tpls" id="tpl" key="k">
+								<if condition="$k eq 1">
+									{$tpl}
+								<else/>
+									<b>，</b>{$tpl}
+								</if>
+							</volist>
+						</td>
+						<td class="text-right" width="90"><b>栏目组名称：</b></td>
+						<td>
+							<input type="text" class="form-control input-sm" name="grpname" value="{$Think.get.grpname}" style="width:182px;">
+							<button type="submit" class="btn btn-info btn-sm">搜索</button>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</form>
+	</div>
+	<div class="col-md-2 text-right">
+		<table class="table">
+			<tbody>
+				<tr>
+					<td style="border:0;">
+						<a href="__URL__/addGroup/pid/{$program.program_classid}" type="button" class="btn btn-info btn-sm" id="addNewGroup">新建栏目组</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<div class="data-list">
+	<table class="table table-hover list-tbl">
+		<thead>
+			<tr>
+				<th width="36"><input type="checkbox" class="select-all" title="全选/全不选"></th>
+				<th width="60">#ID</th>
+                <th width="60">状态</th>
+				<th>栏目组名称</th>
+				<th>描述</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody>
+			<volist name="groups" id="vo">
+			<tr>
+				<td><input type="checkbox" value="{$vo.dirgroup_classid}"></td>
+				<td>{$vo.id}</td>
+                <td checked="{$vo.checked}">
+                    <switch name="vo.checked">
+                        <case value="-1"><span class="check-bh">已驳回</span></case>
+                        <case value="1"><span class="check-ys">已审核</span></case>
+                        <default /><span class="check-ds">待审核</span>
+                    </switch>
+                </td>
+				<td><a href="__URL__/columns/pid/{$program.program_classid}/id/{$vo.dirgroup_classid}" title="管理栏目">{$vo.dirgroup_name}</a></td>
+				<td>{$vo.dirgroup_note}</td>
+				<td>
+					<php>	if (checkAccess('Users', 'editUser')) {	</php>
+					<a class="oper edit" href="__URL__/editGroup/pid/{$program.program_classid}/id/{$vo.dirgroup_classid}" title="编辑"><i class="icon-pencil"></i></a>
+					<php>	}	</php>
+					<a class="oper edit" href="__URL__/columns/pid/{$program.program_classid}/id/{$vo.dirgroup_classid}" title="管理栏目"><i class="icon-sitemap"></i></a>
+					<php>	if (checkAccess('Users', 'delUser')) {	</php>
+					<a class="oper del" href="javascript:void(0);" data-pid="{$program.program_classid}" data-id="{$vo.dirgroup_classid}" data-url="__URL__/delGroup/pid/{$program.program_classid}/id/{$vo.dirgroup_classid}" title="删除"><i class="icon-trash"></i></a>
+					<php>	}	</php>
+				</td>
+			</tr>
+			</volist>
+			<tr>
+            <td colspan="10">
+                <div class="form-group" id="write_check_message">
+                    <label class="col-sm-1 control-label text-right" for="Num">附加消息</label>
+                    <div class="col-sm-11">
+                        <textarea class="form-control" rows="3" name="checkMessage" id="checkMessage"></textarea>
+                        <span id="checkMessage-error" class="help-block"></span>
+                    </div>
+                </div>           
+            </td>
+            </tr>
+		</tbody>
+	</table>
+	<table class="table">
+		<tr>
+			<td>
+				<input type="checkbox" class="select-all" title="全选/全不选">
+				<button type="button" class="btn btn-default btn-sm multi-del hide" style="margin-left:30px;">批量删除</button>
+
+				<button type="button" class="btn btn-default btn-sm multi-check_pass" style="margin-left:10px;">审核通过</button>
+                <button type="button" class="btn btn-default btn-sm multi-check_not_pass" style="margin-left:10px;">取消审核</button>
+                <button type="button" class="btn btn-default btn-sm multi-check_rebut" style="margin-left:10px;">驳回</button>
+			</td>
+			<td class="page-box text-right" width="60%">{$page}</td>
+		</tr>
+	</table>
+</div>
+
+<include file="Public/jsLoader" />
+<script type="text/javascript">
+$(function($){
+	
+	var programClassId = $.trim('{$Think.get.id|default=""}');
+	var treeId = $.trim('{$Think.get.treeId|default=""}');
+	
+	//if (treeId == '' && programClassId != '') {
+	if (programClassId != '') {
+		var programTrees = window.parent.programTree,
+			nodeObj = programTrees.getNodeByParam("unid", programClassId, null);
+		
+		//programTrees.expandNode(nodeObj, true, false, true);
+		$('#programs', window.parent.frame_left_menu.document).find('a').removeClass('curSelectedNode');
+		$("#" + nodeObj.tId + "_a", window.parent.frame_left_menu.document).addClass('curSelectedNode');
+	}
+	
+	/* $('.del').click(function() {
+		var targetUrl = $.trim($(this).attr('data-url'));
+		$.kw.confirm('确认要删除该栏目组吗？', function() {
+			window.location.href = targetUrl;
+		});
+	}); */
+	
+	$('.del').click(function() {
+		var program_clazzid = $.trim($(this).attr('data-pid')),
+			clazzid = $.trim($(this).attr('data-id'));
+		
+		if (clazzid == '' || program_clazzid == '') {
+			$.kw.alert('页面数据错误，请刷新页面重试……');
+			return false;
+		}
+		
+		$.kw.confirm('确认要删除该栏目组吗？', function() {
+			$.ajax({
+				type:'POST',
+				url:'__URL__/delGroup',
+				data:{'id' : clazzid, 'pid' : program_clazzid},
+				async:false,
+				dataType:'json',
+				beforeSend:function() {
+					
+				},
+				success:function(re) {
+					if (re.stat*1) {
+						var programTrees = window.parent.programTree;
+						var nodeObj = programTrees.getNodeByParam("unid", clazzid, null);
+							
+						programTrees.removeNode(nodeObj);
+						
+						$.kw.alert('操作成功！', '', function() {
+							window.location.reload();
+						});
+					} else {
+						$.kw.alert(re.msg);
+					}
+				},
+				error:function() {
+					$.kw.alert('操作失败！请重试……');
+				}
+			});
+		});
+	});
+	
+	
+	
+	//批量审核通过	
+	$('.table .multi-check_pass').click(function(){
+		var aids = '',
+			requestURL = params = null;
+			checkedItems = $('.list-tbl').first().find('tbody').first().find(':checkbox:checked');
+			$.each(checkedItems, function(i, o){
+				aids += $(o).val() + ';';
+			});
+		
+			requestURL = '__URL__/multiCheckGroup';
+			params = {aids : aids,checkedType:'ys'};
+		$("#write_check_message").css({"display":"none"});
+		if (checkedItems.size() > 0) {
+			$.kw.confirm('确认要通过审核吗？', function() {
+				$.ajax({
+					url:requestURL,
+					type:'post',
+					async:false,
+					data:params,
+					dataType:'json',
+					success:function(re){
+						var d = re.msg+"<br>"+re.debug;
+						if (re.stat*1) {
+							//$.kw.alert(re.msg+"<br>"+re.debug);
+							$.kw.alert(d, '', function() {
+								window.location.reload();
+							});
+						} else {
+							$.kw.alert(d);
+						}
+					},
+					error:function(){
+						$.kw.alert('由于网络异常导致操作失败，请刷新页面重试....');
+					}
+				});
+			});
+		} else {
+			$.kw.alert('至少选择一条记录！');
+		}
+	});	
+	
+	//批量取消审核	
+	$('.table .multi-check_not_pass').click(function(){
+		var aids = '',
+			requestURL = params = null;
+			checkedItems = $('.list-tbl').first().find('tbody').first().find(':checkbox:checked');
+			$.each(checkedItems, function(i, o){
+				aids += $(o).val() + ';';
+			});
+			
+			requestURL = '__URL__/multiCheckGroup';
+			params = {aids : aids,checkedType:'ds'};
+		$("#write_check_message").css({"display":"none"});		
+		if (checkedItems.size() > 0) {
+			$.kw.confirm('确认要通过审核吗？', function() {
+				$.ajax({
+					url:requestURL,
+					type:'post',
+					async:false,
+					data:params,
+					dataType:'json',
+					success:function(re){
+						if (re.stat*1) {
+							$.kw.alert('操作成功！', '', function() {
+								window.location.reload();
+							});
+						} else {
+							$.kw.alert(re.msg);
+						}
+					},
+					error:function(){
+						$.kw.alert('由于网络异常导致操作失败，请刷新页面重试....');
+					}
+				});
+			});
+		} else {
+			$.kw.alert('至少选择一条记录！');
+		}
+	});	
+
+	//批量驳回	
+	$('.table .multi-check_rebut').click(function(){
+		var aids = '',
+			requestURL = params = null;
+			checkedItems = $('.list-tbl').first().find('tbody').first().find(':checkbox:checked');
+			$.each(checkedItems, function(i, o){
+				aids += $(o).val() + ';';
+			});
+			
+			var checkMessageValue = $("#checkMessage").val();
+			
+			requestURL = '__URL__/multiCheckGroup';
+			params = {aids : aids,checkedType:'bh',checkMessage:checkMessageValue};
+			
+		if (checkedItems.size() > 0) {
+			$("#write_check_message").css("display","block");
+			
+			//alert(checkMessage);
+			if (checkMessageValue == ""){
+				$("#write_check_message").addClass("has-error");
+				$("#checkMessage-error").html("驳回时，附加消息必须填写，长度为1至255个字符，超长部分将被截断");
+				//alert("请输入附加消息");
+				return;
+			}
+			$.kw.confirm('确认要通过审核吗？', function() {
+				$.ajax({
+					url:requestURL,
+					type:'post',
+					async:false,
+					data:params,
+					dataType:'json',
+					success:function(re){
+						if (re.stat*1) {
+							$.kw.alert('操作成功！', '', function() {
+								window.location.reload();
+							});
+						} else {
+							$.kw.alert(re.msg);
+						}
+					},
+					error:function(){
+						$.kw.alert('由于网络异常导致操作失败，请刷新页面重试....');
+					}
+				});
+			});
+		} else {
+			$.kw.alert('至少选择一条记录！');
+		}
+	});		
+	
+	
+	
+});
+</script>
+<include file="Public/footer" />

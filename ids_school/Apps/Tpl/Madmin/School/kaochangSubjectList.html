@@ -1,0 +1,90 @@
+<!--zjh-->
+<include file="Public/header" />
+
+<ol class="breadcrumb">
+	<li><a href="{:U('School/kaochangSubjectList')}">考试科目管理</a></li>
+	<li class="active">考试科目列表</li>
+</ol>
+
+<div id="" class="row well">
+	<div class="col-md-9">
+
+	</div>
+	<div class="col-md-12 text-right">
+		<table class="table">
+			<tbody>
+				<tr>
+					<td style="border:0;">
+						<a href="{:U('School/addKaochangSubject')}" type="button" class="btn btn-info btn-sm" id="addNew">添加考试科目</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<div class="data-list">
+	<table class="table table-hover list-tbl">
+		<thead>
+			<tr>
+				<!-- <th width="36"><input type="checkbox" class="select-all" title="全选/全不选"></th> -->
+				<th width="60">#ID</th>
+				<th width="200">科目名称</th>
+                <th>监考教师</th>
+                <th>开始时间</th>
+                <th>结束时间</th>
+                <th>应到人数</th>
+                <th>实到人数</th>
+                <th></th>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody>
+
+
+            
+        
+			<volist name="datas" id="vo">
+			<tr>
+				<!-- <td><input type="checkbox"></td> -->
+				<td width='60'>{$vo.id}</td>
+				<td>{$vo.name}</td>
+                <td>{$vo.teachers}</td>
+				<td>{$vo.starttime}</td>
+                <td>{$vo.endtime}</td>
+                <td>{$vo.numbers}</td>
+                <td>{$vo.realNumbers}</td>
+                <td></td>
+				<td>
+					<a class="oper edit" href="__URL__/editKaochangSubject/id/{$vo.id}" title="编辑"><i class="icon-pencil"></i></a>
+					<a class="oper del" href="javascript:void(0);" data-url="__URL__/delKaochangSubject/id/{$vo.id}" title="删除"><i class="icon-trash"></i></a>
+				</td>
+			</tr>
+			</volist>
+		</tbody>
+	</table>
+	<table class="table">
+		<tr>
+			<td>
+				<!-- <input type="checkbox" class="select-all" title="全选/全不选">
+				<button type="button" class="btn btn-default btn-sm multi-del" style="margin-left:30px;">批量删除</button> -->
+				&nbsp;
+			</td>
+			<td class="page-box text-right" width="80%">{$page}</td>
+		</tr>
+	</table>
+</div>
+
+<include file="Public/jsLoader" />
+<script type="text/javascript">
+$(function($){
+	
+	$('.del').click(function() {
+		var targetUrl = $.trim($(this).attr('data-url'));
+		$.kw.confirm('确认要删除该记录吗？', function() {
+			window.location.href = targetUrl;
+		});
+	});
+});
+</script>
+<include file="Public/footer" />

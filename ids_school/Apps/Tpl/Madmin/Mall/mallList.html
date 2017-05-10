@@ -1,0 +1,92 @@
+<!--zjh-->
+<include file="Public/header" />
+
+<ol class="breadcrumb">
+	<li><a href="">商场管理</a></li>
+	<li class="active">商场列表</li>
+</ol>
+
+<div id="" class="row well">
+	<div class="col-md-9">
+
+	</div>
+	<div class="col-md-12 text-right">
+		<table class="table">
+			<tbody>
+				<tr>
+					<td style="border:0;">
+                    <span style="float:left;">当前默认管理“胜利桥东美特好”，点击切换。</span>
+						<a href="__URL__/addMall/" type="button" class="btn btn-info btn-sm" id="addNewStore">添加商场</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<div class="data-list">
+	<table class="table table-hover list-tbl">
+		<thead>
+			<tr>
+				<!-- <th width="36"><input type="checkbox" class="select-all" title="全选/全不选"></th> -->
+				<th>#ID</th>
+				<th>商场全称</th>
+				<th>商场简写</th>
+				<th>LOGO</th>
+                
+				<th>地址</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody>
+
+
+            
+        
+			<volist name="malls" id="vo">
+			<tr>
+				<!-- <td><input type="checkbox"></td> -->
+				<td>{$vo.id}</td>
+				<td>{$vo.mallName}</td>
+				<td>{$vo.mallShortName|mb_substr=###,0,5,'utf-8'}</td>
+				<td><notempty name="logo"><img src="{$vo.logo}" height="20"></notempty>{$vo.logo}</td>
+                
+				<td>{$vo.address}</td>
+				<td>
+                	<a class="oper" href="__URL__/designLayout/id/{$vo.id}" data-url="__URL__/designLayout/id/{$vo.id}" title="规划商场铺位布局"><button type="button" class="btn btn-primary btn-xs">规划铺位</button></a>
+					<a class="oper edit" href="__URL__/editMall/id/{$vo.id}" title="编辑"><i class="icon-pencil"></i></a>
+					<eq name="Think.get.sc" value="1">
+					<a class="oper edit" href="__URL__/storeGallery/id/{$vo.id}" title="管理形象照片"><i class="icon-th"></i></a>
+					<a class="oper edit" href="__URL__/storeWeixin/id/{$vo.id}" title="关联微信"><i class="icon-comments"></i></a>
+					</eq>
+					<a class="oper del" href="javascript:void(0);" data-url="__URL__/delMall/id/{$vo.id}" title="删除"><i class="icon-trash"></i></a>
+				</td>
+			</tr>
+			</volist>
+		</tbody>
+	</table>
+	<table class="table">
+		<tr>
+			<td>
+				<!-- <input type="checkbox" class="select-all" title="全选/全不选">
+				<button type="button" class="btn btn-default btn-sm multi-del" style="margin-left:30px;">批量删除</button> -->
+				&nbsp;
+			</td>
+			<td class="page-box text-right" width="80%">{$page}</td>
+		</tr>
+	</table>
+</div>
+
+<include file="Public/jsLoader" />
+<script type="text/javascript">
+$(function($){
+	
+	$('.del').click(function() {
+		var targetUrl = $.trim($(this).attr('data-url'));
+		$.kw.confirm('确认要删除该商场吗？', function() {
+			window.location.href = targetUrl;
+		});
+	});
+});
+</script>
+<include file="Public/footer" />

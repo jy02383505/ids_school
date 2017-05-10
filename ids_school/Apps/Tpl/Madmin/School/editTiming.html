@@ -1,0 +1,186 @@
+<include file="Public/header" />
+<script src="__PUBLIC__/script/jquery/jquery.min.js"></script>
+<script src="__PUBLIC__/bootstrap/bootstrap.min.js"></script>
+<link rel="stylesheet" href="__PUBLIC__/bootstrap/datetimepicker/bootstrap-datetimepicker.min.css">
+<script src="__PUBLIC__/bootstrap/datetimepicker/bootstrap-datetimepicker.min.js"></script>
+<script src="__PUBLIC__/bootstrap/datetimepicker/bootstrap-datetimepicker.zh-CN.js"></script>
+<ol class="breadcrumb">
+	<li><a href="">日常管理</a></li>
+	<li><a href="">倒计时信息管理</a></li>
+	<li class="active">
+        <switch name="ACTION_NAME" >
+        <case value="addActivities" break="1">添加</case>
+        <case value="editActivities">修改</case>
+        <default />添加
+        </switch>
+        倒计时信息
+    </li>
+</ol>
+		<form id="editForm" class="form-horizontal" role="form" method="post" action="__SELF__">
+			<div class="form-group">
+		      <label class="col-sm-2 control-label" for="banjiId"><span class="required">*</span>所属班级</label>
+		      <div class="col-sm-2">
+			  <select class="form-control input-sm" name="banjiId" id="banjiId">
+				<option value="">请选择</option>
+				<volist name="banji" id="vo">
+					<eq name="vo.id" value="$actiInfo.banjiId">
+						<option value="{$vo.id}" selected>{$vo.name}</option>
+					<else/>
+						<option value="{$vo.id}">{$vo.name}</option>
+					</eq>
+				</volist>
+			  </select>
+		      </div>
+	       </div>
+            <div class="form-group" id="addEndType">
+				<label class="col-sm-2 control-label">计时类型</label>
+				<div class="col-sm-3">
+                    <empty name="actiInfo.beginTime">
+					<label class="radio-inline">
+						<input type="radio" name="addEndType" id="" value="manu" /> 正计时
+					</label>
+					<label class="radio-inline">
+						<input type="radio" name="addEndType" id="" value="auto" checked> 倒计时
+					</label>
+                    <else/>
+                        <label class="radio-inline">
+						<input type="radio" name="addEndType" id="" value="manu" checked> 正计时
+					   </label>
+					   <label class="radio-inline">
+						<input type="radio" name="addEndType" id="" value="auto" /> 倒计时
+					   </label>
+                    </empty>
+				</div>
+                <input type="hidden" class="addType" name="addType" value="auto"/>
+			</div>
+            <empty name="actiInfo.beginTime">
+            <div class="form-group manual-work" style="display:none">
+            <else/>
+			<div class="form-group manual-work">
+            </empty>
+				<label class="col-sm-2 control-label" for="storeName">开始时间</label>
+		        <div class="col-sm-3">
+				    <input class="form-control form_datetime1" name="starttime" id="starttime" type="text" style="width:160px;" value='<php>if($actiInfo["beginTime"])echo date("Y-m-d H:i",$actiInfo["beginTime"]);</php>'>
+				    <script type="text/javascript">
+                     $(".form_datetime1").datetimepicker({format: 'yyyy-mm-dd hh:ii', language: 'zh-CN', autoclose: true});
+                    </script>
+                </div>
+			</div>
+            <empty name="actiInfo.beginTime">
+            <div class="form-group auto-work">
+            <else/>
+			<div class="form-group auto-work" style="display:none">
+            </empty>
+			
+				<label class="col-sm-2 control-label" for="storeName">截止时间</label>
+		        <div class="col-sm-3">
+		          <input class="form-control form_datetime2" name="endtime" id="endtime" type="text" style="width:160px;" value='<php>if($actiInfo["endTime"])echo date("Y-m-d H:i",$actiInfo["endTime"]);</php>'>
+				    <script type="text/javascript">
+                    $(".form_datetime2").datetimepicker({format: 'yyyy-mm-dd hh:ii', language: 'zh-CN', autoclose: true});
+                    </script>
+		        </div>
+			</div>
+            <div class="form-group">
+		      <label class="col-sm-2 control-label" for="storeName">提示文字</label>
+		      <div class="col-sm-3">
+			     <input class="form-control input-sm" type="text" name="modelNum" id="modelNum" value="{$actiInfo.prompt}">
+		      </div>
+	       </div>
+	       <div class="form-group">
+		      <label class="col-sm-2 control-label" for="">&nbsp;</label>
+		      <div class="col-sm-4">
+			  <input type="hidden" name="store_id" value="{$store.Id}">
+			  <input type="hidden" name="classid" value="{$unid}">
+			  <input type="hidden" name="spottype" value="shop">
+			  <button type="submit" class="btn btn-info btn-sm">保存更改</button>&nbsp;&nbsp;
+			  <button type="reset" class="btn btn-default btn-sm">取消</button>
+		      </div>
+	       </div>
+		</form>
+
+<include file="Public/jsLoader" />
+<script type="text/javascript" src="__PUBLIC__/script/jquery/jquery.validate.min.js"></script>
+<script type="text/javascript">
+$(function($) {
+
+	$('button[type="reset"]').click(function(){
+		window.location.href = '__URL__/timingList';
+	});
+	
+	$('#editForm').validate({
+		errorElement : 'span',
+		errorClass : 'help-block',
+		focusInvalid : true,  
+        rules : {  
+        	banjiId : {  
+                required : true,
+            },
+        	starttime : {  
+				required : true,
+            },
+        	endtime : {  
+				required : true,
+            },
+			modelNum : {
+				required : true,
+			},
+        },  
+        messages : {
+        	banjiId : {  
+                required : "所属班级必填.",
+            },
+        	starttime : {  
+                required : "开始时间必填.",
+            },
+        	endtime : {  
+                required : "结束时间必填.",
+            },
+        	modelNum : {  
+                required : "提示文字必填.",
+            },
+        },  
+
+        highlight : function(element) {  
+            $(element).closest('.form-group').addClass('has-error');  
+        },  
+
+        success : function(label) {  
+            label.closest('.form-group').removeClass('has-error');  
+            label.remove();  
+        },  
+
+        errorPlacement : function(error, element) {  
+            element.parent('div').append(error);  
+        },  
+		submitHandler: function(form) {
+			form.submit();
+		}
+	});
+
+	
+	$('#addEndType ins').click(function() {
+		var type = $(this).siblings(':radio[name="addEndType"]').val();
+		switchAddType(type);
+	});
+	
+	$('#addEndType label.radio-inline').click(function() {
+		var type = $(this).find(':radio[name="addEndType"]').first().val();
+		switchAddType(type);
+	});
+	
+function switchAddType(type){
+        if(type=='auto'){
+            $('.manual-work').hide();
+            $('.auto-work').show();
+            $('#starttime').rules('remove');
+            $('.addType').val('auto');
+        }else{
+            $('.manual-work').show();
+            $('.auto-work').hide();
+            $('#endtime').rules('remove');
+            $('.addType').val('manu');
+        }
+    }
+});
+</script>
+<include file="Public/footer" />

@@ -1,0 +1,120 @@
+<!--zjh-->
+<include file="Public/header" />
+
+<ol class="breadcrumb">
+	<li><a href="{:U('School/votesList')}">投票管理</a></li>
+	<li class="active">投票结果</li>
+</ol>
+<script language="javascript" type="text/javascript" src="__PUBLIC__/My97DatePicker/WdatePicker.js"></script>
+
+<div id="" class="row well ">
+	<div class="col-md-9 ">
+		<form class="form-inline edit-form" role="form" method="get" action="">
+			<table class="table">
+				<tbody>
+					<tr>
+						<td >
+                        	投票名称：{$datas_vote['name']}<br>
+							投票内容：{$datas_vote['content']}<br>
+                            总票数：{$datas_vote['allnumber']}<br>
+                            已投票：{$datas_vote['hadSendNumber']}<br>
+                        </td>
+                        <td width="100">
+                        
+                        </td>
+					</tr>
+				</tbody>
+			</table>
+		</form>
+	</div>
+	<div class="col-md-3 text-right">
+		<table class="table">
+			<tbody>
+				<tr>
+					<td style="border:0;text-align:right;">
+						<a href="{:U('School/votesList')}" type="button" class="btn btn-default btn-sm" onclick="javascript:goback();">返回</a>
+                        
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<div class="data-list">
+	<div style="height:30px;line-height:30px;top:0px;background-color:#f3f3f3;font-size:14px;padding:0 20px 0 10px;">投票结果统计：</div>
+	<table class="table table-hover list-tbl">
+		<thead>
+			<tr>
+				<th width="100">选项</th>
+				<th width="60">票数</th>
+ 				<th width="100">比例</th>               
+				<th></th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			<volist name="datas_opt" id="vo">
+			<tr>
+				<td>{$vo.content}</td>
+				<td>{$vo.num}</td> 
+				<td>{$vo.bili}%</td>
+				<td></td>
+                <td></td>
+			</tr>
+			</volist>
+		</tbody>
+	</table>
+
+    <div style="height:30px;line-height:30px;top:0px;background-color:#f3f3f3;font-size:14px;padding:0 20px 0 10px;margin:1px;">投票结果详细：</div>
+	<table class="table table-hover list-tbl">
+		<thead>
+			<tr>
+            	<th width="100" class="hide">学生ID</th>
+				<th width="100">学生姓名</th>
+				<th width="200">投票结果</th>
+ 				<th width="100"></th>               
+				<th></th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			<volist name="datas_result" id="vo">
+			<tr>
+            	<td class="hide">{$vo.studentId}</td>
+				<td>{$vo.stu_name}</td>
+				<td>{$vo.option}</td> 
+				<td></td>
+				<td></td>
+                <td></td>
+			</tr>
+			</volist>
+		</tbody>
+	</table>
+    
+	<table class="table">
+		<tr>
+			<td>
+				<!-- <input type="checkbox" class="select-all" title="全选/全不选">
+				<button type="button" class="btn btn-default btn-sm multi-del" style="margin-left:30px;">批量删除</button> -->
+				&nbsp;
+			</td>
+			<td class="page-box text-right" width="80%">{$page}</td>
+		</tr>
+	</table>    
+       
+</div>
+
+<include file="Public/jsLoader" />
+<script type="text/javascript">
+$(function($){
+	
+	$('.del').click(function() {
+		var targetUrl = $.trim($(this).attr('data-url'));
+		$.kw.confirm('确认要删除该记录吗？', function() {
+			window.location.href = targetUrl;
+		});
+	});
+});
+</script>
+<include file="Public/footer" />

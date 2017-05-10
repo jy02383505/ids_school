@@ -1,0 +1,96 @@
+
+<!-------学生模态对话框 一个班级的---------->
+<div class="modal fade" id="studentOneBanjiModal" draggable='true' style="margin-top:200px;">
+    <div class="modal-dialog modal-lg">
+    	<div class="modal-content">
+    		<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">学生选择 {$banjiName}</h4>
+			</div>
+            
+			<div class="modal-body" >
+                <div class="col-sm-12  pre-scrollable" style="clear:both;height:300px;">
+					<div class="row "><br></div>
+                    
+                    
+                    <div id="modal_student_list">
+                    	<?php
+                            $studentIdArray = array();
+                           // $studentIdArray = explode(',',$datas['userId']);
+                            $studentIdArray = explode(',',$strStudentsId);
+                            //学生选择对话框
+                            //学生按班级分开显示，当学生可复选时，班级名称前显示复选框供快捷全选时用，单选时不显示复选框，因为不会让全选
+                    	?>
+                      
+                        
+                        
+
+                            <div class="form-group">
+                                <volist name="students" id="vo">
+                                    <?php
+                                    	           	
+                                        if ( in_array($vo['id'],$studentIdArray) )
+                                        {
+                                            $ck="checked='checked'";
+                                        }else{
+                                            $ck="";
+                                        }
+                                    ?>
+                                    <if condition="$vo['banjiId'] == $voo['id'] ">
+                                        <div class="col-md-2">
+                                            <label><input type="<eq name='studentModalSelType' value='radio'>radio<else/>checkbox</eq>" value="{$vo.id}"  name="studentIdStr[]" id="chk_student_{$vo.id}" tName='{$vo.name}'  <?php echo $ck;?> class='chk_student' > {$vo.name}</label>
+                                        </div>
+                                    </if>
+                                </volist>
+                            </div>
+           
+              
+                        
+					</div>
+				</div>
+                <div style="clear:both;width:100%;height:1px;"></div>
+			</div>
+			<div class="modal-footer">
+            	<div class="col-sm-4 " style="text-align:left;" id="student_dialog_message">{$student_dialog_message}</div>
+                <div class="col-md-6 ">
+                    <if condition='$studentModalSelType eq "radio"'>
+                    <else/>
+                        <span class="col-md-2"><a class="select_all_student" href="javascript:void(0);">全选</a></span>
+                        <span class="col-md-2"><a class="select_opposite_student" href="javascript:void(0);">反选</a></span>
+                        <span class="col-md-2"><a class="cancel_all_student" href="javascript:void(0);">全不选</a></span>
+                    </if>
+                </div>
+            	<div class="col-sm-2">
+                	<button type="button" class="btn btn-primary" data-dismiss="modal"　id="btn_save_modal">确定</button>
+            	</div>
+				
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-------学生模态对话框---------->
+
+
+<script language="javascript">
+$(document).ready(function() {
+	// 学生：全选
+    $('.select_all_student').click(function(){
+        $('.chk_student').iCheck('check');
+    })
+
+    // 学生：全不选
+    $('.cancel_all_student').click(function(){
+        $('.chk_student').iCheck('uncheck');
+    })
+    
+    // 学生：反选
+    $('.select_opposite_student').click(function(){
+        $('.chk_student').each(function(i){
+            var ck = $(this).prop('checked') ? 'uncheck' : 'check';
+            $(this).iCheck(ck);
+        })
+    })
+// 
+    
+});
+</script>

@@ -1,0 +1,385 @@
+<include file="Public/header" />
+<link rel="stylesheet" href="__PUBLIC__/script/uploadify/uploadify.css">
+<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+<script src="__PUBLIC__/script/jquery/jquery.min.js"></script>
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="__PUBLIC__/bootstrap/bootstrap.min.js"></script>
+<script language="javascript" type="text/javascript" src="__PUBLIC__/My97DatePicker/WdatePicker.js"></script>
+
+<style>
+#storeVideoUp .btn-default, #storeVideoUp .btn-default:hover, #storeVideoUp .btn-default:active, #storeVideoUp .btn-default:visited{background-color:#fff;border-color:#ccc;padding:3px 10px 4px;font-size:14px;outline:0;}
+</style>
+
+<script>
+	$('.form_datetime1').datetimepicker({
+        language:  'zh-CN',
+        weekStart: 1,
+        todayBtn:  1,
+		autoclose: 1,
+		todayHighlight: 1,
+		startView: 1,
+		minView: 0,
+		maxView: 1,
+		forceParse: 0
+    });
+	$('.form_datetime2').datetimepicker({
+        language:  'zh-CN',
+        weekStart: 1,
+        todayBtn:  1,
+		autoclose: 1,
+		todayHighlight: 1,
+		startView: 1,
+		minView: 0,
+		maxView: 1,
+		forceParse: 0
+    });
+</script>
+
+<ol class="breadcrumb">
+	<li><a href="{:U('School/homeworkList')}">作业管理</a></li>
+	<li class="active">
+        <switch name="ACTION_NAME" >
+        <case value="addHomework" break="1">添加</case>
+        <case value="editHomework">修改</case>
+        <default />添加
+        </switch>
+        作业
+    </li>
+</ol>
+<form id="editForm" class="form-horizontal" role="form" method="post" action="__SELF__">
+
+
+    
+    
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="description">作业简介</label>
+		<div class="col-sm-3">
+			
+            <textarea class="form-control" rows="3" name="description">{$datas.description}</textarea>
+		</div>
+	</div>
+    
+
+	<div class="form-group" >
+          <label class="col-sm-2 control-label">时间范围</label>
+          <div class="col-sm-1">
+                <input type="text" class="form-control input-sm" name="starttime" value="{$datas.starttime}" style="width:100px;" onClick="WdatePicker()">
+          </div>
+          <label class="col-sm-1 control-label" style="width:20px;margin-left:0px;padding-left:0px;">至</label>
+          <div class="col-sm-1" >
+                <input type="text" class="form-control input-sm" name="endtime" value="{$datas.endtime}" style="width:100px;" onClick="WdatePicker()">
+          </div>
+	</div>
+
+  	<div class="form-group " style="margin-bottom:0px;">
+		<label class="col-sm-2 control-label" for="banjiId">班级</label>
+        <div class="col-sm-10  " >
+			<style>
+                #banji_list li{margin-right:10px;}
+            </style>        
+            <ul class="list-group" id="banji_list">
+                <li type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#banjiModal">选择班级</li>
+                <volist name="banji_list" id="vo">
+                <li class="btn btn-warning btn-sm"  type="button" bid="{$vo.id}">{$vo.name}<span class="hide" ><i class="hide glyphicon glyphicon-remove pull-right btn-removefromlist" bid="{$vo.id}"></i></span></li>
+                </volist>
+            </ul>
+        </div>
+	</div> 
+    
+  	<div class="form-group " style="margin-bottom:0px;">
+		<label class="col-sm-2 control-label" for="subjectId">科目</label>
+        <div class="col-sm-10 " >
+			<style>
+                #subject_list li{margin-right:10px;}
+            </style>        
+            <ul class="list-group" id="subject_list">
+                <li type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#subjectModal">选择科目</li>
+                <volist name="subject_list" id="vo">
+                <li class="btn btn-warning btn-sm"  type="button" bid="{$vo.id}">{$vo.name}<span class="hide" ><i class="hide glyphicon glyphicon-remove pull-right btn-removefromlist" bid="{$vo.id}"></i></span></li>
+                </volist>
+            </ul>
+        </div>
+	</div>
+    
+  	<div class="form-group hide" style="margin-bottom:0px;">
+		<label class="col-sm-2 control-label" for="banjiId">教师</label>
+        <div class="col-sm-10  " >
+			<style>
+                #teacher_list li{margin-right:10px;}
+				#grade_list li{margin-right:10px;}
+            </style>        
+            <ul class="list-group" id="teacher_list">
+                <li type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#teacherModal">选择教师</li>
+                <span id="teacher_list_v">
+                <volist name="teacher_list" id="vo">
+                <li class="btn btn-warning btn-sm"  type="button" bid="{$vo.id}">{$vo.name}<span class="hide" ><i class="hide glyphicon glyphicon-remove pull-right btn-removefromlist" bid="{$vo.id}"></i></span></li>
+                </volist>
+                </span>
+            </ul>
+        </div>
+	</div> 
+
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="">&nbsp;</label>
+		<div class="col-sm-4">
+			<input type="hidden" name="id" value="{$datas.id}">
+			<button type="submit" class="btn btn-info btn-sm">保存更改</button>&nbsp;&nbsp;
+			<button type="reset" class="btn btn-default btn-sm">取消</button>
+		</div>
+	</div>
+    
+<!--zjh add start 模态对话框-->
+<include file="Public/schoolKaochangModal" />
+<include file="Public/schoolTeacherModal" />
+<include file="Public/schoolSubjectModal" />
+<include file="Public/schoolGradeModal" />
+<include file="Public/schoolBanjiModal" />
+<!--zjh add end 模态对话框-->
+</form>
+
+
+<!--zjh add start 模态对话框-->
+<include file="Public/resourceBox" />
+<include file="Public/systemLayoutBox" />
+<!--zjh add end 模态对话框-->
+
+
+<include file="Public/jsLoader" />
+<script type="text/javascript" src="__PUBLIC__/script/uploadify/jquery.uploadify.js"></script>
+<script type="text/javascript" charset="utf-8" src="__PUBLIC__/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="__PUBLIC__/ueditor/ueditor.all.js"> </script>
+<script type="text/javascript" charset="utf-8" src="__PUBLIC__/ueditor/lang/zh-cn/zh-cn.js"></script>
+<script type="text/javascript">
+$(function($) {
+	
+
+});
+</script>
+
+
+<script type="text/javascript" src="__PUBLIC__/script/jquery/jquery.validate.min.js"></script>
+<script type="text/javascript">
+$(function($) {
+	$('button[type="reset"]').click(function(){
+		window.location.href = '__URL__/homeworkList';
+	});
+	
+	$('#editForm').validate({
+		errorElement : 'span',
+		errorClass : 'help-block',
+		focusInvalid : true,  
+        rules : {  
+        	name : {  
+                required : true,
+            },
+        	starttime : {  
+				required : true,
+            },
+        	endtime : {  
+				required : true,
+            },
+			classid : {
+				required : true,
+			},
+			description : {
+				required : true,
+			},
+        },  
+        messages : {
+        	name : {  
+                required : "标题必填.",
+            },
+        	starttime : {  
+                required : "开始时间必填.",
+            },
+        	endtime : {  
+                required : "结束时间必填.",
+            },
+        	classid : {  
+                required : "分类必须选择.",
+            },
+        	description : {  
+                required : "内容必填.",
+            },
+        },  
+
+        highlight : function(element) {  
+            $(element).closest('.form-group').addClass('has-error');  
+        },  
+
+        success : function(label) {  
+            label.closest('.form-group').removeClass('has-error');  
+            label.remove();  
+        },  
+
+        errorPlacement : function(error, element) {  
+            element.parent('div').append(error);  
+        },  
+		submitHandler: function(form) {
+			var banji_len = $("input[name='banjiIdStr[]']:checked").length;
+			if (!banji_len){
+				alert("请选择班级");	
+				return;
+			}
+
+			
+			var subject_len = $("input[name='subjectIdStr[]']:checked").length;
+			if (!subject_len){
+				alert("请选择科目");	
+				return;
+			}
+			
+		//	var teacher_len = $("input[name='teacherIdStr[]']:checked").length;
+		//	if (!teacher_len){
+		//		alert("请选择教师");	
+		//		return;
+		//	}
+			
+			form.submit();
+		}
+	});
+});
+</script>
+
+<script>
+$(document).ready(function() {
+	//科目选择选择 START
+	/*$(".btn-removefromlist").click(function(){
+		//alert($(this).parent().attr("bid"));
+		var bid = $(this).parent().attr("bid");
+		var a = "#chk_grade_" + bid;
+		//alert(a);
+		//$("input[@name =S_03_22]").parent().prev().text();
+		//$("#chkddd").prop("checked", true);//这样是操作一般复选框
+		//$(a).iCheck('check');//这是操作icheck复选框的
+		$(a).iCheck('uncheck');//这是操作icheck复选框
+		//alert($("#chkddd").prop("checked"));//返回true
+		//$("#chk8").remove();
+		$(this).parent().remove();
+	});*/
+
+	$('.chk_subject').on('ifChecked', function(event){
+		var val = $(this).val();
+		var tName = $(this).attr("tName");
+	//	alert(val);
+		//检测list，然后加入新的
+		$("#subject_list li").each(function(){
+			//alert($(this).attr("bid"));
+			//
+			var tmp_bid = $(this).attr("bid");
+			if (tmp_bid == val){
+				//alert('list中已有此记录');
+				return;
+			}			
+		});
+		$('#subject_list').append('<li class="btn btn-warning btn-sm" bid="' + val + '">' + tName + '<i class="hide glyphicon glyphicon-remove pull-right btn-removefromlist"></i></li>');
+		
+	});
+	
+	//从list中删除一条
+	$('.chk_subject').on('ifUnchecked', function(event){
+		var val = $(this).val();
+		var tName = $(this).attr("tName");
+		//alert(val);
+		//检测list，然后加入新的
+		$("#subject_list li").each(function(){
+			//alert($(this).attr("bid"));
+			//
+			var tmp_bid = $(this).attr("bid");
+			if (tmp_bid == val){
+				//alert('list中已有此记录');
+				$(this).remove();
+			}			
+		});
+	});
+	//科目选择 END
+	
+});
+</script>
+
+<script>
+$(document).ready(function() {
+	//班级选择 START
+	$('.chk_banji').on('ifChecked', function(event){
+		var val = $(this).val();
+		var tName = $(this).attr("tName");
+	//	alert(val);
+		//检测list，然后加入新的
+		$("#banji_list li").each(function(){
+			//alert($(this).attr("bid"));
+			//
+			var tmp_bid = $(this).attr("bid");
+			if (tmp_bid == val){
+				//alert('list中已有此记录');
+				return;
+			}			
+		});
+		$('#banji_list').html();
+		$('#banji_list').append('<li class="btn btn-warning btn-sm" bid="' + val + '">' + tName + '<i class="hide glyphicon glyphicon-remove pull-right btn-removefromlist"></i></li>');
+		
+	});
+	
+	//从list中删除一条
+	$('.chk_banji').on('ifUnchecked', function(event){
+		
+		var val = $(this).val();
+		var tName = $(this).attr("tName");
+		//alert(val);
+		//检测list，然后加入新的
+		$("#banji_list li").each(function(){
+			//alert($(this).attr("bid"));
+			//
+			var tmp_bid = $(this).attr("bid");
+			if (tmp_bid == val){
+				//alert('list中已有此记录');
+				$(this).remove();
+			}			
+		});
+	});
+	//班级选择 END
+	
+});
+</script>
+<script>
+$(document).ready(function() {
+	//教师选择选择 START
+	$('.chk_teacher').on('ifChecked', function(event){
+		var val = $(this).val();
+		var tName = $(this).attr("tName");
+	//	alert(val);
+		//检测list，然后加入新的
+		$("#teacher_list li").each(function(){
+			//alert($(this).attr("bid"));
+			//
+			var tmp_bid = $(this).attr("bid");
+			if (tmp_bid == val){
+				//alert('list中已有此记录');
+				return;
+			}			
+		});
+		$('#teacher_list_v').html("");
+		$('#teacher_list').append('<li class="btn btn-warning btn-sm" bid="' + val + '">' + tName + '<i class="hide glyphicon glyphicon-remove pull-right btn-removefromlist"></i></li>');
+		
+	});
+	
+	//从list中删除一条
+	$('.chk_teacher').on('ifUnchecked', function(event){
+		var val = $(this).val();
+		var tName = $(this).attr("tName");
+		//alert(val);
+		//检测list，然后加入新的
+		$("#teacher_list li").each(function(){
+			//alert($(this).attr("bid"));
+			//
+			var tmp_bid = $(this).attr("bid");
+			if (tmp_bid == val){
+				//alert('list中已有此记录');
+				$(this).remove();
+			}			
+		});
+	});
+	//教师选择 END
+	
+});
+</script>
+<include file="Public/footer" />

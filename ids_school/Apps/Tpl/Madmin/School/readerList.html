@@ -1,0 +1,65 @@
+<include file="Public/header" />
+
+<ol class="breadcrumb">
+	<li><a href="">环境监测设备管理</a></li>
+	<li class="active">环境监测设备信息列表</li>
+</ol>
+
+<div class="col-md-12 text-right">
+    <table class="table">
+    <tbody>
+    <tr>
+    <td style="border:0;">
+    	<a href="__URL__/addReader/" type="button" class="btn btn-info btn-sm" id="addBrandClass">添加签到读卡器信息</a>
+    </td>
+    </tr>
+    </tbody>
+    </table>
+</div>
+
+<div class="data-list">
+	<table class="table table-hover list-tbl">
+		<thead>
+			<tr>
+				<th style="width:60px;">ID</th>
+                <th >设备编码</th>
+				<th style="width:200px;">操作</th>
+			</tr>
+		</thead>
+		<tbody>
+			<volist name="storeTypes" id="vo">
+			<tr>
+				<td>{$vo.Id}</td>
+                <td>{$vo.Num}</td>
+				<td>
+					<a class="oper edit" href="__URL__/editReader/tid/{$vo.Id}" title="编辑"><i class="icon-pencil"></i></a>
+					<a class="oper del" href="javascript:void(0);" data-url="__URL__/delReader/tid/{$vo.Id}" title="删除"><i class="icon-trash"></i></a>
+				</td>
+			</tr>
+			</volist>
+		</tbody>
+	</table>
+	<table class="table">
+		<tr>
+			<td>&nbsp;</td>
+			<td class="page-box text-right" width="80%">{$page}</td>
+		</tr>
+	</table>
+</div>
+
+<include file="Public/jsLoader" />
+<script type="text/javascript">
+$(function($){
+	$('.del').click(function() {
+		var targetUrl = $.trim($(this).attr('data-url'));
+		$.kw.confirm('确认要删除吗？', function() {
+			window.location.href = targetUrl;
+		});
+	});
+	
+	/* $('#nodeFilter').change(function() {
+		window.location.href = '__URL__/nodesList/nid/' + $(this).val();
+	}); */
+});
+</script>
+<include file="Public/footer" />

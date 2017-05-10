@@ -1,0 +1,220 @@
+<include file="Public/header" />
+<link rel="stylesheet" href="__PUBLIC__/script/uploadify/uploadify.css">
+<style>
+#storeVideoUp .btn-default, #storeVideoUp .btn-default:hover, #storeVideoUp .btn-default:active, #storeVideoUp .btn-default:visited{background-color:#fff;border-color:#ccc;padding:3px 10px 4px;font-size:14px;outline:0;}
+</style>
+<ol class="breadcrumb">
+	<li><a href="{:U('School/boardsList')}">板报管理</a></li>
+	<li class="active">
+        <switch name="ACTION_NAME" >
+        <case value="addAlbum" break="1">添加</case>
+        <case value="editAlbum">修改</case>
+        <default />添加
+        </switch>图片
+    
+    </li>
+</ol>
+<form id="editForm" class="form-horizontal" role="form" method="post" action="__SELF__">
+
+<style>
+    .row {margin:0 0 10px 0;}
+	</style>
+   
+
+<div class="row breadcrumb">
+            <div class="col-md-2">
+                <div class="up-image-box" style="position:relative;">
+                    <input id="file_upload" class="btn btn-default" name="file_upload" type="file">
+                    <div id="uploadfyQueueList"></div> 
+                </div>
+            </div> 
+            <label class="col-sm-1 control-label " for="name">名称：</label>
+            <div class="col-md-2  control-label " style="padding-left:0px;margin-left:0px;text-align:left;">
+                {$board.subject}
+            </div>
+            <label class="col-sm-1 control-label " for="name">所属班级</label>
+            <div class="col-md-2  control-label " style="padding-left:0px;margin-left:0px;text-align:left;">
+                {$banjiName}
+            </div>
+            <div class="col-md-1"><a href="{:U('School/boardsList')}" type="button" class="btn btn-info btn-sm"><b>返回板报管理</b></a></div>
+       
+</div>   
+<div class="row " >
+	<div class="col-md-12 " style="background-color:#f9f9f9;border-bottom:#f9f9f9 solid 1px;">
+    	<h6>板报图片</h6>
+    </div>
+</div>
+<style>
+	.clear{float:none; clear:both;font-size:0px;line-height:0px;height:0px; min-height:0px; padding:0px; margin:0px; overflow:hidden;}
+	.image-boxs{padding:5px;border:1px solid #e0e0e0;background-color:#FFFFFF;overflow:hidden;height:200px;margin:0px;}
+	
+	.image-box{width:100%;height:160px;border:0px solid #ff0000;overflow:hidden;}
+	
+	.toolbar{clerar:both;width:200px;height:30px;position:absolute;bottom:0px;border:0px solid #ff00ff;overflow:hidden;}
+	.toolbar i{cursor:pointer;margin-top:0px;} 
+	.toolbar i.del-img{font-size:20px;color:#1abc9c;}
+	.toolbar i.icon-minus-sign{font-size:20px;color:#1abc9c;padding:0px;border:0px solid #e0e0e0;} 
+	.toolbar i.icon-bookmark{font-size:20px;color:#1abc9c;}
+	.toolbar i.icon-bookmark-empty{font-size:20px;color:#1abc9c;}
+	.is-cover{border:1px solid #cccc33;}
+	
+</style>
+<div class="row " id="allPhotos" >
+	<volist name="photos" id="vo">
+	<div class="col-md-2" style="margin:5px;">
+    	<div class="image-boxs <eq name='vo.id' value='$albumInfo.coverImage'> is-cover</eq> "  >
+            	<div class="image-box">
+					<img src="__GROUP__/{$vo.fileName}?{:rand()}"  width="100%" />
+                </div>
+				<div class="toolbar">
+                    <a href="javascript:void(0);" class="del-gallery-item" data-resid="{$vo.id}" title="删除"><i class="icon-minus-sign"></i></a>
+                    <!--<eq name="vo.resourceId" value="$albumInfo.coverImage">
+                    <a href="javascript:void(0);" class="set-as-cover is-cover-i" data-iscover="1" data-resid="{$vo.resourceId}" title="设置相册封面图"><i class="icon-bookmark"></i></a>
+                    <else/>
+                    <a href="javascript:void(0);" class="set-as-cover" data-iscover="0" data-resid="{$vo.resourceId}" title="设置相册封面图"><i class="icon-bookmark-empty"></i></a>
+					</eq>-->
+                </div>
+        </div>
+    </div>
+	</volist>
+
+    <div class="row" style="clear:both;padding-top:10px;">
+    	<div class="col-md-12 page-box">{$page}</div>
+    </div>
+    
+</div>
+</form>
+
+<include file="Public/jsLoader" />
+<script type="text/javascript" src="__PUBLIC__/script/uploadify/jquery.uploadify.js"></script>
+<script type="text/javascript" charset="utf-8" src="__PUBLIC__/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="__PUBLIC__/ueditor/ueditor.all.js"> </script>
+<script type="text/javascript" charset="utf-8" src="__PUBLIC__/ueditor/lang/zh-cn/zh-cn.js"></script>
+
+<script type="text/javascript">
+//$(document).ready(function() {
+$(function($) {
+	
+	// Uploadify 批量上传
+	setTimeout(function(){
+		$('#file_upload').uploadify({
+			'debug' : false,
+			'multi' : true,
+			'fileObjName' : 'myUpfile',
+			'fileTypeDesc' : '图片',
+			'fileTypeExts' : '*.jpeg; *.jpg; *.png; *.bmp',
+			'buttonText' : '<i class="icon-upload"></i>上传图片',
+			'width' : 100,
+			'buttonClass' : 'uploadify',
+			'swf'      : '__PUBLIC__/script/uploadify/uploadify.swf',
+			'formData'     : {dataType : 'image', savename :'', isMyUpRoot : 1,boardId:<?php echo $board['id'];?>,banjiId:<?php echo $banjiId;?>,folderName:"board/<?php echo $banjiId;?>"},//'formData'     : {dataType : 'image', savename : 'logo', isMyUpRoot : 1},
+			'uploader' : '__GROUP__/Ajaxschool/boardPhotosUploadify',
+			'queueID'  : 'uploadfyQueueList',
+			'removeCompleted' : true,
+			'removeTimeout' : 1,
+			'overrideEvents' : ['onUploadSuccess', 'onSelectError'],
+			'onSelectError' : function(file, errorCode, errorMsg) {
+				//console.log(errorCode);
+				//console.log(errorMsg);
+				switch (errorCode) {
+					case -110:
+						alert('【文件上传失败提示】\n\n ' + file.name + ' : 文件大小超过最大上传限制50MB！');
+						break;
+					case -130:
+						alert('【文件上传失败提示】\n\n ' + file.name + ' : 文件类型不正确.');
+						break;
+				}
+			},
+			'onUploadSuccess' : function(file, data, response) {
+				var re = $.parseJSON(data);
+				if (re.stat*1) {
+					$('#' + file.id).find('.data').html('<span class="text-success">&nbsp;上传成功</span>');
+					//var out = '<span><img src="__GROUP__' + re.url + '?' + Math.random() + '" /></span>';
+					var out = ''+
+						'<div class="col-md-2 " style="margin:5px;">'+
+							'<div id="image-boxs" class="image-boxs">'+
+									'<div class="image-box">'+
+										'<img src="__GROUP__' + re.url + '"  width="100%" />'+
+								   ' </div>'+
+									'<div class="toolbar">'+
+										'<a href="javascript:void(0);" class="del-gallery-item" data-resid="' + re.id + '" title="删除"><i class="icon-minus-sign"></i></a>'+
+									'</div>'+
+								'</div>'+
+
+						'</div>';
+					//alert(re.url);
+					
+					$("#allPhotos").prepend(out);
+				} else {
+					//$('#' + file.id).addClass('text-danger').find('.data').html('<span>&nbsp;'+re.msg+'</span>');
+					$('#' + file.id).find('.uploadify-progress-bar').first().css({width : 0});
+				}
+			}
+		});
+	}, 10);
+	
+	
+	
+	
+});
+</script>
+
+<script language="javascript">
+$(document).ready(function() {
+	//删除相片
+	/*
+	$('.del-gallery-item').click(function(){
+		//取resourceId
+		var rid = $(this).attr("data-resid");//alert($(this).attr("data-resid"));
+		var mythis = $(this);
+		//
+		$.get("__GROUP__/Ajaxschool/delBoardPhoto",{ rid:rid },
+		function(data){
+			//alert("Data Loaded: " + data);
+			var res = $.parseJSON(data);
+			//alert(data);//
+			
+			if (res.stat){
+				//alert(res.msg);//删除成功
+				$(mythis).parent().parent().parent().remove();
+			} else {
+				alert(res.msg);	
+			}
+		});
+	});
+	*/
+	
+	$(document).on("click",".del-gallery-item",function(){
+		var rid = $(this).attr("data-resid");//alert($(this).attr("data-resid"));return;
+		var mythis = $(this);
+		//
+		$.get("__GROUP__/Ajaxschool/delBoardPhoto",{ rid:rid },
+		function(data){
+			//alert("Data Loaded: " + data);
+			var res = $.parseJSON(data);
+			//alert(data);//
+			
+			if (res.stat){
+				//alert(res.msg);//删除成功
+				$(mythis).parent().parent().parent().remove();
+			} else {
+				alert(res.msg);	
+			}
+		});
+	});
+	
+});
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+<include file="Public/footer" />

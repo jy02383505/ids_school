@@ -1,0 +1,89 @@
+<include file="Public/header" />
+
+<ol class="breadcrumb">
+	<li><a href="">学校硬件设备管理</a></li>
+	<li><a href="">网络摄像头信息管理</a></li>
+	<li class="active">网络摄像头信息列表</li>
+</ol>
+
+<div id="" class="row well">
+	<div class="col-md-9" style="padding-top:5px;">
+		<form class="form-inline edit-form" role="form" method="get" action="__SELF__">
+  
+
+		</form>
+	</div>
+	<div class="col-md-3 text-right">
+		<table class="table">
+			<tbody>
+				<tr>
+					<td style="border:0;">
+						<a href="__URL__/addcamera/" type="button" class="btn btn-info btn-sm" id="addActivities">添加网络摄像头信息</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<div class="data-list">
+	<table class="table table-hover list-tbl">
+		<thead>
+			<tr>
+				<!-- <th width="36"><input type="checkbox" class="select-all" title="全选/全不选"></th> -->
+				<!--<th width="80">#ID</th>-->
+				<th width="200">设备号</th>
+                <th width="140">IP</th>
+                <th width="80">端口</th>
+                <th width="240">mac地址</th>
+                <th width="140">型号</th>
+                <th width="140">用户名</th>
+                <th></th>                
+				<th width="200">操作</th>
+			</tr>
+		</thead>
+		<tbody>
+			<volist name="datas" id="vo">
+			<tr>
+				<!-- <td><input type="checkbox"></td> -->
+				<!--<td>{$vo.Id}</td>-->
+                <td>{$vo.code}</td>
+                <td >{$vo.ip}</td>
+                <td >{$vo.port}</td>
+                <td >{$vo.mac}</td>
+                <td>{$vo.modelNum}</td>
+                <td >{$vo.username}</td>
+                <td></td>
+				<td>
+					<a class="oper edit" href="__URL__/editCamera/id/{$vo.Id}" title="编辑"><i class="icon-pencil"></i></a><!--zjh add shop{$vo.spottype}中的shop-->
+					<a class="oper del" href="javascript:void(0);" data-url="__URL__/delCamera/ID/{$vo.Id}" title="删除"><i class="icon-trash"></i></a>
+				</td>
+			</tr>
+			</volist>
+		</tbody>
+	</table>
+	<table class="table">
+		<tr>
+			<td>
+				<!-- <input type="checkbox" class="select-all" title="全选/全不选">
+				<button type="button" class="btn btn-default btn-sm multi-del" style="margin-left:30px;">批量删除</button> -->
+				&nbsp;
+			</td>
+			<td class="page-box text-right" width="80%">{$page}</td>
+		</tr>
+	</table>
+</div>
+
+<include file="Public/jsLoader" />
+<script type="text/javascript">
+$(function($){
+	
+	$('.del').click(function() {
+		var targetUrl = $.trim($(this).attr('data-url'));
+		$.kw.confirm('确认要删除该网络摄像头信息吗？', function() {
+			window.location.href = targetUrl;
+		});
+	});
+});
+</script>
+<include file="Public/footer" />

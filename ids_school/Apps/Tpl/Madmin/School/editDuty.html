@@ -1,0 +1,195 @@
+<include file="Public/header" />
+
+<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+<script src="__PUBLIC__/script/jquery/jquery.min.js"></script>
+
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="__PUBLIC__/bootstrap/bootstrap.min.js"></script>
+
+<style>
+#storeVideoUp .btn-default, #storeVideoUp .btn-default:hover, #storeVideoUp .btn-default:active, #storeVideoUp .btn-default:visited{background-color:#fff;border-color:#ccc;padding:3px 10px 4px;font-size:14px;outline:0;}
+
+#dutyHeader{clear:both;width:100%;height:60px;line-height:60px;text-align:center;font-size:2em;}
+
+#dutyTable {clear:both;width:100%;border:1px #FFFFFF solid;overflow:hidden;}
+#dutyTable li{width:100%;height:60px;line-height:30px;border-bottom:1px #FFFFFF solid;background-color:#E0E0E0;overflow:hidden;}
+#dutyTable li dt{float:left;width:10%;height:60px;line-height:60px;border-right:1px #FFFFFF solid;text-align:center;}
+#dutyTable li dd{float:left;width:80%;height:100%;line-height:60px;}
+#dutyTable li bb{float:left;width:10%;height:100%;line-height:60px;}
+#dutyTable li dt div{padding:2px;}
+#dutyTable li dd div{padding:2px;}
+
+#dutyTable li.current{width:100%;height:60px;line-height:30px;border-bottom:1px #FFFFFF solid;background-color:#EEEEEE;overflow:hidden;}
+
+</style>
+<ol class="breadcrumb">
+    <li><a href="{:U('School/dutyList')}">值日表管理</a></li>
+	<li class="active">
+        <switch name="ACTION_NAME" >
+        <case value="addDuty" break="1">添加</case>
+        <case value="editDuty">修改</case>
+        <default />添加
+        </switch>
+        值日表
+    </li>
+</ol>
+
+<form id="editForm" class="form-horizontal" role="form" method="post" action="__SELF__">
+	<input type="hidden" name="banjiId" id="banjiId" value="{$banjiId}">
+  	<div class="form-group " style="margin-bottom:0px;">
+        <div class="col-sm-6 " >
+        	<div id="dutyHeader">{$banjiName}值日表</div>
+            <UL id="dutyTable">
+				<volist name="datas" id="vo">
+                    <li id="li_week_{$i}" data-id="{$vo.id}" data-day="{$i}" data-member-list="{$vo.memberList}">
+                    <dt ><div>{$vo.dutyday}</div></dt>
+                    <dd><div class="memberList" id="memberList_{$i}">{$vo.memberNameList}</div></dd>
+                    <bb><button type="button" class="btn btn-primary btn-sm btn_set" ><i class="glyphicon glyphicon-cog"></i> 设置</button></bb>
+                    </li>
+				</volist>
+            </UL>
+        </div>
+	</div> 
+ 
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="">&nbsp;</label>
+		<div class="col-sm-4">
+			<button type="reset" class="btn btn-default btn-sm">返回列表</button>
+            
+		</div>
+	</div>
+
+    <!--zjh add start 模态对话框-->
+    <include file="Public/schoolStudentOneBanjiModel" />
+    <!--zjh add end 模态对话框-->
+
+
+
+</form>
+
+
+
+
+
+<script type="text/javascript" src="__PUBLIC__/script/myplugins/jq.kw.js"></script>
+
+
+<script>
+$(document).ready(function() {
+	var banjiId = 0;//班级ID
+	var curDay = 0;//当前编缉第几天/周
+	
+	banjiId = $("#banjiId").val();
+	
+	$('button[type="reset"]').click(function(){
+		window.location.href = '__URL__/dutyList';
+	});
+
+	
+
+
+	$('.btn_set').click(function(){
+		$("#dutyTable li").removeClass("current");
+		$(this).parent().parent().addClass("current");//当前行反色显示
+		curDay = $(this).parent().parent().attr("data-day");//当前的星期几
+		curMemberList = $(this).parent().parent().attr("data-member-list");//当前的值日生id
+	//	alert("curDay=" + curDay + " ;banjiId="+banjiId + " ;curMemberList=" + curMemberList);
+		
+		//将当天的值日生提前选中
+		var arr=new Array();
+		arr=curMemberList.split(',');//注split可以用字符或字符串分割
+		
+		$("#studentOneBanjiModal .chk_student").iCheck('uncheck');
+		for(var i=0;i<arr.length;i++)
+		{
+			//alert(arr[i]);
+			$("#studentOneBanjiModal .chk_student:checkbox").each(function () {
+				if ($(this).val() == arr[i]){
+					$(this).iCheck('check');
+				}
+			});
+		}
+		
+
+		
+		$('#studentOneBanjiModal').modal({ keyboard: false });   // initialized with no keyboard
+		$('#studentOneBanjiModal').modal('show');                // 初始化后立即调用 show 方法
+
+		
+		
+		
+	});
+	
+	
+	//对话框：学生选择 START
+	$('.chk_student').on('ifChecked', function(event){
+		//var tmp="";
+		//tmp = "memberList_"+curDay;
+		//alert("tmp");
+		
+		//每选中一个，动态存储和刷新页面显示
+		
+	});
+	
+	
+	
+	
+	//对话框：关闭
+	$('#studentOneBanjiModal').on('hide.bs.modal', function () {
+	//	alert(curDay);
+		var members =  new Array();
+		$("#studentOneBanjiModal .chk_student:checkbox").each(function () {
+			if ($(this).prop("checked")){
+				members.push($(this).val()); 
+			}
+		});
+	//	alert("members"+members);
+		//这儿需要的话可以弹出confirm询问一下是否更新
+		
+		//提交保存
+		$.ajax({
+			url:'__URL__/editDuty',
+			type:'post',
+			data:"doType=editDay&banjiId="+banjiId+"&curDay="+curDay+"&members="+members+"&cache="+Math.random(),
+			async:true,//false为同步
+			dataType:'json',
+			success:function(re) {
+				//alert(re);
+				if (re.stat * 1 > 0){
+					//var datas = re.data;
+				//	alert(re.stat);
+				//	alert("msg="+re.msg);
+					var tmp = "#memberList_"+curDay;
+					//alert(tmp);
+					$(tmp).html(re.data);
+				}else{
+						
+				}
+
+			},
+			error:function() {
+				alert('由于网络异常导致操作失败，请刷新页面重试....');
+			}
+		}); 
+	})
+
+
+	
+});
+</script>
+<script type="text/javascript" src="__PUBLIC__/flib/icheck/icheck.js"></script>
+<script>
+$(document).ready(function() {
+	//jsLoader.html会引起脚本弹窗失效，换此方法
+	$('input').iCheck({
+		checkboxClass: 'icheckbox_flat-green',
+		radioClass: 'iradio_flat-green',
+		increaseArea: '20%' // optional
+	});
+});
+</script>			
+
+
+
+
+<include file="Public/footer" />

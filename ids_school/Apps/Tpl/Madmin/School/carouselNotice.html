@@ -1,0 +1,77 @@
+<extend name="Public:baseRight"/>
+
+<block name="style">
+    <style>
+        .carousel{
+            position: relative;
+        }
+        .carouselWindow{
+            width: 478px;
+            height: 304px;
+            margin:0 auto;
+            position: relative;
+            overflow: hidden;
+            outline: 1px solid red;
+        }
+        .item_list{
+            position: relative;
+        }
+        .item_list .oneNotice{
+            float: left;
+        }
+        .indicator{
+            position: relative;
+            text-align: center;
+            bottom: 40px;
+        }
+        .indicator button{
+            background-color: transparent;
+            border: 0px;
+            margin-left: 15px;
+            color: rgba(255, 180, 0, 0.7);
+            outline: none;
+        }
+        .indicator button.active{
+            color: #fff;    
+        }
+        .indicator button>span{
+            border-radius: 7px;
+        }
+        .indicator button:hover{
+            color: #fff;
+        }
+        .indicator button>span:hover{
+            box-shadow: 0px 0px 1px 1px rgba(0, 0, 0, 0.8);
+        }
+        .title{
+            font-size: {$configuration[titleFontsize]}px;
+            /*color: {$configuration[titleForeground]};*/
+        }
+        .content{
+            font-size: {$configuration[ContentFontsize]}px;
+            /*color: {$configuration[ContentForeground]};*/
+        }
+    </style>
+</block>
+
+<block name="content">
+    <div class="carouselWindow">
+        <div class="item_list">
+            <volist name="notices" id="row">
+                <div class="oneNotice" style="width:478px;">
+                    <marquee behavior="scroll" direction="left" class="title titleWindow" scrollamount='100' scrolldelay='2000'>
+                        {$row[title]}
+                    </marquee>
+                    <marquee behavior="scroll" direction="up" class="content contentWindow" scrollamount='100' scrolldelay='2000'>
+                        {$row[content]}
+                    </marquee>
+                </div>
+            </volist>
+        </div>
+    </div>
+</block>
+
+<block name="script">
+    <script>
+    </script>
+</block>

@@ -1,0 +1,48 @@
+<!-- lym -->
+<extend name="Public:baseRight"/>
+
+<block name="style">
+    <style>
+
+    </style>
+</block>
+
+<block name="content">
+    <div class="">
+        <ol class="breadcrumb">
+            <li><a href="{:U('comparisonItems')}">班级评比项目管理</a></li>
+            <!-- <li class="active">场景管理</li> -->
+        </ol>
+
+        <form action="__SELF__" class="form-horizontal" method="post">
+            <div class="col-md-offset-1 col-md-4">
+                <div class="form-group">
+                    <label class="col-md-2 control-label">评比项目名称</label>
+                    <div class="col-md-10">
+                        <input type="text" name="name" class="form-control" value="{$row[name]}">
+                        <if condition="ACTION_NAME eq 'editComparisonItem'">
+                            <input type="hidden" name="id" class="form-control" value="{$row[id]}">
+                        </if>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="text-right">
+                        <button type="submit" class="btn btn-sm btn-primary">保存</button>
+                        <button type="reset" class="btn btn-sm btn-danger">取消</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</block>
+
+<block name="script">
+    <script>
+        // 取消返回上一个页面，刷新
+        $('button[type=reset]').click(function(){
+            history.go(-1);
+            location.reload();
+        })
+
+    </script>
+</block>

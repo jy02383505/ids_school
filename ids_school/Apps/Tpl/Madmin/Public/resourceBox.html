@@ -1,0 +1,139 @@
+
+
+
+<!--zjh add start 模态对话框-->
+<div class="modal fade" id="resourceModal">
+	<div class="modal-dialog bs-example-modal-lg" style="width:80% !important;min-width:1000px;min-height:600px;">
+		<div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">资源对话框</h4>
+            </div>
+			<div class="modal-body container-fluid">
+
+				<div class="bs-example bs-example-tabs" data-example-id="togglable-tabs">
+                    <div class="row" style="background-color:#FFFFFF;padding-bottom:10px;">
+                        <form class="form-inline">
+                            <div class="form-group">
+                            <label class=""></label>
+                            </div>
+                            <div class="form-group">
+                            <input type="text" class="form-control" id="keyboard" placeholder="关键字">
+                            </div>
+                            <button type="button" class="btn btn-default">搜索</button>
+                            
+                
+                            
+                            
+                            <div class="form-group" style="float:right;">
+                            <button type="button" class="btn btn-primary">上传</button>
+                            </div>
+                        </form>
+                    </div>
+	<div class="row">
+    
+ 		<div class="col-md-2">
+        	左
+        </div>
+        <div class="col-md-10">
+        	<div>
+                <ul id="myTabs" class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active"><a href="#image" id="home-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true">图片</a></li>
+                <li role="presentation" class=""><a href="#animation" role="tab" id="profile-tab" data-toggle="tab" aria-controls="profile" aria-expanded="false">动画</a></li>
+                <li role="presentation" class=""><a href="#document" role="tab" id="profile-tab" data-toggle="tab" aria-controls="profile" aria-expanded="false">文档</a></li>
+                <li role="presentation" class=""><a href="#video" role="tab" id="profile-tab" data-toggle="tab" aria-controls="profile" aria-expanded="false">视频</a></li>
+                
+                <li role="presentation" class="dropdown hide">
+                <a href="#" id="myTabDrop1" class="dropdown-toggle" data-toggle="dropdown" aria-controls="myTabDrop1-contents" aria-expanded="false">Dropdown <span class="caret"></span></a>
+                <ul class="dropdown-menu" aria-labelledby="myTabDrop1" id="myTabDrop1-contents">
+                <li><a href="#dropdown1" role="tab" id="dropdown1-tab" data-toggle="tab" aria-controls="dropdown1">@fat</a></li>
+                <li><a href="#dropdown2" role="tab" id="dropdown2-tab" data-toggle="tab" aria-controls="dropdown2">@mdo</a></li>
+                </ul>
+                </li>
+                <li role="presentation" class="" style="float:right;"><a href="#"><span class="glyphicon glyphicon-align-justify" aria-hidden="true" style="color:blue;"></span></a></li>
+                <li role="presentation" class="" style="float:right;"><a href="#"><span class="glyphicon glyphicon-th" aria-hidden="true"></span></a></li>
+                </ul>
+            
+        	</div>
+            <div>
+            
+                <div id="myTabContent" class="tab-content">
+                  <div role="tabpanel" class="tab-pane fade active in" id="image" aria-labelledby="home-tab">
+                    <style>
+                        ul.resourList{display:table;}
+                        ul.resourList li{float:left;width:100px;height:100px;overflow:hidden;margin:5px 5px 0 0;}
+                    </style>
+                        <UL class="resourList">
+                        <li><img src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1457437487,655486635&fm=111&gp=0.jpg"></li>
+                        <li><img src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1457437487,655486635&fm=111&gp=0.jpg"></li>
+                        <li><img src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1457437487,655486635&fm=111&gp=0.jpg"></li>
+                        <li><img src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1457437487,655486635&fm=111&gp=0.jpg"></li>
+                        <li><img src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1457437487,655486635&fm=111&gp=0.jpg"></li>
+                        <li><img src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1457437487,655486635&fm=111&gp=0.jpg"></li>
+                        <li><img src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1457437487,655486635&fm=111&gp=0.jpg"></li>
+                        <li><img src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1457437487,655486635&fm=111&gp=0.jpg"></li>
+                        <li><img src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1457437487,655486635&fm=111&gp=0.jpg"></li>
+                        <li><img src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1457437487,655486635&fm=111&gp=0.jpg"></li>
+                        <li><img src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1457437487,655486635&fm=111&gp=0.jpg"></li>
+                        <li><img src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1457437487,655486635&fm=111&gp=0.jpg"></li>
+                        </UL>
+            
+                  </div>
+                  <div role="tabpanel" class="tab-pane fade" id="animation" aria-labelledby="profile-tab">
+                    <p>动画列表</p>
+                  </div>
+                   <div role="tabpanel" class="tab-pane fade" id="document" aria-labelledby="profile-tab">
+                    <p>文档列表</p>
+                  </div>   
+                   <div role="tabpanel" class="tab-pane fade" id="document" aria-labelledby="profile-tab">
+                    <p>视频列表</p>
+                  </div>  
+                    
+                  <div role="tabpanel" class="tab-pane fade" id="dropdown1" aria-labelledby="dropdown1-tab">
+                    <p>3333333333333333</p>
+                  </div>
+                  <div role="tabpanel" class="tab-pane fade" id="dropdown2" aria-labelledby="dropdown2-tab">
+                    <p>4444444444444444</p>
+                  </div>
+            </div>
+        
+        
+        </div>
+    
+
+
+    </div>
+
+      <nav>
+  <ul class="pagination">
+    <li>
+      <a href="#" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+      </a>
+    </li>
+    <li><a href="#">1</a></li>
+    <li><a href="#">2</a></li>
+    <li><a href="#">3</a></li>
+    <li><a href="#">4</a></li>
+    <li><a href="#">5</a></li>
+    <li>
+      <a href="#" aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+      </a>
+    </li>
+  </ul>
+</nav>
+    </div>
+  </div>
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!--zjh add end 模态对话框-->
+

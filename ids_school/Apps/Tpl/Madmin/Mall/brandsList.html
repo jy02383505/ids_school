@@ -1,0 +1,120 @@
+<include file="Public/header" />
+
+<ol class="breadcrumb">
+	<li><a href="">商场管理</a></li>
+	<li><a href="">品牌管理</a></li>
+	<li class="active">品牌列表</li>
+</ol>
+
+<div id="" class="row well">
+	<div class="col-md-9" style="padding-top:5px;">
+		<form class="form-inline edit-form" role="form" method="get" action="__SELF__">
+        
+            <div class="form-group">
+                <label for="exampleInputName2">关键字：</label>
+                <input type="text" class="form-control" name="keyboard" id="keyboard" placeholder="关键字" value="{$Think.get.keyboard}" style="width:182px;">
+            </div>      
+            <div class="form-group">
+                <label for="searchtype">字段：</label>
+                <select class="form-control" name="searchtype">
+                    <option value="brandName" <eq name="Think.get.searchtype" value="brandName"> selected = selected</eq> >品牌名称</option>
+                    <option value="id" <eq name="Think.get.searchtype" value="id"> selected = selected</eq> >id</option>
+                </select>
+                
+                
+				<label for="brandClassId"></label>
+                <select class="form-control input-sm" name="brandClassId" id="brandClassId">
+                    <option value="">品牌分类</option>
+                    <volist name="brandClassId" id="vo">
+                        <eq name="Think.get.brandClassId" value="$vo.ID">
+                            <option value="{$vo.ID}"  selected = selected >{$vo.space} {$vo.tName}</option>
+                        <else/>
+                            <php> if ($vo['has_children'] > 0) { </php>
+                            <option value="{$vo.ID}" disabled>{$vo.space} {$vo.tName}</option>
+                            <php> } else { </php>
+                            <option value="{$vo.ID}">{$vo.space} {$vo.tName}</option>
+                            <php> } </php>
+                        </eq>
+                    </volist>
+                </select>        
+                
+                
+                <button type="submit" class="btn btn-info btn-sm">搜索</button>
+			</div>
+  
+
+		</form>
+	</div>
+	<div class="col-md-3 text-right">
+		<table class="table">
+			<tbody>
+				<tr>
+					<td style="border:0;">
+						<a href="__URL__/addBrand/" type="button" class="btn btn-info btn-sm" id="addNewStore">添加品牌</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<div class="data-list">
+	<table class="table table-hover list-tbl">
+		<thead>
+			<tr>
+				<!-- <th width="36"><input type="checkbox" class="select-all" title="全选/全不选"></th> -->
+				<th>#ID</th>
+				<th>品牌名称</th>
+                <th>首字母</th>
+				<th>首字母简称</th>
+				<th>LOGO</th>
+                <th>分类</th>
+                <th>相关店铺</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody>
+			<volist name="brands" id="vo">
+			<tr>
+				<!-- <td><input type="checkbox"></td> -->
+				<td>{$vo.id}</td>
+                <td>{$vo.brandName}</td>
+				<td>{$vo.brandFirstLetter}</td>
+				<td>{$vo.brandPYShortName}</td>
+				<td>{$vo.logo}<img src="__ROOT__/Uploads/logo.png?7260" height="20"></td>
+                <td >{$vo.brandClassName}</td>
+                <td>相关店铺</td>
+
+				<td>
+					<a class="oper edit" href="__URL__/editBrand/id/{$vo.id}" title="编辑"><i class="icon-pencil"></i></a><!--zjh add shop{$vo.spottype}中的shop-->
+					<a class="oper del" href="javascript:void(0);" data-url="__URL__/delBrand/id/{$vo.id}" title="删除"><i class="icon-trash"></i></a>
+				</td>
+			</tr>
+			</volist>
+		</tbody>
+	</table>
+	<table class="table">
+		<tr>
+			<td>
+				<!-- <input type="checkbox" class="select-all" title="全选/全不选">
+				<button type="button" class="btn btn-default btn-sm multi-del" style="margin-left:30px;">批量删除</button> -->
+				&nbsp;
+			</td>
+			<td class="page-box text-right" width="80%">{$page}</td>
+		</tr>
+	</table>
+</div>
+
+<include file="Public/jsLoader" />
+<script type="text/javascript">
+$(function($){
+	
+	$('.del').click(function() {
+		var targetUrl = $.trim($(this).attr('data-url'));
+		$.kw.confirm('确认要删除该品牌吗？', function() {
+			window.location.href = targetUrl;
+		});
+	});
+});
+</script>
+<include file="Public/footer" />

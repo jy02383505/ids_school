@@ -1,0 +1,494 @@
+<include file="Public/header" />
+<link rel="stylesheet" href="__PUBLIC__/script/uploadify/uploadify.css">
+
+
+
+<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+<script src="__PUBLIC__/script/jquery/jquery.min.js"></script>
+
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="__PUBLIC__/bootstrap/bootstrap.min.js"></script>
+
+<style>
+#storeVideoUp .btn-default, #storeVideoUp .btn-default:hover, #storeVideoUp .btn-default:active, #storeVideoUp .btn-default:visited{background-color:#fff;border-color:#ccc;padding:3px 10px 4px;font-size:14px;outline:0;}
+
+
+
+</style>
+<ol class="breadcrumb">
+	<li><a href="{:U('School/schoolList')}">学校管理</a></li>
+    <li><a href="{:U('School/teachersList')}">教师管理</a></li>
+	<li class="active">
+        <switch name="ACTION_NAME" >
+        <case value="addTeacher" break="1">添加</case>
+        <case value="editTeacher">修改</case>
+        <default />添加
+        </switch>
+        教师
+    </li>
+</ol>
+<form id="editForm" class="form-horizontal" role="form" method="post" action="__SELF__">
+	  
+	<div class="form-group">
+		<label class="col-sm-2 control-label " for="name">教师姓名</label>
+		<div class="col-sm-1">
+			<input class="form-control input-sm" type="text" name="tname" id="tname" value="{$datas.name}" placeholder='请输入教师姓名'>
+            
+		</div>
+        <div class="col-sm-2"><span class="help-block"></span></div>
+	</div>
+    
+	<div class="form-group">
+		<label class="col-sm-2 control-label " for="name">教师编号</label>
+		<div class="col-sm-2">
+			<input class="form-control input-sm" type="text" name="code" id="code" value="{$datas.code}" placeholder='请输入教师编号'>
+            
+		</div>
+        <div class="col-sm-2"><span class="help-block"></span></div>
+	</div>
+
+    
+	<div class="form-group">
+    	<div class="row">
+            <label class="col-sm-2 control-label" for="">照片</label>
+            <div class="col-sm-5">
+                <div class="up-image-box" style="position:relative;padding:0;margin:0;">
+                    <button id="file_upload_photo" class="btn btn-default" name="file_upload_photo" type="file"></button>
+                    <label class="col-sm-2 control-label hide" for="" style="margin-left:20px;" ><button type="button" class="btn btn-link btn-sm" id="btnSet" data-toggle="modal" data-target="#resourceModal"> <i class="glyphicon glyphicon-upload"></i> 从已上传中选择</button></label>
+    				
+                    <div id="uploadfyQueueList1"></div> 
+                    <div class="showimg clearfix" style="clear:both;padding:0;margin:0;">
+                        <notempty name="datas['imagePath']">
+                            <span style="margin:10px 0 0 0;"><img height="180" src="/{$Think.config.UPLOAD_COMM_PATH}/{$datas.imagePath}" /></span>
+                        </notempty>
+                    </div>
+                    <input type="hidden" name="photo" class="gcovers" value="{$datas.image}">
+                    <input type="hidden" name="photoPath" id="photoPath" value="{$datas.imagePath}">
+                </div>
+            </div>
+        </div>
+    	<div class="row">
+        
+         </div>       
+	</div>
+    
+ 	<div class="form-group hide" style="margin-bottom:0px;">
+		<label class="col-sm-2 control-label" for="gradeId">授课年级</label>
+        <div class="col-sm-10  pre-scrollable" >
+			<style>
+                #grade_list li{margin-right:10px;}
+            </style>        
+            <ul class="list-group" id="grade_list">
+                <li type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#gradeModal">选择年级</li>
+                <volist name="grade_list" id="vo">
+                <li class="btn btn-warning btn-sm"  type="button" bid="{$vo.id}">{$vo.name}<span class="hide" ><i class="hide glyphicon glyphicon-remove pull-right btn-removefromlist" bid="{$vo.id}"></i></span></li>
+                </volist>
+            </ul>
+        </div>
+	</div> 
+    
+   	<div class="form-group " style="margin-bottom:0px;">
+		<label class="col-sm-2 control-label" for="banjiId">班级</label>
+        <div class="col-sm-10 " >
+			<style>
+                #banji_list li{margin-right:10px;}
+            </style>        
+            <ul class="list-group" id="banji_list">
+                <li type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#banjiModal">选择班级</li>
+                <span id="banji_list_v">
+                <volist name="banji_list" id="vo">
+                <li class="btn btn-warning btn-sm"  type="button" bid="{$vo.id}">{$vo.name}<span class="hide" ><i class="hide glyphicon glyphicon-remove pull-right btn-removefromlist" bid="{$vo.id}"></i></span></li>
+                </volist>
+                </span>
+            </ul>
+        </div>
+	</div> 
+ 
+  	<div class="form-group " style="margin-bottom:0px;">
+		<label class="col-sm-2 control-label" for="banjiId">教学科目</label>
+        <div class="col-sm-10" >
+			<style>
+                #subject_list li{margin-right:10px;}
+            </style>        
+            <ul class="list-group" id="subject_list">
+                <li type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#subjectModal">选择科目</li>
+                <volist name="subject_list" id="vo">
+                <li class="btn btn-warning btn-sm"  type="button" bid="{$vo.id}">{$vo.name}<span class="hide" ><i class="hide glyphicon glyphicon-remove pull-right btn-removefromlist" bid="{$vo.id}"></i></span></li>
+                </volist>
+            </ul>
+        </div>
+	</div> 
+   
+	<div class="form-group">
+		<label class="col-sm-2 control-label " for="name">部门</label>
+		<div class="col-sm-1">
+            <select class="form-control input-sm" name="department" id="department">
+                    <option value="">所属部门</option>
+                    <volist name="departments" id="vo">
+                        <eq name="vo.id" value="$datas.department">
+                            <option value="{$vo.id}" selected>{$vo.name}</option>
+                        <else/>
+                            <option value="{$vo.id}">{$vo.name}</option>
+                        </eq>
+                    </volist>
+
+            </select>
+		</div>
+        <div class="col-sm-2"><span class="help-block"></span></div>
+	</div>   
+   
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="sex">性别</label>
+		<div class="col-sm-3">
+            <switch name="datas.sex" >
+            <case value="女" >
+            	<label class="radio-inline "><input type="radio" name="sex" id="sex" class="radio_user_type"  value="男" > 男</label>
+				<label class="radio-inline "><input type="radio" name="sex" id="sex" class="radio_user_type" value="女" checked> 女</label>
+            </case>
+            <case value="男">
+            	<label class="radio-inline "><input type="radio" name="sex" id="sex" class="radio_user_type" value="男" checked> 男</label>
+				<label class="radio-inline "><input type="radio" name="sex" id="sex" class="radio_user_type" value="女"> 女</label>
+            </case>
+            <default />
+            	<label class="radio-inline "><input type="radio" name="sex" id="sex" class="radio_user_type" value="男" checked> 男</label>
+				<label class="radio-inline "><input type="radio" name="sex" id="sex" class="radio_user_type" value="女" > 女</label>
+            </switch>
+
+		</div>
+	</div>  
+   
+   
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="">&nbsp;</label>
+		<div class="col-sm-4">
+			<input type="hidden" name="uuid" value="{$uuid}">
+			<input type="hidden" name="id" value='<empty name="id">{:I('get.id',0,'intval');}</empty>'>  
+			<button type="submit" class="btn btn-info btn-sm">保存更改</button>&nbsp;&nbsp;
+			<button type="reset" class="btn btn-info btn-sm">取消</button>
+		</div>
+	</div>
+
+
+
+<!--zjh add start 模态对话框-->
+
+<include file="Public/schoolSubjectModal" />
+<include file="Public/schoolBanjiModal" />
+<!--zjh add end 模态对话框-->
+
+</form>
+
+<include file="Public/resourceBox" />
+<include file="Public/systemLayoutBox" />
+
+
+<include file="Public/jsLoader" />
+<script type="text/javascript" src="__PUBLIC__/script/uploadify/jquery.uploadify.js"></script>
+<script type="text/javascript" charset="utf-8" src="__PUBLIC__/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="__PUBLIC__/ueditor/ueditor.all.js"> </script>
+<script type="text/javascript" charset="utf-8" src="__PUBLIC__/ueditor/lang/zh-cn/zh-cn.js"></script>
+<script type="text/javascript">
+$(function($) {
+	var tmpClassid = '{$unid|default=""}';
+	
+	
+	$('button[type="reset"]').click(function(){
+		window.location.href = '__URL__/teachersList';
+	});
+	
+	
+	var toolbars_for_txt = [['fullscreen', 'forecolor', 'fontfamily', 'fontsize', '|', 'bold', 'italic', 'underline', 'fontborder', 'strikethrough', '|', 'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', 'horizontal', 'date', 'time', '|', 'undo', 'redo',]];
+	var ueTxt = UE.getEditor('mainContent', {
+		serverUrl : '__GROUP__/Ajaxhandle/UEUploadImage',
+		toolbars : toolbars_for_txt,
+        elementPathEnabled : false,
+        wordCount : false
+	});
+	
+	// Uploadify 批量上传
+	initUpload();
+	function initUpload(){
+		$('#file_upload_photo').uploadify({
+			'debug' : false,
+			'multi' : false,
+			'fileObjName' : 'myUpfile',
+			'fileTypeDesc' : '图片',
+			'fileTypeExts' : '*.jpeg; *.jpg; *.png; *.bmp',
+			'buttonText' : '<i class="icon-upload"></i>上传图片',
+			'width' : 100,
+			'buttonClass' : 'uploadify',
+			'swf'      : '__PUBLIC__/script/uploadify/uploadify.swf',
+			'formData'     : {dataType : 'image', savename :'', isMyUpRoot : 1,appModel:'school',School_IsDBWrite:1,School_ResType:'image',School_resModel:'student',School_PId:0,School_PName:'学生照片',School_MyName:''},//'formData'     : {dataType : 'image', savename : 'logo', isMyUpRoot : 1},
+			'uploader' : '__GROUP__/Ajaxhandle/School_Uploadify',
+			'queueID'  : 'uploadfyQueueList1',
+			'removeCompleted' : true,
+			'removeTimeout' : 3,
+			'overrideEvents' : ['onUploadSuccess', 'onSelectError'],
+			'onSelectError' : function(file, errorCode, errorMsg) {
+				//console.log(errorCode);
+				//console.log(errorMsg);
+				switch (errorCode) {
+					case -110:
+						alert('【文件上传失败提示】\n\n ' + file.name + ' : 文件大小超过最大上传限制50MB！\n\n 请示使用 [ 大文件上传 ] 工具进行上传.');
+						break;
+					case -130:
+						alert('【文件上传失败提示】\n\n ' + file.name + ' : 文件类型不正确.');
+						break;
+				}
+			},
+			'onUploadSuccess' : function(file, data, response) {
+				var re = $.parseJSON(data);
+				if (re.stat*1) {
+					//alert(re.savePath);
+					$('#' + file.id).find('.data').html('<span class="text-success">&nbsp;上传成功</span>');
+					$('#file_upload_photo').closest('div.up-image-box').find(".showimg").first().html('<span><img src="' + re.url + '?' + Math.random() + '" /></span>');
+					$('#file_upload_photo').closest('div.up-image-box').find(".gcovers").first().val(re.resourceid);
+					
+					$('#photoPath').val(re.savePath);//图片路径存储在表单，数据库中将存它
+				} else {
+					$('#' + file.id).addClass('text-danger').find('.data').html('<span>&nbsp;'+re.msg+'</span>');
+					$('#' + file.id).find('.uploadify-progress-bar').first().css({width : 0});
+				}
+			}
+		});
+	}
+	
+
+	
+});
+</script>
+<include file="Public/footer" />
+
+
+
+<script type="text/javascript" src="__PUBLIC__/script/jquery/jquery.validate.min.js"></script>
+<script type="text/javascript">
+$(function($) {
+
+	// 判断英文字符
+	jQuery.validator.addMethod("isEnglish", function(value, element) {       
+         return this.optional(element) || /^[A-Za-z]+$/.test(value);       
+    }, "只能包含英文字符。");
+	
+	
+	$('#editForm').validate({
+		errorElement : 'span',
+		errorClass : 'help-block',
+		focusInvalid : true,  
+        rules : {  
+			tname:{
+				required: true,minlength:2,maxlength:30,//名称带方括号验证不了
+			},
+        	code : {  
+                maxlength:15,
+            },
+
+        },  
+        messages : {
+			tname :{
+				required :"教师名称必填",minlength:"最少2个字符",maxlength:"最长30个字符"	//名称带方括号验证不了
+			},
+        	code : {  
+                maxlength:"最大长度为15个字符",
+            },
+
+        },  
+		
+
+        highlight : function(element) {  
+            $(element).closest('.form-group').addClass('has-error');  
+        },  
+
+        success : function(label) {  
+            label.closest('.form-group').removeClass('has-error');  
+            label.remove();  
+        },  
+
+        errorPlacement : function(error, element) {  
+            element.parent('div').append(error);  
+        },  
+		submitHandler: function(form) {
+			/*
+			var banji_len = $("input[name='banjiIdStr[]']:checked").length;
+			if (!banji_len){
+				alert("请选择班级");	
+				return;
+			}
+
+			
+			var subject_len = $("input[name='subjectIdStr[]']:checked").length;
+			if (!subject_len){
+				alert("请选择科目");	
+				return;
+			}*/
+			
+			
+			
+			
+			
+			
+			form.submit();
+		}
+	});
+});
+</script>
+
+
+
+
+<script>
+$(document).ready(function() {
+	//年级选择选择 START
+	$(".btn-removefromlist").click(function(){
+		//alert($(this).parent().attr("bid"));
+		var bid = $(this).parent().attr("bid");
+		var a = "#chk_grade_" + bid;
+		//alert(a);
+		//$("input[@name =S_03_22]").parent().prev().text();
+		//$("#chkddd").prop("checked", true);//这样是操作一般复选框
+		//$(a).iCheck('check');//这是操作icheck复选框的
+		$(a).iCheck('uncheck');//这是操作icheck复选框
+		//alert($("#chkddd").prop("checked"));//返回true
+		//$("#chk8").remove();
+		$(this).parent().remove();
+	});
+
+	$('.chk_grade').on('ifChecked', function(event){
+		var val = $(this).val();
+		var tName = $(this).attr("tName");
+	//	alert(val);
+		//检测list，然后加入新的
+		$("#grade_list li").each(function(){
+			//alert($(this).attr("bid"));
+			//
+			var tmp_bid = $(this).attr("bid");
+			if (tmp_bid == val){
+				//alert('list中已有此记录');
+				return;
+			}			
+		});
+		$('#grade_list').append('<li class="btn btn-warning btn-sm" bid="' + val + '">' + tName + '<i class="hide glyphicon glyphicon-remove pull-right btn-removefromlist"></i></li>');
+		
+	});
+	
+	//从list中删除一条
+	$('.chk_grade').on('ifUnchecked', function(event){
+		var val = $(this).val();
+		var tName = $(this).attr("tName");
+		//alert(val);
+		//检测list，然后加入新的
+		$("#grade_list li").each(function(){
+			//alert($(this).attr("bid"));
+			//
+			var tmp_bid = $(this).attr("bid");
+			if (tmp_bid == val){
+				//alert('list中已有此记录');
+				$(this).remove();
+			}			
+		});
+	});
+	//年级选择 END
+	
+});
+</script>
+
+
+<script>
+$(document).ready(function() {
+	//科目选择选择 START
+	/*$(".btn-removefromlist").click(function(){
+		//alert($(this).parent().attr("bid"));
+		var bid = $(this).parent().attr("bid");
+		var a = "#chk_grade_" + bid;
+		//alert(a);
+		//$("input[@name =S_03_22]").parent().prev().text();
+		//$("#chkddd").prop("checked", true);//这样是操作一般复选框
+		//$(a).iCheck('check');//这是操作icheck复选框的
+		$(a).iCheck('uncheck');//这是操作icheck复选框
+		//alert($("#chkddd").prop("checked"));//返回true
+		//$("#chk8").remove();
+		$(this).parent().remove();
+	});*/
+
+	$('.chk_subject').on('ifChecked', function(event){
+		var val = $(this).val();
+		var tName = $(this).attr("tName");
+	//	alert(val);
+		//检测list，然后加入新的
+		$("#subject_list li").each(function(){
+			//alert($(this).attr("bid"));
+			//
+			var tmp_bid = $(this).attr("bid");
+			if (tmp_bid == val){
+				//alert('list中已有此记录');
+				return;
+			}			
+		});
+		$('#subject_list').append('<li class="btn btn-warning btn-sm" bid="' + val + '">' + tName + '<i class="hide glyphicon glyphicon-remove pull-right btn-removefromlist"></i></li>');
+		
+	});
+	
+	//从list中删除一条
+	$('.chk_subject').on('ifUnchecked', function(event){
+		var val = $(this).val();
+		var tName = $(this).attr("tName");
+		//alert(val);
+		//检测list，然后加入新的
+		$("#subject_list li").each(function(){
+			//alert($(this).attr("bid"));
+			//
+			var tmp_bid = $(this).attr("bid");
+			if (tmp_bid == val){
+				//alert('list中已有此记录');
+				$(this).remove();
+			}			
+		});
+	});
+	//科目选择 END
+	
+});
+</script>
+
+<script>
+$(document).ready(function() {
+	//班级选择 START
+	$('.chk_banji').on('ifChecked', function(event){
+		var val = $(this).val();
+		var tName = $(this).attr("tName");
+	//	alert(val);
+		//检测list，然后加入新的
+		$("#banji_list li").each(function(){
+			//alert($(this).attr("bid"));
+			//
+			var tmp_bid = $(this).attr("bid");
+			if (tmp_bid == val){
+				//alert('list中已有此记录');
+				return;
+			}			
+		});
+		//$('#banji_list_v').html("");
+		$('#banji_list').append('<li class="btn btn-warning btn-sm" bid="' + val + '">' + tName + '<i class="hide glyphicon glyphicon-remove pull-right btn-removefromlist"></i></li>');
+		
+	});
+	
+	//从list中删除一条
+	$('.chk_banji').on('ifUnchecked', function(event){
+		
+		var val = $(this).val();
+		var tName = $(this).attr("tName");
+		//alert(val);
+		//检测list，然后加入新的
+		$("#banji_list li").each(function(){
+			//alert($(this).attr("bid"));
+			//
+			var tmp_bid = $(this).attr("bid");
+			if (tmp_bid == val){
+				//alert('list中已有此记录');
+				$(this).remove();
+			}			
+		});
+	});
+	//班级选择 END
+	
+});
+</script>

@@ -1,0 +1,176 @@
+<extend name="Public:baseRight"/>
+
+<block name="style">
+    <style>
+        .carousel{
+            position: relative;
+        }
+        .carouselWindow{
+            margin:0 auto;
+            position: relative;
+            overflow: hidden;
+            background-color: rgba(147, 0, 203, 1);
+            width: {$configuration[noticeWidth]};
+            height: {$configuration[noticeHeight]};
+        }
+        .item_list{
+            position: relative;
+        }
+        .item_list .oneNotice{
+            float: left;
+        }
+        .titleWindow{
+            text-align: center;
+        }
+        .title{
+            white-space: nowrap;
+            padding: 5px 0 5px 10px;
+            font-size: {$configuration[titleFontsize]}px;
+            color: {$configuration[titleForeground]};
+        }
+        .contentWindow{
+            padding: 5px 15px 5px 15px;
+        }
+        .content{
+            font-size: {$configuration[ContentFontsize]}px;
+            color: {$configuration[ContentForeground]};
+        }
+        .oneNotice{
+            display: none;
+        }
+        .active{
+            display: block;
+        }
+        .titleWindow, .contentWindow{
+            overflow: hidden;
+        }
+    </style>
+</block>
+
+<block name="content">
+    <div class="carouselWindow">
+        <div class="item_list"></div>
+    </div>
+</block>
+
+<block name="script">
+    <script>
+        var result = {$notices};
+        htmlStr = '';
+        for(var i = 0; i < result.length; i++){
+            if(i == 0){
+                var active = 'active';
+            }else{
+                var active = '';
+            }
+
+            htmlStr += '<div class="oneNotice ' + active + '" rel="' + i + '">';
+            htmlStr += '<div class="titleWindow" style="width:478px;height:46px;">';
+            htmlStr += '<span class="title">';
+            htmlStr += '{$before} ' + result[i]['title'];
+            htmlStr += '</span>';
+            htmlStr += '</div>';
+            htmlStr += '<div class="contentWindow" style="width:478px;height:258px;">';
+            htmlStr += '<span class="content">';
+            htmlStr += result[i]['content'];
+            htmlStr += '</span>';
+            htmlStr += '</div>';
+            htmlStr += '</div>';
+        }
+
+        $('.item_list').html(htmlStr);
+
+        var i = 0;
+        function rotate(){
+            thisNotice = $('.oneNotice').eq(i);
+            var realWidth = thisNotice.find('.title').css('width');
+            var windowWidth = thisNotice.find('.titleWindow').css('width');
+            var diffWidth = parseInt(realWidth) - parseInt(windowWidth);
+            if(realWidth > windowWidth){
+                rolling(2000, 'left', '.title', 3000, diffWidth, 15);
+            }
+            var realHeight = thisNotice.find('.content').css('height');
+            var windowHeight = thisNotice.find('.contentWindow').css('height');
+            var diffHeight = parseInt(realHeight) - parseInt(windowHeight);
+            // console.log('No.'+i+'  realWidth:'+realWidth+';windowWidth'+windowWidth+';realHeight'+realHeight+';windowHeight'+windowHeight+'.');
+            if(realHeight > windowHeight){
+                rolling(2000, 'top', '.content', 3000, diffHeight, 30);
+            }
+
+            roll = setTimeout(function(){
+                $('.oneNotice').removeClass('active');
+                thisNotice.next().addClass('active');
+                i++;
+                if(i == ($('.oneNotice').length)){
+                    i = 0;
+                    $('.oneNotice:first').addClass('active');
+                }
+                rotate();
+            }, 10*1000)
+        }
+
+        /**
+         * 可设置延迟时间的自定义动画
+         * @param  {[type]} holdOn=2000         [延迟等待时间，单位毫秒，若无需延迟，请用0占位]
+         * @param  {[type]} direction='top'     [滚动方向，参考值有二left,top]
+         * @param  {[type]} selector='.content' [选择滚动的对象，类选择器]
+         * @param  {[type]} speed=3000          [滚动时间]
+         * @param  {[type]} diff                [滚动距离，单位像素]
+         * @param  {[type]} offset              [修正偏移量，类似于padding]
+         * @return {[type]}                     [description]
+         */
+        function rolling(holdOn=2000, direction='top', selector='.content', speed=3000, diff, offset=30){
+            if(holdOn){
+                if(direction == 'top'){
+                    thisNotice.find(selector).css({
+                        'position': 'relative',
+                        'top': 0,
+                    });
+                }else if(direction == 'left'){
+                    thisNotice.find(selector).css({
+                        'position': 'relative',
+                        'left': 0,
+                    });
+                }
+                setTimeout(function(){
+                    customAnimate(direction, selector, speed, diff, offset);
+                }, holdOn)
+            }else{
+                customAnimate(direction, selector, speed, diff, offset);
+            }
+
+        }
+
+        /**
+         * 自定义动画核心函数
+         * @param  {[type]} direction='top'     [滚动方向，参考值有二left,top]
+         * @param  {[type]} selector='.content' [选择滚动的对象，类选择器]
+         * @param  {[type]} speed=3000          [滚动时间]
+         * @param  {[type]} diff                [滚动距离，单位像素]
+         * @param  {[type]} offset              [修正偏移量，类似于padding]
+         * @return {[type]}                     [description]
+         */
+        function customAnimate(direction='top', selector='.content', speed=3000, diff, offset=30){
+            if(direction == 'top'){
+                thisNotice.find(selector).css({
+                    'position': 'relative',
+                    'top': 0,
+                });
+                thisNotice.find(selector).stop().animate({
+                    'top': -(diff+offset)
+                }, speed)
+            }else if(direction == 'left'){
+                thisNotice.find(selector).css({
+                    'position': 'relative',
+                    'left': 0,
+                });
+                thisNotice.find(selector).stop().animate({
+                    'left': -(diff+offset)
+                }, speed)
+            }
+        }
+
+        rotate();
+
+    </script>
+</block>

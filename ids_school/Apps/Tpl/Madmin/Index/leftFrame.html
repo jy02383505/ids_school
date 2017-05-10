@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<meta charset="UTF-8">
+		<link rel="stylesheet" href="__PUBLIC__/style/reset.css">
+		<link rel="stylesheet" href="__PUBLIC__/flib/bt3/css/bootstrap.min.css">
+		<link rel="stylesheet" href="__PUBLIC__/flib/fa3/css/font-awesome.min.css">
+		<link rel="stylesheet" href="__PUBLIC__/script/zTree_v3/css/metroStyle/metroStyle.css">
+		<link rel="stylesheet" href="__PUBLIC__/style/madmin.css">
+		<link rel="shortcut icon" href="__PUBLIC__/images/favicon.ico">
+		<style>
+		.ztree *{font-family:"Helvetica Neue", Helvetica, Microsoft Yahei, Hiragino Sans GB, WenQuanYi Micro Hei, sans-serif;}
+		.ztree{padding:0}
+		.ztree li a{color:#fff;}
+		.ztree li{background:#34495E;line-height:40px;margin-top:1px;position:relative;}
+		.ztree li a{height:40px;display:block;border-bottom:1px solid #4A5967;}
+		.ztree li a:hover{text-decoration:none;background:#263747;}
+		.ztree li a.curSelectedNode{height:40px;background:#11949A url(__PUBLIC__/images/leftmenu-active.png) no-repeat right center;color:#fff;}
+		/*.ztree li a.curSelectedNode{height:40px;background:#263747;color:#fff;}*/
+		.scence-menu-ico{background-image:url(__PUBLIC__/images/mini.png);display:inline-block;width:32px;height:32px;background-position: -166px -88px;vertical-align:middle;}
+		
+		.ztree li span.button{background-image:url(__PUBLIC__/images/mini.png);width:32px;height:32px;}
+		.ztree li span.button.ico_open, .ztree li span.button.ico_close{background-position:-166px -88px;vertical-align:middle;}
+		#scences li span.button.ico_docu{background-position:-238px -81px;}
+		.ztree li span.button.switch{display:block;}
+		.ztree li span.button.root_open, .ztree li span.button.root_close{display:none;}
+		.ztree li span.button.roots_open, .ztree li span.button.roots_docu, .ztree li span.button.root_docu, .ztree li span.button.roots_close, .ztree li span.button.center_open, .ztree li span.button.center_close, .ztree li span.button.center_open, .ztree li span.button.bottom_open, .ztree li span.button.bottom_close, .ztree li span.button.center_docu, .ztree li span.button.bottom_docu{background-image:url(__PUBLIC__/images/metro.png);width:11px;height:40px;float:left;background-position:-94px -12px;}
+		#scences li span.button.root_ico_open, .ztree li span.button.root_ico_close{background-position:-95px -41px;margin-left:5px;}
+		.ztree .item-tools{position:absolute;top:0;right:10px;background:#34495E;}
+		.ztree .item-tools .icon-edit{font-family:FontAwesome;font-size:16px;color:#95A5A6;}
+		.ztree li ul.line{background-position:-10px 0;}
+		.ztree li a.scences{position:relative;}
+		.ztree li a.scences span.button{position:absolute;top:5px;right:10px;background:url(__PUBLIC__/images/my-icons.png) no-repeat}
+		.ztree li a.scences span.button.ico_open{background-position:-12px -213px}
+		.ztree li a.scences span.button.ico_close{background-position:-12px -116px}
+		#programs li a.scences span.button.ico_docu{background-position:-12px -116px}
+		#endPoints li a.scences span.button.ico_docu{background-position:-12px -116px}
+		#programs li span.button.ico_docu{background-position:-166px -88px;vertical-align:middle;}
+		#endPoints li span.button.ico_docu{background-position:-166px -88px;vertical-align:middle;}
+		#programs li a.column span.button.ico_docu{background-position:-240px -86px;vertical-align:middle;}
+		#endPoints li a.column span.button.ico_docu{background-position:-240px -86px;vertical-align:middle;}
+		#programs .scence-menu-ico{background-position:-310px -41px;}
+		#endPoints .scence-menu-ico{background-position:-310px -41px;}
+		#programs .dirgroup .scence-menu-ico{background-position:-201px -86px;}
+		#endPoints .dirgroup .scence-menu-ico{background-position:-201px -86px;}
+		#programs .column .scence-menu-ico{background-position:-240px -86px;}
+		#endPoints .column .scence-menu-ico{background-position:-240px -86px;}
+		.ztree li{margin-top:0px;}
+        .myBadge{
+            background: #2C3E50;
+        }
+        .notifyPoint{
+            background-image: url('__PUBLIC__/images/lym_icon.png');
+            background-position: -23px -196px;
+            width: 10px;
+            height: 10px;
+        }
+		</style>
+ 		<script>
+			var root = "__ROOT__";
+		</script>
+       
+        
+        
+	</head>
+	<body class="left-menu-body">
+		<eq name="menuID" value="scences">
+		<div class="menu-header" style="background:#34495E;width:90%;padding:6px;text-align:center;margin:10px auto;border-radius:16px;-moz-border-radius:16px;-webkit-border-radius:16px;">
+			<a href="__GROUP__/Index/leftFrame/menuID/scences" style="display:block;"><i class="icon-refresh"></i>&nbsp;&nbsp;更新内容</a>	
+		</div>
+		</eq>
+		
+		<div class="menu-box">
+			<eq name="menuID" value="homepage">
+			<ul class="menu-list" id="homepage">
+			<else/>
+			<ul class="menu-list" id="homepage" style="display:none;">
+			</eq>
+				<li>
+					<a href="__URL__/rightFrame" target="frame_right_main" class="active"><i class=""></i> 欢迎页</a>
+				</li>
+				<php>	if (checkAccess('Syscfg', 'modifyLoginPass')) {	</php>
+				<li>
+					<a href="javascript:void(0);"><span class="folded"></span><i class=""></i>  快捷操作</a>
+					<ul data-folded="1">
+						<php>	if (checkAccess('Syscfg', 'modifyLoginPass')) {	</php>
+						<li><a href="__GROUP__/Syscfg/modifyLoginPass" target="frame_right_main"><i class="icon-caret-right"></i> 设置登录密码</a></li>
+						<php>	}	</php>
+					</ul>
+				</li>
+				<php>	}	</php>
+  
+ 				<php>	if (checkAccess('ResLib', 'multiCheckWorldNews,multiCheckHistoric,multiCheckFamousQuotes,multiCheckBaike,multiCheckHumorJokes')||checkAccess('Programs', 'multiCheckPrograms,multiCheckGroup,multiCheckDir,multiCheckArticles')||checkAccess('Programs', 'checkLogList')) {	</php>
+				<li>
+					<a href="javascript:void(0);"><span class="folded"></span><i class=""></i>  内容审核</a>
+					<ul data-folded="1">
+						<php>	if (checkAccess('Programs', 'multiCheckPrograms,multiCheckGroup,multiCheckDir,multiCheckArticles')) {	</php>
+						<li><a href="__GROUP__/Programs/ProgramsCheckIndex" target="frame_right_main"><i class="icon-caret-right"></i> 节目审核</a></li>
+						<php>	}	</php>
+						<php>	if (checkAccess('ResLib', 'multiCheckWorldNews,multiCheckHistoric,multiCheckFamousQuotes,multiCheckBaike,multiCheckHumorJokes')) {	</php>
+						<li><a href="__GROUP__/ResLib/ResCheckIndex" target="frame_right_main"><i class="icon-caret-right"></i> 资源审核</a></li>
+						<php>	}	</php>
+						<php>	if (checkAccess('Programs', 'checkLogList')) {	</php>
+						<li><a href="__GROUP__/Programs/checkLogList" target="frame_right_main"><i class="icon-caret-right"></i> 审核日志</a></li>
+						<php>	}	</php>
+                        
+					</ul>
+				</li>
+				<php>	}	</php> 
+                
+                
+			</ul>
+			
+			<eq name="menuID" value="scences">
+				<ul class="ztree" id="scences"></ul>
+			<else/>
+				<ul class="ztree" id="scences" style="display:none"></ul>
+			</eq>
+			
+			<eq name="menuID" value="programs">
+				<eq name="etype" value="azt">
+					<ul class="menu-list" id="programs">
+				<else />
+					<ul class="ztree" id="programs">
+				</eq>
+			<else/>
+				<ul class="ztree" id="programs" style="display:none">
+			</eq>
+				<if condition="$etype eq 'azt'">
+					<li>
+						<a href="__GROUP__/Playlists/programs" target="frame_right_main"><i class=""></i> 节目列表</a>
+					</li>
+					<li>
+						<a href="javascript:void(0);"><span class="folded"></span><i class=""></i>  节目播放管理</a>
+						<ul data-folded="1">
+							<li><a href="__GROUP__/Playlists/index" target="frame_right_main"><i class="icon-caret-right"></i> 浏览节目播放表</a></li>
+							<li><a href="__GROUP__/Playlists/add" target="frame_right_main"><i class="icon-caret-right"></i> 创建节目播放表</a></li>
+						</ul>
+					</li>
+				</if>
+			</ul>
+            
+   			<eq name="menuID" value="plan">
+                <ul class="menu-list" id="plan">
+                <php>if (checkAccess('plan', 'PowerPlanIndex,AddPowerPlan,EditPowerPlan,SavePowerPlan,delPowerPlan,multiDelPowerPlan,delPowerPlanDetail,addPowerPlanDetails,playPlans,addPlayPlans,editPlayPlans,delPlayPlan,multiDelPlayPlan,savePlayPlans,updatePlayPlanWeekData,addPlayPlanDateRecord,delDayPlayPlan,dayArranges,addDayArranges,editDayArranges,saveDayArranges,delDayArranges,multiDelDayArranges,addDayArrangeDetails,delDayArrangeDetails,updatePlayPlanWeekData,powerDayArranges,editPowerDayArrange,savePowerDayArrange,addPowerDayArrange,addPowerDayArrangeDetails,multiDelPowerDayArrange')) {	</php>
+                
+                <li>
+                	<a href="javascript:void(0);"><span class="folded"></span><i class=""></i>  开关机计划</a>
+                    <ul data-folded="1">
+                        <li><a href="__GROUP__/Plan/powerPlanIndex" target="frame_right_main"><i class="icon-caret-right"></i> 开关机计划列表</a></li>
+                        <li><a href="__GROUP__/Plan/powerDayArranges" target="frame_right_main"><i class="icon-caret-right"></i> 开关机单日安排</a></li>
+                    </ul>
+                </li>
+                      
+				<li>
+					<a href="__GROUP__/Plan/playPlans" target="frame_right_main"><span class="folded"></span><i class=""></i>  播放计划管理</a>
+                    <ul data-folded="1" class="active">
+                        <li><a href="__GROUP__/Plan/playPlans" target="frame_right_main"><i class="icon-caret-right"></i> 播放计划列表</a></li>
+                        <li><a href="__GROUP__/Plan/dayArranges" target="frame_right_main"><i class="icon-caret-right"></i> 日安排列表</a></li>
+                        <li><a href="__GROUP__/Plan/addPlayPlans/planType/week" target="frame_right_main"><i class="icon-caret-right"></i> 添加周播放计划</a></li>
+                        <li><a href="__GROUP__/Plan/addPlayPlans/planType/date" target="frame_right_main"><i class="icon-caret-right"></i> 添加日播放计划</a></li>
+                    </ul>
+				</li>                
+				<php>	}	</php>
+              
+                
+                </ul>
+			</eq>         
+            
+            
+			<eq name="menuID" value="syscfg">
+			<ul class="menu-list" id="syscfg">
+			<else/>
+			<ul class="menu-list" id="syscfg" style="display:none">
+			</eq>
+				<php>	if (checkAccess('Syscfg', 'basicCfg')) {	</php>
+				<li>
+					<a href="__GROUP__/Syscfg/basicCfg" target="frame_right_main"><i class=""></i> 基本设置</a>
+				</li>
+				<php>	}	</php>
+				
+				<php>	if (checkAccess('Syscfg', 'modifyLoginPass') || checkAccess('Syscfg', 'securityCfg')) {	</php>
+				<li>
+					<a href="javascript:void(0);"><span class="folded"></span><i class=""></i>  安全配置</a>
+					<ul data-folded="1">
+						<php>	if (checkAccess('Syscfg', 'modifyLoginPass')) {	</php>
+						<li><a href="__GROUP__/Syscfg/modifyLoginPass" target="frame_right_main"><i class="icon-caret-right"></i> 修改登录密码</a></li>
+						<php>	}	</php>
+						<php>	if (checkAccess('Syscfg', 'securityCfg')) {	</php>
+						<li><a href="__GROUP__/Syscfg/securityCfg" target="frame_right_main"><i class="icon-caret-right"></i> 安全设置</a></li>
+						<php>	}	</php>
+					</ul>
+				</li>
+				<php>	}	</php>
+
+				<li>
+					<a href="javascript:void(0);"><span class="folded"></span><i class=""></i>  广告管理</a>
+					<ul data-folded="1">
+						<li><a href="__GROUP__/Syscfg/ads" target="frame_right_main"><i class="icon-caret-right"></i> x86 广告资源</a></li>
+					</ul>
+				</li>
+				
+				<eq name="Think.config.is_dev" value="1">
+				<li>
+					<a href="javascript:void(0);"><span class="folded"></span><i class=""></i>  模块管理</a>
+					<ul data-folded="1">
+						<li><a href="__GROUP__/Syscfg/nodesList" target="frame_right_main"><i class="icon-caret-right"></i> 模块列表</a></li>
+						<li><a href="__GROUP__/Syscfg/addNode" target="frame_right_main"><i class="icon-caret-right"></i> 添加模块</a></li>
+					</ul>
+				</li>
+				
+				<li>
+					<a href="javascript:void(0);"><span class="folded"></span><i class=""></i>  开发者选项</a>
+					<ul data-folded="1">
+						<li><a href="__GROUP__/Syscfg/advancedCfg" target="frame_right_main"><i class="icon-caret-right"></i> 系统配置</a></li>
+						<li><a href="__GROUP__/Syscfg/dataAPIs" target="frame_right_main"><i class="icon-caret-right"></i> 数据接口配置</a></li>
+					</ul>
+				</li>
+				</eq>
+				
+				<php>	if (checkAccess('Syscfg', 'logList,delLog')) {	</php>
+				<li>
+					<a href="javascript:void(0);"><span class="folded"></span><i class=""></i>  系统日志</a>
+					<ul data-folded="1">
+						<li><a href="__GROUP__/Syscfg/logList" target="frame_right_main"><i class="icon-caret-right"></i> 管理日志</a></li>
+					</ul>
+				</li>
+				<php>	}	</php>
+			</ul>
+			
+			<eq name="menuID" value="endPoints">
+                <div class="noticeBox" style="display:none;">
+                    <span class="badge myBadge" data-toggle="popover" data-content="播放计划已更改"><div class="notifyPoint"></div></span>
+                </div>
+				<ul class="ztree" id="endPoints"></ul>
+                <ul><li></li></ul><!--所有终端-->
+			<else/>
+				<ul class="ztree" id="endPoints" style="display:none">
+                
+                </ul>
+			</eq>
+
+			<!-- <eq name="menuID" value="endPoints">
+			<ul class="menu-list" id="endPoints">
+			<else/>
+			<ul class="menu-list" id="endPoints" style="display:none">
+			</eq>
+				<php>	if (checkAccess('Endpoints', 'index')) {	</php>
+				<li>
+					<a href="__GROUP__/Endpoints/index" target="frame_right_main"><i class=""></i> 终端列表</a>
+				</li>
+				<php>	}	</php>
+				<php>	if (checkAccess('EndpointsGroups', 'index') || checkAccess('EndpointsGroups', 'add')) {	</php>
+				<li>
+					<a href="javascript:void(0);"><span class="folded"></span><i class=""></i>  终端组</a>
+					<ul data-folded="1">
+						<php>	if (checkAccess('EndpointsGroups', 'index')) {	</php>
+						<li><a href="__GROUP__/EndpointsGroups/index" target="frame_right_main"><i class="icon-caret-right"></i> 组列表</a></li>
+						<php>	}	</php>
+						<php>	if (checkAccess('EndpointsGroups', 'add')) {	</php>
+						<li><a href="__GROUP__/EndpointsGroups/add" target="frame_right_main"><i class="icon-caret-right"></i> 添加组</a></li>
+						<php>	}	</php>
+					</ul>
+				</li>
+				<php>	}	</php>
+			</ul> -->
+		
+			<eq name="menuID" value="ucenter">
+			<ul class="menu-list" id="ucenter">
+			<else/>
+			<ul class="menu-list" id="ucenter" style="display:none">
+			</eq>
+				<php>	if (checkAccess('Users', 'index') || checkAccess('Users', 'addUser')) {	</php>
+				<li>
+					<a href="javascript:void(0);"><span class="folded"></span><i class=""></i>  用户管理</a>
+					<ul data-folded="1">
+						<php>	if (checkAccess('Users', 'index')) {	</php>
+						<li><a href="__GROUP__/Users/index" target="frame_right_main"><i class="icon-caret-right"></i> 用户列表</a></li>
+						<php>	}	</php>
+						<php>	if (checkAccess('Users', 'addUser')) {	</php>
+						<li><a href="__GROUP__/Users/addUser" target="frame_right_main"><i class="icon-caret-right"></i> 添加用户</a></li>
+						<php>	}	</php>
+					</ul>
+				</li>
+				<php>	}	</php>
+				
+				<php>	if (checkAccess('Users', 'rolesList') || checkAccess('Users', 'addRole')) {	</php>
+				<li>
+					<a href="javascript:void(0);"><span class="folded"></span><i class=""></i>  用户组</a>
+					<ul data-folded="1">
+						<php>	if (checkAccess('Users', 'rolesList')) {	</php>
+						<li><a href="__GROUP__/Users/rolesList" target="frame_right_main"><i class="icon-caret-right"></i> 用户组列表</a></li>
+						<php>	}	</php>
+						<php>	if (checkAccess('Users', 'addRole')) {	</php>
+						<li><a href="__GROUP__/Users/addRole" target="frame_right_main"><i class="icon-caret-right"></i> 创建用户组</a></li>
+						<php>	}	</php>
+					</ul>
+				</li>
+				<php>	}	</php>
+				
+ 				<php>	if (checkAccess('School', 'departmentList') || checkAccess('School', 'addRole')) {	</php>
+				<li>
+					<a href="javascript:void(0);"><span class="folded"></span><i class=""></i>  部门管理</a>
+					<ul data-folded="1">
+						<php>	if (checkAccess('School', 'rolesList')) {	</php>
+						<li><a href="__GROUP__/School/departmentList" target="frame_right_main"><i class="icon-caret-right"></i> 部门列表</a></li>
+						<php>	}	</php>
+						<php>	if (checkAccess('School', 'addRole')) {	</php>
+						<li><a href="__GROUP__/School/addDepartment" target="frame_right_main"><i class="icon-caret-right"></i> 创建部门</a></li>
+						<php>	}	</php>
+					</ul>
+				</li>
+				<php>	}	</php>               
+                
+			</ul>
+			
+            <style>
+			.btnPublish{float:left;margin:5px 10px 5px 10px;padding:5px 35px 5px 35px;width:201px;height:33px;line-height:25px;font-family: "Microsoft YaHei";color:#000000;font-size:18px;text-align:center;background-image: url('__ROOT__/public/images/btn_left_1.png');}
+			</style>
+
+			<if condition="$Think.config.app_type eq 'school'">
+			<eq name="menuID" value="school">
+			<ul class="menu-list" id="school">
+			<else/>
+			<ul class="menu-list" id="school" style="display:none">
+			</eq>
+            	<php>if (checkAccess('school', 'makeUpdate')) {	</php>
+ 				<li style="background-color:#0c686c;">
+
+                    <div class="multi-oper"  data-type="eps" data-cmd="RefreshScene" style="width:100%;cursor:hand;text-align:center;height:34px;line-height:34px;width:188px;margin-left:20px;"><div style="float:left;margin-top:10px;width:13px;height:14px;background-image: url(__ROOT__/PUBLIC/IMAGES/发布更新_icon.png)">1</div><div style="float:left;cursor:pointer;height:34px;line-height:38px;font-size:10pt;padding-left:5px;color:#FFFFFF;" title="更新数字班牌">更新数字班牌</div></div>
+				</li>  
+                <php>	}	</php>
+                <php>	if (checkAccess('school', 'index,schoolList,addSchool,editSchool,delSchool,uloadify_icon')) {	</php>
+				<li>
+					<a href="__GROUP__/School/index" target="frame_right_main"><span class="folded"></span><i class=""></i>  学校设置</a>
+				</li>
+
+                <php>	}	</php>
+				<li>
+                	<?php
+                    //增加其它项到基础信息管理中后，需在此处增加
+                    if ( checkAccess('school', 'lessonTime') || checkAccess('school', 'gradeList,addGrade,editGrade,delGrade') || checkAccess('school', 'banjiList,addBanji,editBanji,delBanji,banjiClass,addBanjiClass,editBanjiClass,delBanjiClass') || checkAccess('school', 'teachersList,addTeacher,editTeacher,delTeacher') || checkAccess('school', 'subjectsList,addSubject,editSubject,delSubject') || checkAccess('school', 'roomList,addRoom,editRoom,delRoom') || checkAccess('school', 'SeatPlan,editSeatPlan') ||checkAccess("school",'studentList,addStudent,editStudent,delStudent') ){
+                    ?>
+					<a href="javascript:void(0);"><span class="folded"></span><i class=""></i>  基础信息管理</a>
+                    <?php
+                    }
+                    ?>
+					<ul data-folded="1">
+                    
+                     	<php>if (checkAccess('school', 'lessonTime')) {	</php>
+						<li><a href="__GROUP__/School/lessonTime/" target="frame_right_main"><i class="icon-caret-right"></i>  上课时间</a></li>
+                        <php>}</php>
+                                           
+                    	<php>if (checkAccess('school', 'gradeList,addGrade,editGrade,delGrade')) {	</php>
+						<li><a href="__GROUP__/School/gradeList/" target="frame_right_main"><i class="icon-caret-right"></i>  年级管理</a></li>
+                        <php>}</php>
+                        
+                        <php>if (checkAccess('school', 'banjiList,addBanji,editBanji,delBanji,banjiClass,addBanjiClass,editBanjiClass,delBanjiClass')) {	</php>
+                        <li><a href="__GROUP__/School/banjiList/" target="frame_right_main"><i class="icon-caret-right"></i>  班级管理</a></li>
+                        <php>}</php>
+                        
+                        <php>if (checkAccess('school', 'teachersList,addTeacher,editTeacher,delTeacher')) {	</php>
+						<li><a href="__GROUP__/School/teachersList" target="frame_right_main"><i class="icon-caret-right"></i>  教师管理</a></li>
+                        <php>}</php>
+                   
+                        
+                        <php>if (checkAccess('school', 'subjectsList,addSubject,editSubject,delSubject')) {	</php>
+						<li><a href="__GROUP__/School/subjectsList" target="frame_right_main"><i class="icon-caret-right"></i>  科目管理</a></li>  
+                        <php>}</php>  
+                        
+                        <php>if (checkAccess('school', 'roomList,addRoom,editRoom,delRoom')) {	</php>
+ 						<li><a href="__GROUP__/School/roomList/sc/1" target="frame_right_main"><i class="icon-caret-right"></i>  教室管理</a></li>
+                        <php>}</php>      
+                        
+                        <php>if (checkAccess('school', 'SeatPlan,editSeatPlan')) {	</php>
+ 						<li><a href="__GROUP__/School/SeatPlan" target="frame_right_main"><i class="icon-caret-right"></i>  座位安排</a></li>
+                        <php>}</php>                        
+                            
+                        <php>if (checkAccess('school', 'studentList,addStudent,editStudent,delStudent')) {	</php>                                  
+						<li><a href="__GROUP__/School/studentList/sc/1" target="frame_right_main"><i class="icon-caret-right"></i>  学生管理</a></li>
+                        <php>}</php>
+
+					</ul>
+				</li>
+                
+               
+  				<li>
+                	<?php
+
+                    if ( checkAccess('school', 'cameraList,addCamera,editCamera,delCamera') || checkAccess('school', 'monitorList,editMonitor,addMonitor,delMonitor') || checkAccess('school', 'cardList,addCard,editCard,delCard') ){
+                    ?>
+					<a href="javascript:void(0);"><span class="folded"></span><i class=""></i>硬件设施管理</a>
+                    <?php
+                    }
+                    ?>
+					<ul data-folded="1">
+                    	<php>	if (checkAccess('school', 'cameraList,addCamera,editCamera,delCamera')) {	</php>
+						<li><a href="__GROUP__/School/cameraList" target="frame_right_main"><i class="icon-caret-right"></i>  网络摄像头管理</a></li>
+                        <php>	}	</php>
+
+                        <php>	if (checkAccess('school', 'monitorList,editMonitor,addMonitor,delMonitor')) {	</php>
+                        <li><a href="__GROUP__/School/monitorList/" target="frame_right_main"><i class="icon-caret-right"></i>  环境监测设备管理</a></li>
+                        <php>	}	</php>
+                        <php>	if (checkAccess('school', 'cardList,addCard,editCard,delCard')) {	</php>
+                        <li><a href="__GROUP__/School/cardList/sc/1" target="frame_right_main"><i class="icon-caret-right"></i>  IC卡管理</a></li>
+                        <php>	}	</php>
+					</ul>
+				</li>                 
+                
+
+  				<li >
+					<a href="javascript:void(0);"><span class="folded"></span><i class=""></i>  日常管理</a>
+					<ul data-folded="1">
+                        
+                        <php>if (checkAccess('school', 'banjiHonors,addBanjiHonor,editBanjiHonor,delBanjiHonor')) {	</php>
+						<li><a href="__GROUP__/School/banjiHonors" target="frame_right_main"><i class="icon-caret-right"></i>  班级荣誉</a></li>
+                        <php>}</php>    
+                    
+                    	<php>	if (checkAccess('school', 'lessionTableList,addLessionTable,editLessionTable,delLessionTable,ajaxSetLession,saveBanjiSubjectTeacher,delBanjiSubjectTeacher,ajaxResetLessionTable')) {	</php>
+                    	<li><a href="__GROUP__/School/lessionTableList/" target="frame_right_main"><i class="icon-caret-right"></i>  课&nbsp;&nbsp;程&nbsp;&nbsp;表</a></li><php>		}	</php>
+                        
+                        <!--这个不用了，以后删除它
+                        <php>	if (checkAccess('school', 'studentSignInList')) {	</php>
+                        <li><a href="__GROUP__/School/studentSignInList/" target="frame_right_main"><i class="icon-caret-right"></i>  学生签到</a></li><php>		}	</php>
+                        -->
+                        <php>	if (checkAccess('school', 'studentSignCount')) {	</php>
+                        <li><a href="__GROUP__/School/studentSignCount/" target="frame_right_main"><i class="icon-caret-right"></i>  学生签到统计</a></li><php>		}	</php>
+
+                        <!--教师签到不要了
+                        <php>	if (checkAccess('school', 'teacherSignInList')) {	</php>
+                        <li><a href="__GROUP__/School/teacherSignInList/" target="frame_right_main"><i class="icon-caret-right"></i>  教师签到</a></li><php>		}	</php>
+                        -->
+                        
+                        <php>	if (checkAccess('school', 'boardsList')) {	</php>
+                        <li><a href="__GROUP__/School/boardsList/" target="frame_right_main"><i class="icon-caret-right"></i>  板报管理</a></li><php>		}	</php>
+                        
+                        <php>	if (checkAccess('school', 'noticesList,addNotice,editNotice,delNotice')) {	</php>
+                        <li><a href="__GROUP__/School/noticesList/" target="frame_right_main"><i class="icon-caret-right"></i>  通知管理</a></li><php>		}	</php>
+                        
+                        <php>	if (checkAccess('school', 'messageList,addMessage,editMessage,showMessage,delMessage')) {	</php>
+                        <li><a href="__GROUP__/School/messageList/" target="frame_right_main"><i class="icon-caret-right"></i>  留言管理</a></li><php>		}	</php>
+                        <!--<li><a href="__GROUP__/School/pinbiList/" target="frame_right_main"><i class="icon-caret-right"></i>  评比管理</a></li>-->
+                        
+                        <php>	if (checkAccess('school', 'rateList,addRateResult,editRateResult,delRateResult')) {	</php>
+                        <li><a href="__GROUP__/School/rateList/" target="frame_right_main"><i class="icon-caret-right"></i>  校园评比管理</a></li><php>		}	</php>
+                        
+                        <php>	if (checkAccess('school', 'comparisonItems, addComparisonItem, editComparisonItem, delComparisonItem, batchDel')) {	</php>
+                        <li><a href="{:U('School/comparisonItems')}" target="frame_right_main"><i class="icon-caret-right"></i>  班级评比项目管理</a></li><php>		}	</php>
+                        
+                        
+                         <php>//	if (checkAccess('school', 'rateList,addRateResult,editRateResult,delRateResult')) {	</php>
+                        <li><a href="__GROUP__/School/ComparisonResults/" target="frame_right_main"><i class="icon-caret-right"></i>  班级评比结果管理</a></li><php>	//	}	</php>                       
+                        
+                        
+                        <php>	if (checkAccess('school', 'dutyList,editDuty')) {	</php>
+                        <li><a href="__GROUP__/School/dutyList/" target="frame_right_main"><i class="icon-caret-right"></i>  值日管理</a></li><php>		}	</php>
+                        <php>	if (checkAccess('school', 'kaochangList,addKaochang,editKaochang,delKaochang,examinationTime,addExaminationTime,editExaminationTime,delExaminationTime,kaochangExamplanList,addKaochangExamplan,editKaochangExamplan,delKaochangExamplan,kaoChangKaoWei')) {	</php>
+                        <li><a href="__GROUP__/School/kaochangList/" target="frame_right_main"><i class="icon-caret-right"></i>  考场管理</a></li><php>		}	</php>
+                  <!--      
+                        <php>	if (checkAccess('school', 'homeworkList')) {	</php>
+                        <li><a href="__GROUP__/School/homeworkList/" target="frame_right_main"><i class="icon-caret-right"></i>  作业管理</a></li><php>		}	</php>
+
+                        
+                        
+                        <php>	if (checkAccess('school', 'homeworkCount')) {	</php>
+                        <li><a href="__GROUP__/School/homeworkCount/" target="frame_right_main"><i class="icon-caret-right"></i>  作业统计</a></li><php>		}	</php>     
+                        
+                -->        
+
+                        <php>	if (checkAccess('school', 'homeworkSubmit')) {	</php>
+                        <li><a href="__GROUP__/School/homeworkSubmit/" target="frame_right_main"><i class="icon-caret-right"></i>  作业提交情况</a></li><php>		}	</php>   
+                                          
+                        <php>	if (checkAccess('school', 'albumList,addAlbum,editAlbum,delAlbum,addPhotos,delPhoto')) {	</php>
+						<li><a href="__GROUP__/School/albumList" target="frame_right_main"><i class="icon-caret-right"></i>  相册管理</a></li><php>		}	</php>
+                        
+                        <php>	if (checkAccess('school', 'videoList,addVideoGroup,editVideoGroup,delVideoGroup,videoList,addVideo,editVideo,delVideo,delOneVideo')) {	</php>
+						<li><a href="__GROUP__/School/videoList" target="frame_right_main"><i class="icon-caret-right"></i>  视频管理</a></li><php>		}	</php>
+                        
+                        <php>	if (checkAccess('school', 'Environment')) {	</php>
+                        <li><a href="__GROUP__/School/Environment" target="frame_right_main"><i class="icon-caret-right"></i>  环境统计查询管理</a></li><php>		}	</php>
+                        
+                        <php>	if (checkAccess('school', 'timingList,addTiming,editTiming,delTiming')) {	</php>
+                        <li><a href="__GROUP__/School/timingList" target="frame_right_main"><i class="icon-caret-right"></i>  倒计时管理</a></li><php>		}	</php>
+                         <php>	if (checkAccess('school', 'votesList,addVote,editVote,delVote,voteResult')) {	</php>
+                        <li><a href="__GROUP__/School/votesList" target="frame_right_main"><i class="icon-caret-right"></i>  投票管理</a></li><php>		}	</php>
+                        <php>	if (checkAccess('school', 'emergencies,emergenciesCondition')) {	</php>
+                        <li><a href="__GROUP__/School/emergencies" target="frame_right_main"><i class="icon-caret-right"></i>  紧急事件</a></li><php>		}	</php>                                               
+                         <php>	if (checkAccess('school', 'emergencies,emergenciesCondition')) {	</php>
+                        <li><a href="__GROUP__/School/emergenciesCondition" target="frame_right_main"><i class="icon-caret-right"></i>  紧急事件设置</a></li><php>		}	</php>                         
+                        
+                        
+                        <!--
+                        <?php
+                        if (checkAccess('school', 'aaa,bbb,ccc')){
+                        ?>
+                        	<li><a href="__GROUP__/School/aaa/" target="frame_right_main"><i class="icon-caret-right"></i>  aaa</a></li>
+                            <li><a href="__GROUP__/School/bbb/" target="frame_right_main"><i class="icon-caret-right"></i>  bbb</a></li>
+                            <li><a href="__GROUP__/School/ccc/" target="frame_right_main"><i class="icon-caret-right"></i>  ccc</a></li>
+                        <?php
+                        }
+                        
+                        ?>
+                        -->
+					</ul>
+				</li>                
+          
+            
+                
+            <!--                
+                
+				<li>
+					<a href="javascript:void(0);"><span class="folded"></span><i class=""></i>  公共设施点位管理</a>
+					<ul data-folded="1">
+						<li class="hidden"><a href="__GROUP__/Mall/stores/sc/0" target="frame_right_main"><i class="icon-caret-right"></i>  X 点位列表</a></li>
+						<li class="hidden"><a href="__GROUP__/Mall/addStore/spottype/service" target="frame_right_main"><i class="icon-caret-right"></i>  X 添加公共设施点位</a></li>
+						<li class="hidden"><a href="__GROUP__/Mall/addStore/spottype/tep" target="frame_right_main"><i class="icon-caret-right"></i>  X 添加信息终端点位</a></li>
+                        
+                        
+
+                        <li><a href="__GROUP__/Mall/utilities/spottype/service" target="frame_right_main"><i class="icon-caret-right"></i>  公共设施点位列表</a></li>
+                        <li><a href="__GROUP__/Mall/utilities/spottype/tep" target="frame_right_main"><i class="icon-caret-right"></i>  信息终端点位列表</a></li>
+						<li><a href="__GROUP__/Mall/addUtilities/spottype/service" target="frame_right_main"><i class="icon-caret-right"></i>  添加公共设施点位</a></li>
+						<li><a href="__GROUP__/Mall/addUtilities/spottype/tep" target="frame_right_main"><i class="icon-caret-right"></i>  添加信息终端点位</a></li>
+                        <li><a href="__GROUP__/Mall/utilityClass/" target="frame_right_main"><i class="icon-caret-right"></i>  公共设施分类</a></li>
+					</ul>
+				</li>
+				<li style="display:none;">
+					<a href="javascript:void(0);"><span class="folded"></span><i class=""></i>  分类管理</a>
+					<ul data-folded="1">
+						<li><a href="__GROUP__/Mall/storeTypes" target="frame_right_main"><i class="icon-caret-right"></i>  分类列表</a></li>
+						<li><a href="__GROUP__/Mall/addStoreType" target="frame_right_main"><i class="icon-caret-right"></i>  创建分类</a></li>
+					</ul>
+				</li>
+				<li>
+					<a href="javascript:void(0);"><span class="folded"></span><i class=""></i>  商场活动管理</a>
+					<ul data-folded="1">
+						<li><a href="__GROUP__/Mall/activities" target="frame_right_main"><i class="icon-caret-right"></i>  活动列表</a></li>
+						<li><a href="__GROUP__/Mall/addActivities" target="frame_right_main"><i class="icon-caret-right"></i>  发布活动</a></li>
+                        <li><a href="__GROUP__/Mall/actiClass/" target="frame_right_main"><i class="icon-caret-right"></i>  活动分类</a></li>
+					</ul>
+				</li>
+
+				<li>
+					<a href="javascript:void(0);"><span class="folded"></span><i class=""></i>  相册管理</a>
+					<ul data-folded="1">
+						<li><a href="__GROUP__/Mall/albumList" target="frame_right_main"><i class="icon-caret-right"></i>  相册列表</a></li>
+						<li><a href="__GROUP__/Mall/addAlbum" target="frame_right_main"><i class="icon-caret-right"></i>  创建相册</a></li>
+                        <li><a href="__GROUP__/Mall/photoList" target="frame_right_main"><i class="icon-caret-right"></i>  图片列表</a></li>
+                        <li><a href="__GROUP__/Mall/albumClass" target="frame_right_main"><i class="icon-caret-right"></i>  相册分类</a></li>
+					</ul>
+				</li>
+
+
+
+            
+            
+            
+            -->
+			</ul>
+			</if> 
+		
+			<eq name="menuID" value="resLib">
+			<ul class="menu-list" id="resLib">
+			<else/>
+			<ul class="menu-list" id="resLib" style="display:none">
+			</eq>
+				<php>	if (checkAccess('ResLib', 'index')) {	</php>
+				<li>
+					<a href="__GROUP__/ResLib/index" target="frame_right_main"><i class=""></i>  素材管理</a>
+				</li>
+				<php>	}	</php>
+				
+				<php> if (C('EN_RES_PACKET')) { </php>
+				<php>	if (checkAccess('ResLib', 'worldNews') || checkAccess('ResLib', 'historic') || checkAccess('ResLib', 'famousQuotes') || checkAccess('ResLib', 'baike') || checkAccess('ResLib', 'humorJokes') || checkAccess('ResLib', 'englishWords') || checkAccess('ResLib', 'weather')) {	</php>
+				<li>
+					<a href="javascript:void(0);"><span class="folded"></span><i class=""></i>  资源包管理</a>
+					<ul data-folded="1">
+						<php>	if (checkAccess('ResLib', 'worldNews')) {	</php>
+						<li>
+							<a href="__GROUP__/ResLib/worldNews" target="frame_right_main"><i class="icon-caret-right"></i>  全球要闻</a>
+						</li>
+						<php>	}	</php>
+						<php>	if (checkAccess('ResLib', 'weather')) {	</php>
+						<li>
+							<a href="__GROUP__/ResLib/weather" target="frame_right_main"><i class="icon-caret-right"></i>  天气预报</a>
+						</li>
+						<php>	}	</php>
+						<php>	if (checkAccess('ResLib', 'historic')) {	</php>
+						<li>
+							<a href="__GROUP__/ResLib/historic" target="frame_right_main"><i class="icon-caret-right"></i>  历史上的今天</a>
+						</li>
+						<php>	}	</php>
+						<php>	if (checkAccess('ResLib', 'famousQuotes')) {	</php>
+						<li>
+							<a href="__GROUP__/ResLib/famousQuotes" target="frame_right_main"><i class="icon-caret-right"></i>  名人名言</a>
+						</li>
+						<php>	}	</php>
+						<php>	if (checkAccess('ResLib', 'baike')) {	</php>
+						<li>
+							<a href="__GROUP__/ResLib/baike" target="frame_right_main"><i class="icon-caret-right"></i>  百科知识</a>
+						</li>
+						<php>	}	</php>
+						<php>	if (checkAccess('ResLib', 'humorJokes')) {	</php>
+						<li>
+							<a href="__GROUP__/ResLib/humorJokes" target="frame_right_main"><i class="icon-caret-right"></i>  幽默笑话</a>
+						</li>
+						<php>	}	</php>
+						<php>	if (checkAccess('ResLib', 'englishWords') && false) {	</php>
+						<li>
+							<a href="__GROUP__/ResLib/englishWords" target="frame_right_main"><i class="icon-caret-right"></i>  英语词条</a>
+						</li>
+						<php>	}	</php>
+					</ul>
+				</li>
+				<php>	}}	</php>
+			</ul>
+
+            
+            
+            <eq name="menuID" value="template">
+				<ul class="menu-list" id="template">
+            <else/>
+				<ul class="menu-list" id="template" style="display:none;">
+            </eq>
+            <php>	if (checkAccess('TemplateManage', 'template_index,showEach,scene_index,getSerialize,setExigent,ajax_setPlayorder,ajax_changePlayorder,ajax_setPlaytime,index_azad,scene_list')) {	</php>
+
+                <li>
+                <a href="javascript:void(0);" target="frame_right_main" class="active"><span class="folded"></span><i class=""></i>  模板管理</a>
+					<ul data-folded="1">
+						<li><a href="__GROUP__/TemplateManage/showEach/tType/x86" target="frame_right_main"><i class="icon-caret-right"></i>  x86触摸机</a></li>
+						<li><a href="__GROUP__/TemplateManage/showEach/tType/azt" target="frame_right_main"><i class="icon-caret-right"></i>  安卓触摸机</a></li>
+						<li><a href="__GROUP__/TemplateManage/showEach/tType/azad" target="frame_right_main"><i class="icon-caret-right"></i>  安卓广告机</a></li>
+                    </ul>
+                </li>
+             <php>	}	</php>
+            </ul>           
+            
+            
+            
+
+		</div>
+        
+
+		
+		<div class="left-bottom-box hide">
+			<p class="text-center">{$Think.config.a_copyright}</p>
+			<p class="text-center">{$Think.config.a_aftersales}</p>
+		</div>
+		
+		<div id="pageData" style="display:none;">
+			<textarea rows="0" cols="0" id="enodes"></textarea>
+			<textarea rows="0" cols="0" id="pnodes"></textarea>
+		</div>
+		
+		<div class="my-cover" style="display:none;"></div>
+		<include file="Public/jsLoader" />
+		<script type="text/javascript" src="__PUBLIC__/script/jquery/jquery-1.11.0.min.js"></script>
+        <script type="text/javascript" src="__PUBLIC__/bootstrap/bootstrap.min.js"></script>
+		<script type="text/javascript" src="__PUBLIC__/script/common.js"></script>
+		<script type="text/javascript" src="__PUBLIC__/script/zTree_v3/js/jquery.ztree.core-3.5.js"></script>
+		<script type="text/javascript">
+		$(function($) {
+			var menuID = "{$menuID|default=''}",
+				menuDef = "{$menuDef|default=''}",
+				etype = "{$etype|default='x86'}",
+				noDef = {$Think.get.noDef|default=0},//这个不能加单引号，否则出错
+				endPointsTree = null;
+			
+			// start 123	
+			function onClickFunc(e, treeId, treeNode) {
+				
+				pagePreLoader(root);
+				if (menuID == 'scences') {
+					if (treeNode.iconSkin != 'root') {
+						var zTree = $.fn.zTree.getZTreeObj("scences");
+						zTree.expandNode(treeNode);
+						$('.ztree').find('a').first().removeClass('curSelectedNode');
+					}
+				
+					if (treeNode._dataType == 'scence') {
+						window.parent.frame_right_main.location.href = '__GROUP__/Scences/index/sid/' + treeNode.id + '/treeId/' + treeNode.tId;
+					} else {
+						window.parent.frame_right_main.location.href = '__GROUP__/Plugins/index/pid/' + treeNode.id + '/treeId/' + treeNode.tId;
+					}
+					$('.left-bottom-box').css('position', $('#scences').outerHeight() > 580 ? 'static' : 'fixed');
+					
+
+				}else if (menuID == 'endPoints') {
+					
+					var zTree = $.fn.zTree.getZTreeObj("endPoints");
+					//zTree.expandNode(treeNode);
+					$('#endPoints').find('a').removeClass('curSelectedNode');
+					$('#' + treeNode.tId + '_a').addClass('curSelectedNode');
+					if (treeNode.id) {
+						window.parent.frame_right_main.location.href = '__GROUP__/Endpoints/index/et/' + treeNode.endtype + '/epgId/' + treeNode.id;
+					} else {
+						window.parent.frame_right_main.location.href = '__GROUP__/Endpoints/index/et/' + treeNode.endtype;
+					}
+					
+				} else {
+					var zTree = $.fn.zTree.getZTreeObj("programs");
+					if (etype == 'x86') {
+						if (treeNode.level == 0) {
+							zTree.expandAll(false);
+						}
+						zTree.expandNode(treeNode);
+						if (treeNode.node_type == 'program') {
+							window.parent.frame_right_main.location.href = '__GROUP__/Programs/groups/id/' + treeNode.unid + '/treeId/' + treeNode.tId;
+						} else if (treeNode.node_type == 'dirgroup') {
+							window.parent.frame_right_main.location.href = '__GROUP__/Programs/columns/pid/' + treeNode.program_id + '/id/' + treeNode.unid + '/treeId/' + treeNode.tId;
+						} else if (treeNode.node_type == 'column') {
+							
+							if ($.isEmptyObject(treeNode.children)) {
+								window.parent.frame_right_main.location.href = '__GROUP__/Programs/articles/gid/' + treeNode.dirgroup_classid + '/id/' + treeNode.unid + '/treeId/' + treeNode.tId;
+							} else {
+								window.parent.frame_right_main.location.href = '__GROUP__/Programs/columns/pid/' + treeNode.program_id + '/id/' + treeNode.dirgroup_classid + '/cid/' + treeNode.unid + '/treeId/' + treeNode.tId;
+							}
+							
+						} else {
+							window.parent.frame_right_main.location.href = '__GROUP__/Programs/index';
+						}
+						
+						
+					} else if (etype == 'azt') {
+					} else if (etype == 'azad') {
+					}
+					
+					$('.left-bottom-box').css('position', $('#programs').outerHeight() > 580 ? 'static' : 'fixed');	
+				}
+				
+			}
+			// end 123	
+			
+			
+			/*
+			function onExpand(e, treeId, treeNode) {   // 由于目前插件还不支持onExpand事件，故无法运行事件执行代码
+				//console.log(treeNode);
+				//console.log($(window).height());
+				//console.log($('.menu-header').outerHeight());
+				//console.log($('.ztree').height());
+				//console.log($('.left-bottom-box').outerHeight());
+				var contentHeight = $('.menu-header').outerHeight() + $('.ztree').outerHeight() + $('.left-bottom-box').outerHeight(),
+					winHeight = $(window).height();
+				//console.log(contentHeight + ' : ' + winHeight);
+				$('.left-bottom-box').css('position', contentHeight >= winHeight ? 'static' : 'fixed');				
+			}*/
+			
+			// start 345	
+			function addDiyDomFunc(treeId, treeNode) {
+				var aObj = $("#" + treeNode.tId + "_a");
+				if (menuID == 'scences') {
+					
+					if (treeNode._dataType == 'scence' && treeNode.iconSkin != 'root') {
+						
+						if ($("#diyIco_" + treeNode.id).length>0) return;
+						
+						var htmlStr = "<span class='scence-menu-ico' id='diyIco_" + treeNode.id + "'></span>";
+						aObj.addClass('scences').prepend(htmlStr);
+					} else {
+						aObj.addClass('items');
+					}
+					
+				} else if (menuID == 'endPoints') {
+					
+					if (!treeNode.id) {
+						aObj.addClass('curSelectedNode');
+					}
+                    // alert(treeNode['isChanged']);
+					
+					if (!$.isEmptyObject(treeNode.children)) {
+						
+						if ($("#diyIco_" + treeNode.unid).length>0) return;
+						
+						
+						var htmlStr = "<span class='scence-menu-ico' id='diyIco_" + treeNode.unid + "'></span>";
+						aObj.addClass('scences').prepend(htmlStr);
+					} else {
+						aObj.addClass('items');
+					}
+					
+					aObj.addClass(treeNode.node_type); //这句似乎毫无意义treeNode.node_type的值为undefined
+                    if(treeNode.isChanged){
+                        $("#" + treeNode.tId + '_span').append($('.noticeBox'));
+                        $('.noticeBox').css('display', 'inline');
+                    }
+					
+				} else {
+					
+					if (treeNode.node_type == 'program' || treeNode.node_type == 'dirgroup' || (treeNode.node_type == 'column' && !$.isEmptyObject(treeNode.children))) {
+						
+						if ($("#diyIco_" + treeNode.unid).length>0) return;
+						
+						var htmlStr = "<span class='scence-menu-ico' id='diyIco_" + treeNode.unid + "'></span>";
+						aObj.addClass('scences').prepend(htmlStr);
+					} else if (treeNode.node_type == 'all') {
+						aObj.addClass('curSelectedNode');
+					} else {
+						aObj.addClass('items');
+					}
+					
+					aObj.addClass(treeNode.node_type);
+					
+				}
+			}
+			// end 345
+			
+				
+			var IDMark_Switch = "_switch",
+			IDMark_Icon = "_ico",
+			IDMark_Span = "_span",
+			IDMark_Input = "_input",
+			IDMark_Check = "_check",
+			IDMark_Edit = "_edit",
+			IDMark_Remove = "_remove",
+			IDMark_Ul = "_ul",
+			IDMark_A = "_a";
+			
+			if (menuID == 'scences') {
+	
+				var setting = {
+					view: {
+						dblClickExpand: false,
+						showLine: true,
+						showIcon: true,
+						addDiyDom: addDiyDomFunc
+					},
+					callback: {
+						onClick: onClickFunc,
+					}
+				},
+				zNodes = {$sTree|default=0};
+		
+				$.fn.zTree.init($("#scences"), setting, zNodes);
+			}
+				
+			if (menuID == 'programs' && etype == 'x86') {
+				
+				//左导航：分级显示所有节目，zjh注释掉（原因，之前左侧只显示节目导航，现在要改为所有节目链接和播放计划管理）
+				var setting2 = {
+					view: {
+						dblClickExpand: false,
+						showLine: true,
+						showIcon: true,
+						addDiyDom: addDiyDomFunc
+					},
+					callback: {
+						onClick: onClickFunc,
+					}
+				},
+				zNodes2 = {$programTree|default=0};
+				console.log(zNodes2);
+				
+				var programZTree = $.fn.zTree.init($("#programs"), setting2, zNodes2);
+				window.parent.programTree = programZTree;
+				var allProNodes = programZTree.transformToArray(programZTree.getNodes());
+				var pnodes = '[';
+				$.each(allProNodes,function(i, node) {
+					pnodes += ((i+1 == 1) ? '' : ',') + '{"unid":"' + node.unid + '", "tId":"' + node.tId + '"}';
+				})
+				pnodes += ']';
+				//console.log(pnodes);
+				//console.log(jQuery.parseJSON(pnodes));
+				$('#pnodes').text(pnodes);
+				
+			}
+			
+			if (menuID == 'endPoints') {
+	
+				var setting3 = {
+					view: {
+						dblClickExpand: false,
+						showLine: true,
+						showIcon: true,
+						addDiyDom: addDiyDomFunc
+					},
+					callback: {
+						onClick: onClickFunc,
+					}
+				},
+				zNodes3 = {$groupsTree|default=0};
+
+				endPointsTree = $.fn.zTree.init($("#endPoints"), setting3, zNodes3);
+				var allEndNodes = endPointsTree.transformToArray(endPointsTree.getNodes());
+                // alert(allEndNodes[5]['isChanged']);
+				var enodes = '[';
+				$.each(allEndNodes,function(i, node) {
+					enodes += ((i+1 == 1) ? '' : ',') + '{"id":' + node.id + ', "tId":"' + node.tId + '"}';
+				})
+				enodes += ']';
+				//console.log(enodes);
+				//console.log(jQuery.parseJSON(enodes));
+				$('#enodes').text(enodes);
+			}
+			
+
+
+			
+			if (!noDef) {
+				
+				if (menuID != 'programs' && menuID != 'endPoints') {
+					menuDef = $('#' + menuID).find('a[href!="javascript:void(0);"]').first().attr('href');
+				} else {
+					$('li[data-etype="' + menuID + '"] a[data-etype="' + etype + '"]', window.parent.frame_top.document).addClass('active');
+				}
+				
+				setMenuDef(menuID, menuDef);
+			}
+				
+
+			if (menuID != 'programs' && menuID != 'endPoints' && menuID != 'template') {
+				menuDef = $('#' + menuID).find('a[href!="javascript:void(0);"]').first().attr('href');//默认菜单为第一个链接的href值
+			} else {
+				$('li[data-etype="' + menuID + '"] a[data-etype="' + etype + '"]', window.parent.frame_top.document).addClass('active');
+			}
+
+			
+			if(menuID != 'template'){
+				setMenuDef(menuID, menuDef);
+			}else{
+				window.parent.frames['frame_right_main'].document.location = "{:U('TemplateManage/showEach',array('tType'=>'x86'))}";	//对于模板管理，绕开树结构
+			}
+
+
+
+			$('.left-bottom-box').css('position', $('.ztree').outerHeight() > 580 ? 'static' : 'fixed');
+			
+			$('#scences li').delegate('a', 'click', function() {
+				if($.trim($(this).attr('href')) != 'javascript:void(0);') {
+					pagePreLoader(root);
+				}
+			});
+			
+			// 导航级联展示效果
+			$('.menu-box').delegate('.menu-list > li > a', 'click', function() {
+				var subMenu = $(this).siblings('ul').first();
+				
+				if (subMenu.length > 0) {
+					var isFolded = parseInt(subMenu.attr('data-folded'));
+				}
+				
+				$.each($('.menu-list').children('li'), function(i, o){
+					$(o).children('a').first().removeClass('hover').children('span').first().removeClass('un-folded').addClass('folded');
+					$(o).children('ul').first().attr('data-folded', 1).slideUp('fast');
+				});	
+				
+				if (subMenu.length > 0) {
+					if (isFolded) {
+						$(this).children('span').first().removeClass('folded').addClass('un-folded');
+						subMenu.attr('data-folded', 0).slideDown('fast');
+						$(this).addClass('hover');
+					} else {
+						$(this).children('span').first().removeClass('un-folded').addClass('folded');
+						subMenu.attr('data-folded', 1).slideUp('fast');
+						$(this).removeClass('hover');
+					}	
+				} else {
+					$('.menu-list > li > a').removeClass('active');
+					$(this).addClass('active');
+				}
+			});
+			
+			$('.menu-box').delegate('.menu-list li li a', 'click', function(){
+				$('.menu-list > li > a, .menu-list li li a').removeClass('active');
+				$(this).parents('ul').first().siblings('a').first().addClass('active');
+				$(this).addClass('active');
+			});
+		});
+		
+		function setMenuDef(menuID, menuDef) {
+			var tl = 0;
+			
+			window.parent.frame_right_main.location.href = menuDef;
+			
+
+			if (menuID != 'scences') {
+				
+				$.each($('#' + menuID + ' > li > a', window.parent.frame_left_menu.document), function(i, o) {
+					if ($(o).attr('href') == menuDef) {
+						$(o).addClass('active');
+						tl = 1;
+					}
+				});
+				
+				if (!tl) {
+					$.each($('#' + menuID + ' ul li > a', window.parent.frame_left_menu.document), function(i, o) {
+						if ($(o).attr('href') == menuDef) {
+							$(o).addClass('active').parents('ul').first().show().siblings('a').first().addClass('active');
+							tl = 0;
+						}
+					});
+				}
+				
+				if (!tl) {
+					$.each($('#' + menuID + ' .icon-edit', window.parent.frame_left_menu.document), function(i, o) {
+						if ('__GROUP__/Scences/index/sid/' + $(o).attr('data-sid') == menuDef) {
+							$(o).parents('a').first().addClass('active');
+							tl = 0;
+						}
+					});
+				}
+				
+			} else {
+				$('#scences').find('a').first().addClass('curSelectedNode');
+			}
+		}
+		</script>
+        
+        <include file="Public/schoolCommandRefresh" />
+        
+	</body>
+</html>
+

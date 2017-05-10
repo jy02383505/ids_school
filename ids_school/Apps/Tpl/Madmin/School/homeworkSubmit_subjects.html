@@ -1,0 +1,153 @@
+<!--zjh-->
+<include file="Public/header" />
+
+<ol class="breadcrumb">
+	<li><a href="{:U('School/homeworkSubmit')}">作业提交情况管理</a></li>
+	<li class="active">科目列表</li>
+</ol>
+
+<div id="" class="row well ">
+	<div class="col-md-9">
+		<form class="form-inline edit-form" role="form" method="get" action="">
+			<table class="table">
+				<tbody>
+					<tr>
+						<td class="text-right" width="120"><b>{$banjiName}</b></td>
+						<td width="400">
+							此处列出的科目为课程表中的科目。
+						</td>
+                        <td>
+                        
+                        </td>
+					</tr>
+				</tbody>
+			</table>
+		</form>
+	</div>
+	<div class="col-md-3 text-right">
+		<table class="table">
+			<tbody>
+				<tr>
+					<td style="border:0;">
+                    <button type="reset" class="btn btn-link hide">返回</button>
+
+                        
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<div class="data-list">
+	<table class="table table-hover list-tbl">
+		<thead>
+			<tr>
+				<!-- <th width="36"><input type="checkbox" class="select-all" title="全选/全不选"></th> -->
+				<th width="100">科目</th>
+                <th width="140">提交人数</th>
+                <th width="140">选择输入</th>
+				<th width="140"></th>
+                <th></th>
+			</tr>
+		</thead>
+		<tbody>
+
+
+            
+        
+			<volist name="datas" id="vo">
+			<tr>
+				<!-- <td><input type="checkbox"></td> -->
+				<td>{$vo.id}-{$vo.subjectName}</td>
+                <td><input type="text" class="form-control input-sm inputQuantity" name="quantity-{$vo.id}" id="quantity-{$vo.id}" value="{$vo.quantity}" style="width:100px;"  data-id="{$vo.id}" >
+                </td>
+                <td>
+                    <select class="form-control input-sm sel" name="studentNumber" id="studentNumber"  data-id="{$vo.id}" >
+                        <option value="">请选择</option>
+                        <for start="1" end="$studentNumber">
+                        <option value="{$i}" >{$i}</option>
+                        </for>
+                    </select>
+                </td>
+				<td>
+				<button type="button" class="btn btn-primary btn-save" data-id="{$vo.id}" id="btn-save-{$vo.id}" >保存</button>
+				</td>
+                <td></td>
+			</tr>
+			</volist>
+		</tbody>
+	</table>
+	<table class="table">
+		<tr>
+			<td>
+				<!-- <input type="checkbox" class="select-all" title="全选/全不选">
+				<button type="button" class="btn btn-default btn-sm multi-del" style="margin-left:30px;">批量删除</button> -->
+				&nbsp;
+			</td>
+			<td class="page-box text-right" width="80%">{$page}</td>
+		</tr>
+	</table>
+</div>
+
+<include file="Public/jsLoader" />
+<script type="text/javascript">
+$(function($){
+	$('button[type="reset"]').click(function(){
+		window.location.href = '__URL__/homeworkSubmit/';
+	});		
+	
+	$(".inputQuantity").change(function(){
+		var d = $.trim($(this).attr('data-id'));
+		var tmp = "#btn-save-" + d;
+		$(tmp).text("未保存");
+	});
+	
+	$(".sel").change(function(){
+		var d = $.trim($(this).attr('data-id'));
+		var tmp = "#quantity-" + d;
+		$(tmp).val($(this).val());
+		
+		var btntmp = "#btn-save-" + d;
+		$(btntmp).text("未保存");
+	});	
+	
+	$('.btn-save').click(function() {
+		var d = $.trim($(this).attr('data-id'));
+		var tmp = "#quantity-" + d;
+		//alert(tmp);
+		var quantity = 0;
+		quantity = $(tmp).val();
+		//alert(quantify);
+		$(this).text("正在保存...");
+		
+		//提交保存
+		var ths = $(this);
+		$.ajax({
+			url:'__URL__/homeworkSubmit',
+			type:'post',
+			data:"type=updateOne&id=" + d + "&quantity="+quantity +"&cache="+Math.random(),
+			async:true,//false为同步
+			dataType:'json',
+			success:function(re) {
+				//alert(re);
+				if (re.stat * 1 > 0){
+					//var datas = re.data;
+				//	alert(re.stat);
+					//alert("msg="+re.msg);
+					ths.text("已保存");
+				
+				}else{
+						
+				}
+
+			},
+			error:function() {
+				alert('由于网络异常导致操作失败，请刷新页面重试....');
+			}
+		});
+		
+	});
+});
+</script>
+<include file="Public/footer" />

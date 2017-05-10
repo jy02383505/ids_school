@@ -1,0 +1,266 @@
+<!-------教师模态对话框---------->
+<div class="modal fade" id="teacher2Modal" draggable='true' style="margin-top:200px;">
+    <div class="modal-dialog modal-lg">
+    	<div class="modal-content">
+    		<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">教师</h4>
+			</div>
+			<div class="modal-body" >
+				<div class="form-group " style="width:100%;margin-bottom:0px;">
+                    <table class="table " style="border:none;">
+                    <tbody>
+                    <tr><td colspan=6>点击教师，将姓名自动填入用户名输入框</td></tr>
+                    <tr>
+                    <td width="120" style="display:none;">
+                        <select class="form-control input-sm" name="modal_teacher2_gradeId" id="modal_teacher2_gradeId">
+                            <option value="">年级不限</option>
+                            <volist name="banjis" id="vo">
+                                <eq name="vo.id" value="$banjiId">
+                                    <option value="{$vo.id}" selected>{$vo.name}</option>
+                                <else/>
+                                    <option value="{$vo.id}">{$vo.name}</option>
+                                </eq>
+                            </volist>
+                        </select>
+                    </td>                    
+                    <td width="120">
+                        <select class="form-control input-sm" name="modal_teacher2_banjiId" id="modal_teacher2_banjiId">
+                            <option value="">班级不限</option>
+                            <volist name="banjis" id="vo">
+                                <eq name="vo.id" value="$banjiId">
+                                    <option value="{$vo.id}" selected>{$vo.name}</option>
+                                <else/>
+                                    <option value="{$vo.id}">{$vo.name}</option>
+                                </eq>
+                            </volist>
+                        </select>
+                    </td>                          
+                    
+                    <td width="120">
+                        <select class="form-control input-sm" name="modal_teacher2_subjectId" id="modal_teacher2_subjectId">
+                            <option value="">科目不限</option>
+                            <volist name="subjects" id="vo">
+                                <eq name="vo.id" value="$subjectId">
+                                    <option value="{$vo.id}" selected>{$vo.name}</option>
+                                <else/>
+                                    <option value="{$vo.id}">{$vo.name}</option>
+                                </eq>
+                            </volist>
+                        </select>
+                    </td>
+                    <td width="100">
+                    <input type="text" class="form-control input-sm" name="keyboard" id="modal_teacher2_keyboard" value="" style="width:182px;">
+                    </td>
+                    <td width="100">
+                        <select class="form-control input-sm" name="keyType" id="modal_teacher2_key_type">
+                            <option value="">类型</option>
+                    		<option value="name">姓名</option>
+                            <option value="code">教师编号</option>
+                        </select>
+                    </td>
+                    <td>
+                    	<button type="button" class="btn btn-info btn-sm" id="btn_modal_teacher2_seach">搜索</button>
+                    </td>
+                    </tr>
+                    </tbody>
+                    </table>
+                </div>  
+            
+            
+                <div class="col-sm-12  pre-scrollable" style="clear:both;height:300px;">
+					<div class="row "><br></div>
+                    <div id="modal_teacher2_list">
+                        <?php
+                        //echo $datas['teacherId']; //当前教师
+                        ?>
+                    	<volist name="subjects" id="voo">
+                        	<div class="form-group">
+                                <div class="col-md-12">
+                                    <label style="font-size:16px;background-color:#E0E0E0;padding:6px 10px 2px 10px;">{$voo.name}<!--科目名称--></label>
+                                </div>
+                            </div>
+ 							<div class="form-group">                           
+                                <volist name="teachers" id="vo">
+                                    <?php                            	
+                                        $teacherIdArray = array();
+                                  
+                                        $teacherIdArray = explode(',',$datas['teacherId']);
+                                        
+                                        if ( in_array($vo['id'],$teacherIdArray) )
+                                        {
+                                            $ck="";//"checked";
+                                        }else{
+                                            $ck=" ";
+                                        }
+                                    ?>
+                                    <?php
+                                    $subjectIdArrModel = explode(",",$vo['subjectId']);//逗号分隔的科目ID，拆成数组
+                                    if (in_array($voo['id'],$subjectIdArrModel)){
+                                    ?>
+                                        <div class="col-md-2">
+                                            <label><input type="<eq name='teacherModalSelType' value='radio'>radio<else/>checkbox</eq>" value="{$vo.id}" name="teacher" tName='{$vo.name}'  <?php echo $ck;?>   class='this_teacher' >{$vo.space} {$vo.name}</label>
+                                        </div>
+                                    <?php
+                                    }else{
+                                    
+                                    }
+                                    ?>
+                                </volist>
+							</div>
+
+                    	</volist>
+                        
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <label style="font-size:16px;background-color:#E0E0E0;padding:6px 10px 2px 10px;">其它</label>
+                            </div>
+                            <volist name="teachers" id="vo">
+                                <?php                            	
+                                    $teacherIdArray = array();
+                              
+                                    $teacherIdArray = explode(',',$datas['teacherId']);
+                                    
+                                    if ( in_array($vo['id'],$teacherIdArray) )
+                                    {
+                                        $ck="checked";
+                                    }else{
+                                        $ck=" ";
+                                    }
+                                ?>
+                            	<?php
+                            	//未归入某科的教师，在后面显示
+                            	if (!$vo['subjectId']){
+                                ?>
+                                    <div class="col-md-2">
+                                		<label><input type="<eq name='teacherModalSelType' value='radio'>radio<else/>checkbox</eq>" value="{$vo.id}" name="teacher" data-teacherid="{$vo.id}" id="this_teacher_{$vo.id}" tName='{$vo.name}'  <?php echo $ck;?>   class='this_teacher' >{$vo.space} {$vo.name}</label>
+                                    </div>
+                                <?php
+                                }
+                                ?>
+                            </volist>
+                        </div>
+					</div>
+				</div>
+                <div style="clear:both;width:100%;height:1px;"></div>
+			</div>
+			<div class="modal-footer">
+            	<div class="col-sm-8 " style="text-align:left;" id="teacher2_dialog_message">{$teacher_dialog_message}</div>
+                <div class="col-sm-2"><neq name='teacherModalSelType' value='radio'><label class="control-label "><input type="checkbox" name="checkall_teacher_modal" id="checkall_teacher_modal" value="1"/>全选</label></neq></div>
+            	<div class="col-sm-2">
+				<button type="button" class="btn btn-primary" data-dismiss="modal">确定</button>
+                </div>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-------教师模态对话框---------->
+
+<script language="javascript">
+$(document).ready(function() {
+	
+	var teacherModalSelType = "<eq name='teacherModalSelType' value='radio'>radio<else/>checkbox</eq>";//单选还是复选
+	
+	//点击登陆，post提交
+	$('#btn_modal_teacher2_seach').click(function(){
+		$('#btn_modal_teacher2_seach').text('正在载入...');
+		
+		$('#teacher2_dialog_message').html("正在载入...");
+		
+		var banjiId = $("#modal_teacher2_banjiId").val();
+		var subjectId = $("#modal_teacher2_subjectId").val();
+		var keyType = $("#modal_teacher2_key_type").val();
+		var keyboard = $("#modal_teacher2_keyboard").val();
+
+		var subjects;
+
+		var teacher_list2 = "";
+		//$("#modal_teacher_list").html("");
+		$.ajax({
+			url:'__GROUP__/Ajaxschool/getTeachers2',
+			type:'post',
+			data:"banjiId="+banjiId+"&keyboard="+keyboard+"&keyType="+keyType+"&subjectId="+subjectId,
+			async:true,//false为同步
+			dataType:'json',
+			success:function(re) {
+				if (re.stat * 1 > 0){
+					//alert(re.stat);
+					//alert(re.data);
+					
+					$("#modal_teacher2_list").html("");
+					var datas = re.data;//返回数据：re:stat,array
+					
+					for(var i=0;i<datas.length;i++){
+						var subject = datas[i];
+
+						//科目下有教师才显示科目名
+						if(subject.teacherCount){
+                        	a = '<div class="form-group"><div class="col-md-12"><label style="font-size:16px;background-color:#E0E0E0;padding:6px 10px 2px 10px;">';
+							a = a + subject.subjectName + "（" +subject.teacherCount +"）";
+							a = a + '</label></div></div>';
+						
+							teacher_list2 += a;
+							
+							//teacher_list +="<div><div class='col-md-2'><label>-----</label></div></div>";
+							
+							//科目下的教师
+							for(var ii=0;ii<subject.teacherCount;ii++){
+								var obj = subject['teacherList'][ii];//这里获取数组内每个对象。
+							//	alert(obj.id + obj.name);
+								teacher_list2 += "<div class='col-md-2'><label><input type='"+teacherModalSelType+"' name='teacherIdStr2[]' tName='"+ obj.name +"' value='"+ obj.id +"' class='this_teacher'>"+obj.name+"</label></div>";	   
+							}
+						}
+					}					
+					
+					$("#modal_teacher2_list").html(teacher_list2);
+					
+					//此处必须通过id指定到局部的input，否则影响切换
+					$('#modal_teacher2_list input').iCheck({
+						checkboxClass: 'icheckbox_flat-green',
+						radioClass: 'iradio_flat-green',
+						increaseArea: '20%' // optional
+					});
+					
+					//这儿必须绑定一下，否则点选后无反应
+					/*$('.this_teacher').on('ifChecked', function(event){
+						var val = $(this).val();
+						alert("val="+val);
+					});*/
+					if (var_bindInModelTeacher2){
+						bindInModelTeacher2();//此函数放在调用对话框的页面定义，可参考editUser.html模板中
+					}
+					
+					
+				}else{
+						
+				}
+
+			},
+			error:function() {
+				alert('由于网络异常导致操作失败，请刷新页面重试....');
+			}
+		}); 
+				
+		$('#btn_modal_teacher2_seach').text('搜索');
+		$('#teacher2_dialog_message').html("载入完成...");
+		setTimeout(function(){
+			$('#teacher2_dialog_message').html("");
+		}, 1000);
+
+		
+		
+		
+	});
+	
+
+	
+	
+});
+</script>
+
+
+
+
+
+
+

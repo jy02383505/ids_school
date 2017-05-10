@@ -1,0 +1,244 @@
+
+<!-------学生模态对话框---------->
+<div class="modal fade" id="studentModal" draggable='true' style="margin-top:200px;" tabindex='-1'>
+    <div class="modal-dialog modal-lg">
+    	<div class="modal-content">
+    		<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">学生选择</h4>
+			</div>
+            
+			<div class="modal-body" >
+                <div class="form-group <eq name="hideStudentModelSearch" value="1"> hide </eq>" style="width:100%;margin-bottom:0px;" >
+                    <table class="table table-striped" style="border:none;">
+                    <tbody>
+                    <tr>
+                    <td width="120">
+                        <select class="form-control input-sm" name="modal_student_banjiId" id="modal_student_banjiId">
+                            <option value="">班级不限</option>
+                            <volist name="banjis" id="vo">
+                                <eq name="vo.id" value="$banjiId">
+                                    <option value="{$vo.id}" selected>{$vo.name}</option>
+                                <else/>
+                                    <option value="{$vo.id}">{$vo.name}</option>
+                                </eq>
+                            </volist>
+                        </select>
+                    </td>
+                    <td width="100">
+                    <input type="text" class="form-control input-sm" name="modal_student_keyboard" id="modal_student_keyboard" value="" style="width:182px;">
+                    </td>
+                    <td width="100">
+                        <select class="form-control input-sm" name="keyType" id="modal_student_key_type">
+                            <option value="">请选择</option>
+                    		<option value="name">姓名</option>
+                            <option value="code">学号</option>
+                        </select>
+                    </td>
+                    <td>
+                    	<button type="button" class="btn btn-info btn-sm" id="btn_modal_student_seach">搜索</button>
+                    </td>
+                    </tr>
+                    </tbody>
+                    </table>
+                </div>  
+                
+                
+                
+                
+                
+                <div class="col-sm-12  pre-scrollable" style="clear:both;height:300px;">
+					<div class="row "><br></div>
+                    <div id="modal_student_list">
+                    	<?php
+                            $studentIdArray = array();
+                           // $studentIdArray = explode(',',$datas['userId']);
+                            $studentIdArray = explode(',',$strStudentsId);
+                            //学生选择对话框
+                            //学生按班级分开显示，当学生可复选时，班级名称前显示复选框供快捷全选时用，单选时不显示复选框，因为不会让全选
+                    	?>
+                      
+                        
+                        
+                        <volist name="data_banji_student_model" id="voo">
+                        	<div class="form-group">
+                                <div class="col-md-12">
+                                    <neq name='studentModalSelType' value='radio'><input type="checkbox" class="chk_banji" attr_banji_id="{$voo.banjiId}"></neq><label>{$voo.banjiName}</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <volist name="voo.studentList" id="vo">
+                                	
+                                    <?php
+                                    
+                                        if ( in_array($vo['id'],$studentIdArray) )
+                                        {
+                                            $ck="checked='checked'";
+                                        }else{
+                                            $ck="";
+                                        }
+                                    ?>
+                                    <if condition="$vo['banjiId'] == $voo['id'] "></if>
+                                        <div class="col-md-2">
+                                            <label><input type="<eq name='studentModalSelType' value='radio'>radio<else/>checkbox</eq>" value="{$vo.id}"  name="studentIdStr[]" id="chk_student_{$vo.id}" tName='{$vo.name}'  <?php echo $ck;?> class='chk_student student_in_banji_{$voo.banjiId}' > {$vo.name}</label>
+                                        </div>
+                                    
+                                </volist>
+                            </div>
+                        </volist>
+           
+              
+                        
+					</div>
+				</div>
+                <div style="clear:both;width:100%;height:1px;"></div>
+			</div>
+			<div class="modal-footer">
+                <!-- updated by lym start -->
+                <div class="col-md-6">
+                    <if condition='$studentModalSelType eq "radio"'>
+                    <else/>
+                        <span class="col-md-2"><a class="select_all_student" href="javascript:void(0);">全选</a></span>
+                        <span class="col-md-2"><a class="select_opposite_student" href="javascript:void(0);">反选</a></span>
+                        <span class="col-md-2"><a class="cancel_all_student" href="javascript:void(0);">全不选</a></span>
+                    </if>
+                </div>
+                <div class="col-md-6">
+                    <button class="btn btn-sm btn-primary" data-dismiss='modal' type="button">确定</button>
+                </div>
+                <!-- updated by lym end -->
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-------学生模态对话框---------->
+
+<script language="javascript">
+$(document).ready(function() {
+	
+	var studentModalSelType = "<eq name='studentModalSelType' value='radio'>radio<else/>checkbox</eq>";//单选还是复选
+	
+	$('#btn_modal_student_seach').click(function(){
+		
+		$('#btn_modal_student_seach').text('正在载入...');
+		$('#student_dialog_message').html("正在载入...");
+		
+		var banjiId = $("#modal_student_banjiId").val();
+		var keyType = $("#modal_student_key_type").val();
+		var keyboard = $("#modal_student_keyboard").val();
+
+		var student_list = "";
+		$.ajax({
+			url:'__GROUP__/Ajaxschool/getStudents',
+			type:'post',
+			data:"banjiId="+banjiId+"&keyboard="+keyboard+"&keyType="+keyType,
+			async:true,//false为同步
+			dataType:'json',
+			success:function(re) {
+				if (re.stat * 1 > 0){
+					$("#modal_student_list").html("");
+					var datas = re.data;//返回数据：re:stat,array
+
+					for(var i=0;i<datas.length;i++){
+						var banji = datas[i];
+
+						//科目下有教师才显示科目名
+						if(banji.studentCount){
+                        	a = '<div class="form-group"><div class="col-md-12"><label style="font-size:16px;background-color:#E0E0E0;padding:6px 10px 2px 10px;">';
+							a = a + banji.banjiName + "（" +banji.studentCount +"）";
+							a = a + '</label></div></div>';
+						
+							student_list += a;
+							
+							//班级下的学生
+							for(var ii=0;ii<banji.studentCount;ii++){
+								var obj = banji['studentList'][ii];//这里获取数组内每个对象。
+								//alert(obj.id + obj.name);
+								student_list += "<div class='col-md-2'><label><input type='"+studentModalSelType+"' name='studentIdStr[]' tName='"+ obj.name +"' value='"+ obj.id +"' class='chk_student  student_in_banji_"+ obj.id +"'>" +obj.name+"</label></div>";	   
+							}
+						}
+					}	
+					
+					$("#modal_student_list").html(student_list);
+					
+					//此处必须通过id指定到局部的input，否则影响切换
+					$('#modal_student_list input').iCheck({
+						checkboxClass: 'icheckbox_flat-green',
+						radioClass: 'iradio_flat-green',
+						increaseArea: '20%' // optional
+					});
+
+					if (var_bindInModelStudent){
+						bindInModelStudent();//此函数放在调用对话框的页面定义，可参考editUser.html模板中
+					}
+					
+					
+				}else{
+						
+				}
+
+			},
+			error:function() {
+				alert('由于网络异常导致操作失败，请刷新页面重试....');
+			}
+		}); 
+				
+		$('#btn_modal_student_seach').text('搜索');
+		$('#student_dialog_message').html("载入完成...");
+		setTimeout(function(){
+			$('#student_dialog_message').html("");
+		}, 1000);
+
+		
+		
+		
+	});
+});
+</script>
+
+<script>
+// improved by lym -start
+$(document).ready(function() {
+	// 学生：全选
+    $('.select_all_student').click(function(){
+        $('.chk_student').iCheck('check');
+    })
+
+    // 学生：全不选
+    $('.cancel_all_student').click(function(){
+        $('.chk_student').iCheck('uncheck');
+    })
+    
+    // 学生：反选
+    $('.select_opposite_student').click(function(){
+        $('.chk_student').each(function(i){
+            var ck = $(this).prop('checked') ? 'uncheck' : 'check';
+            $(this).iCheck(ck);
+        })
+    })
+// improved by lym -end
+    
+});
+</script>
+
+
+<script>
+$(document).ready(function() {
+	//单击班级复选框选中全班所有学生
+	$('.chk_banji').on('ifChecked', function(event){
+		//此班级所有学生的选择类
+		var banji_id = $(this).attr("attr_banji_id");
+		var student_banji = ".student_in_banji_" + banji_id;
+		$(student_banji).iCheck('check'); 
+	});
+	
+	//取消全班所有学生
+	$('.chk_banji').on('ifUnchecked', function(event){
+		//此班级所有学生的选择类
+		var banji_id = $(this).attr("attr_banji_id");
+		var student_banji = ".student_in_banji_" + banji_id;
+		$(student_banji).iCheck('uncheck'); 
+	});
+	
+});
+</script>

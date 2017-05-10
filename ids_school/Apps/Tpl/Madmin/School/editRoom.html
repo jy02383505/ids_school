@@ -1,0 +1,472 @@
+<include file="Public/header" />
+<link rel="stylesheet" href="__PUBLIC__/script/uploadify/uploadify.css">
+
+
+
+<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+<script src="__PUBLIC__/script/jquery/jquery.min.js"></script>
+
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="__PUBLIC__/bootstrap/bootstrap.min.js"></script>
+
+<style>
+#storeVideoUp .btn-default, #storeVideoUp .btn-default:hover, #storeVideoUp .btn-default:active, #storeVideoUp .btn-default:visited{background-color:#fff;border-color:#ccc;padding:3px 10px 4px;font-size:14px;outline:0;}
+</style>
+
+<script>
+	//在ajax后追加教师到对话框，需要绑定一下事件，此代码必须在对话框前面
+	var var_bindInModelEndpoint = 1;//不定义它，在教师对话框就不执行绑定，防止调用空函数
+	function bindInModelEndpoint(){
+		//alert("var_bindInModelEndpoint");
+		$('.chk_endpoint').on('ifChecked', function(event){
+			var val = $(this).val();
+			var tName = $(this).attr("tName");
+			//检测list，然后加入新的
+			$("#endpoint_list li").each(function(){
+				var tmp_bid = $(this).attr("bid");
+				if (tmp_bid == val){
+					//alert('list中已有此记录');
+					return;
+				}			
+			});
+			//$('#endpoint_list_v').html("");
+			$('#endpoint_list_v').append('<li class="btn btn-warning btn-sm" bid="' + val + '">' + tName + '<i class="hide glyphicon glyphicon-remove pull-right btn-removefromlist"></i></li>');
+			
+		});		
+	}
+</script>
+
+
+
+
+<ol class="breadcrumb">
+	<li><a href="{:U('School/schoolList')}">学校管理</a></li>
+	<li class="active">
+        <switch name="ACTION_NAME" >
+        <case value="addRoom" break="1">添加</case>
+        <case value="editRoom">修改</case>
+        <default />添加
+        </switch>
+        教室
+    </li>
+</ol>
+<form id="editForm" class="form-horizontal" role="form" method="post" action="__SELF__">
+	  
+	<div class="form-group">
+		<label class="col-sm-2 control-label " for="name">教室名称</label>
+		<div class="col-sm-2">
+			<input class="form-control input-sm" type="text" name="tname" id="tname" value="{$datas.name}" placeholder='请输入教室名称'>
+            
+		</div>
+        <div class="col-sm-2"><span class="help-block">如101,203</span></div>
+	</div>
+    
+  	<div class="form-group hide">
+		<label class="col-sm-2 control-label" for="banjiId">班级</label>
+        <div class="col-sm-1" >
+             <select class="form-control input-sm" name="banjiId" id="banjiId">
+                <option value="">班级</option>
+                <volist name="banjis" id="vo">
+                    <eq name="vo.id" value="$datas['banjiId']">
+                        <option value="{$vo.id}" selected>{$vo.name}</option>
+                    <else/>
+                        <option value="{$vo.id}">{$vo.name}</option>
+                    </eq>
+                </volist>
+            </select>
+
+        </div>
+	</div> 
+
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="floors">楼层</label>
+		<div class="col-sm-1">
+			<select class="form-control input-sm" name="floors" id="floors">
+				<option value=""<eq name="vo.id" value="0"> selected</eq> >请选择</option>
+				<for start="1" end="100">
+					<eq name="i" value="$datas.floor">
+						<option value="{$i}" selected>{$i}</option>
+					<else/>
+						<option value="{$i}">{$i}</option>
+					</eq>
+				</for>
+			</select>
+		</div>
+	</div>
+    
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="gradeId">座位数</label>
+		<div class="col-sm-1">
+			<select class="form-control input-sm" name="seating" id="seating">
+				<option value=""<eq name="$datas.seating" value="0"> selected</eq> >请选择</option>
+				<for start="1" end="100">
+					<eq name="i" value="$datas.seating">
+						<option value="{$i}" selected>{$i}</option>
+					<else/>
+						<option value="{$i}">{$i}</option>
+					</eq>
+				</for>
+			</select>
+		</div>
+    </div>        
+        
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="linenumber" >行</label>
+		<div class="col-sm-1">
+			<select class="form-control input-sm" name="linenumber" id="linenumber">
+				<option value=""<eq name="vo.linenumber" value="0"> selected</eq> >请选择</option>
+				<for start="1" end="100">
+					<eq name="i" value="$datas.linenumber">
+						<option value="{$i}" selected>{$i}</option>
+					<else/>
+						<option value="{$i}">{$i}</option>
+					</eq>
+				</for>
+			</select>
+		</div>
+        
+		<label class="col-sm-1 control-label" for="columnnumber" style="width:40px;">列</label>
+		<div class="col-sm-1">
+			<select class="form-control input-sm" name="columnnumber" id="columnnumber">
+				<option value=""<eq name="vo.columnnumber" value="0"> selected</eq> >请选择</option>
+				<for start="1" end="100">
+					<eq name="i" value="$datas.columnnumber">
+						<option value="{$i}" selected>{$i}</option>
+					<else/>
+						<option value="{$i}">{$i}</option>
+					</eq>
+				</for>
+			</select>
+		</div>
+	</div>  
+
+                
+  	<div class="form-group " style="margin-bottom:0px;">
+		<label class="col-sm-2 control-label" for="cameraId">摄像头</label>
+        <div class="col-sm-10" >
+			<style>
+                #camera_list li{margin-right:10px;}
+            </style>        
+            <ul class="list-group" id="camera_list">
+                <li type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#cameraModal">选择摄像头</li>
+                <span id="camera_list_v">
+                <volist name="cameras" id="vo">
+                <li class="btn btn-warning btn-sm"  type="button" bid="{$vo.id}">{$vo.name}<span class="hide" ><i class="hide glyphicon glyphicon-remove pull-right btn-removefromlist" bid="{$vo.id}"></i></span></li>
+                </volist>
+                </span>
+            </ul>
+        </div>
+	</div> 
+    
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="endpoint">数字班牌</label>
+        <div class="col-sm-10" >
+			<style>
+                #camera_list li{margin-right:10px;}
+				#endpoint_list li{margin-right:10px;}
+            </style>        
+            <ul class="list-group" id="endpoint_list">
+                <li type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#endpointModal">选择班牌</li>
+                <span id="endpoint_list_v">
+                <volist name="endpoints" id="vo">
+                <li class="btn btn-warning btn-sm"  type="button" bid="{$vo.tid}"><empty name="vo.touchEndPointName">{$vo.touchMainId}<else />{$vo.touchEndPointName}</empty><span class="hide" ><i class="hide glyphicon glyphicon-remove pull-right btn-removefromlist" bid="{$vo.tid}"></i></span></li>
+                </volist>
+                </span>
+            </ul>
+        </div>
+    </div>
+    
+	<div class="form-group hide">
+		<label class="col-sm-2 control-label" for="endpoint">座位表</label>
+        <div class="col-sm-10" >
+			<input type="checkbox" name="resetSeatTable" value="1" >更新（勾选后原座位设置将被清空）
+        </div>
+    </div>   
+    
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="mainContent">简介</label>
+		<div class="col-sm-3">
+			<textarea class="form-control" name="description" id="description" rows="4">{$datas.description}</textarea>
+		</div>
+	</div> 
+
+   
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="">&nbsp;</label>
+		<div class="col-sm-4">
+			<input type="hidden" name="uuid" value="{$uuid}">
+			<input type="hidden" name="id" value='<empty name="id">{:I('get.id',0,'intval');}</empty>'>  
+			<button type="submit" class="btn btn-info btn-sm">保存更改</button>&nbsp;&nbsp;
+			<button type="reset" class="btn btn-info btn-sm">取消</button>
+		</div>
+	</div>
+
+
+
+<!--zjh add start 模态对话框-->
+<include file="Public/schoolCameraModal" />
+<include file="Public/schoolEndpointModal" />
+<!--zjh add end 模态对话框-->
+
+</form>
+
+
+
+
+
+<include file="Public/jsLoader" />
+<script type="text/javascript" src="__PUBLIC__/script/uploadify/jquery.uploadify.js"></script>
+<script type="text/javascript" charset="utf-8" src="__PUBLIC__/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="__PUBLIC__/ueditor/ueditor.all.js"> </script>
+<script type="text/javascript" charset="utf-8" src="__PUBLIC__/ueditor/lang/zh-cn/zh-cn.js"></script>
+<script type="text/javascript">
+$(function($) {
+	var tmpClassid = '{$unid|default=""}';
+	
+	
+	$('button[type="reset"]').click(function(){
+		window.location.href = '__URL__/roomList';
+	});
+	
+	
+	var toolbars_for_txt = [['fullscreen', 'forecolor', 'fontfamily', 'fontsize', '|', 'bold', 'italic', 'underline', 'fontborder', 'strikethrough', '|', 'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', 'horizontal', 'date', 'time', '|', 'undo', 'redo',]];
+	var ueTxt = UE.getEditor('mainContent', {
+		serverUrl : '__GROUP__/Ajaxhandle/UEUploadImage',
+		toolbars : toolbars_for_txt,
+        elementPathEnabled : false,
+        wordCount : false
+	});
+	
+
+	
+
+	
+});
+</script>
+<include file="Public/footer" />
+
+
+
+<script type="text/javascript" src="__PUBLIC__/script/jquery/jquery.validate.min.js"></script>
+<script type="text/javascript">
+$(function($) {
+	
+	// 判断英文字符
+	jQuery.validator.addMethod("isEnglish", function(value, element) {       
+         return this.optional(element) || /^[A-Za-z]+$/.test(value);       
+    }, "只能包含英文字符。");
+	
+	
+	$('#editForm').validate({
+		errorElement : 'span',
+		errorClass : 'help-block',
+		focusInvalid : true,  
+        rules : {  
+			tname:{
+				required: true,//名称带方括号验证不了
+				maxlength:15,
+			},
+        	floors : {  
+              required : true,
+            },
+        	seating : {  
+                required : true,
+            },
+        	linenumber : {  
+              required : true,
+            },
+        	columnnumber : {  
+                required : true,
+            },			
+			description:{
+				maxlength:200,
+			},			
+			
+        },  
+        messages : {
+			tname :{
+				required :"教室名称必填",	//名称带方括号验证不了
+				maxlength:"教室名称长度不能超过15个字符",
+			},
+			floors :{
+				required :"楼层必选",	
+			},
+			seating :{
+				required :"座位数必选",	
+			},
+			linenumber :{
+				required :"行数必选",	
+			},
+			columnnumber :{
+				required :"列数必选",	
+			},			
+			
+			description :{
+				maxlength:"简介长度不能超过200个字符",
+			},
+        },  
+		
+
+        highlight : function(element) {  
+            $(element).closest('.form-group').addClass('has-error');  
+        },  
+
+        success : function(label) {  
+            label.closest('.form-group').removeClass('has-error');  
+            label.remove();  
+        },  
+
+        errorPlacement : function(error, element) {  
+            element.parent('div').append(error);  
+        },  
+		submitHandler: function(form) {
+		//	var banji_len = $("input[name='banjiIdStr[]']:checked").length;
+		//	if (!banji_len){
+		//		alert("请选择班级");	
+		//		return;
+		//	}
+			
+			form.submit();
+		}
+	});
+});
+</script>
+
+
+<script>
+$(document).ready(function() {
+	//班级选择 START
+	$('.chk_banji').on('ifChecked', function(event){
+		var val = $(this).val();
+		var tName = $(this).attr("tName");
+	//	alert(val);
+		//检测list，然后加入新的
+		$("#banji_list li").each(function(){
+			//alert($(this).attr("bid"));
+			//
+			var tmp_bid = $(this).attr("bid");
+			if (tmp_bid == val){
+				//alert('list中已有此记录');
+				return;
+			}			
+		});
+		$('#banji_list').html();
+		$('#banji_list').append('<li class="btn btn-warning btn-sm" bid="' + val + '">' + tName + '<i class="hide glyphicon glyphicon-remove pull-right btn-removefromlist"></i></li>');
+		
+	});
+	
+	//从list中删除一条
+	$('.chk_banji').on('ifUnchecked', function(event){
+		
+		var val = $(this).val();
+		var tName = $(this).attr("tName");
+		//alert(val);
+		//检测list，然后加入新的
+		$("#banji_list li").each(function(){
+			//alert($(this).attr("bid"));
+			//
+			var tmp_bid = $(this).attr("bid");
+			if (tmp_bid == val){
+				//alert('list中已有此记录');
+				$(this).remove();
+			}			
+		});
+	});
+	//班级选择 END
+	
+});
+</script>
+
+<script>
+$(document).ready(function() {
+	//摄像头选择选择 START
+	$('.chk_camera').on('ifChecked', function(event){
+		var val = $(this).val();
+		var tName = $(this).attr("tName");
+	//	alert(val);
+		//检测list，然后加入新的
+		$("#camera_list li").each(function(){
+			//alert($(this).attr("bid"));
+			//
+			var tmp_bid = $(this).attr("bid");
+			if (tmp_bid == val){
+				//alert('list中已有此记录');
+				return;
+			}			
+		});
+		//$('#camera_list_v').html("");
+		$('#camera_list_v').append('<li class="btn btn-warning btn-sm" bid="' + val + '">' + tName + '<i class="hide glyphicon glyphicon-remove pull-right btn-removefromlist"></i></li>');
+		
+	});
+	
+	//从list中删除一条
+	$('.chk_camera').on('ifUnchecked', function(event){
+		var val = $(this).val();
+		var tName = $(this).attr("tName");
+		//alert(val);
+		//检测list，然后加入新的
+		$("#camera_list li").each(function(){
+			//alert($(this).attr("bid"));
+			//
+			var tmp_bid = $(this).attr("bid");
+			if (tmp_bid == val){
+				//alert('list中已有此记录');
+				$(this).remove();
+			}			
+		});
+	});
+	//摄像头选择 END
+	
+});
+</script>
+
+
+<script>
+$(document).ready(function() {
+	//终端选择 START
+	$('.chk_endpoint').on('ifChecked', function(event){
+		var val = $(this).val();
+		var tName = $(this).attr("tName");
+	//	alert(val);
+		//检测list，然后加入新的
+		$("#endpoint_list li").each(function(){
+			//alert($(this).attr("bid"));
+			//
+			var tmp_bid = $(this).attr("bid");
+			if (tmp_bid == val){
+				//alert('list中已有此记录');
+				return;
+			}			
+		});
+		//$('#endpoint_list_v').html("");
+		$('#endpoint_list_v').append('<li class="btn btn-warning btn-sm" bid="' + val + '">' + tName + '<i class="hide glyphicon glyphicon-remove pull-right btn-removefromlist"></i></li>');
+		
+	});
+	
+	//从list中删除一条
+	$('.chk_endpoint').on('ifUnchecked', function(event){
+		var val = $(this).val();
+		var tName = $(this).attr("tName");
+		//alert(val);
+		//检测list，然后加入新的
+		$("#endpoint_list li").each(function(){
+			//alert($(this).attr("bid"));
+			//
+			var tmp_bid = $(this).attr("bid");
+			if (tmp_bid == val){
+				//alert('list中已有此记录');
+				$(this).remove();
+			}			
+		});
+	});
+	//终端选择 END
+	
+	//搜索时，清空显示，因为表单被重新生成，提交的话原值丢失了
+	$('#btn_modal_endpoint_seach').click(function(){
+		$('#endpoint_list_v').html("");
+	});
+});
+</script>
+
+
+

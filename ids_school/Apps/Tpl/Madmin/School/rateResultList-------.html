@@ -1,0 +1,98 @@
+<!--zjh-->
+<include file="Public/header" />
+
+<ol class="breadcrumb">
+	<li><a href="{:U('School/schoolList')}">学校管理</a></li>
+	<li><a href="{:U('School/rateList')}">评比管理</a></li>
+	<li class="active">评比结果列表</li>
+</ol>
+
+
+<div id="" class="row well">
+	<div class="col-md-9">
+
+	</div>
+	<div class="col-md-3 text-right">
+		<table class="table">
+			<tbody>
+				<tr>
+					<td style="border:0;">
+						<a href="{:U('School/addRateResult',array("subjectid"=>$subjectid))}" type="button" class="btn btn-info btn-sm" id="addNew">添加评比结果</a>
+                        
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<div class="data-list">
+	<div class="">
+	<table class="table">
+		<tr>
+			<td>
+				<b>评比活动：</b>{$infor.name} <b style="margin-left:20px;">总分：</b>{$infor.totalscore}
+			</td>
+		</tr>
+		<tr>
+			<td>
+				
+			</td>
+		</tr>
+	</table>
+    </div>
+    
+	<table class="table table-hover list-tbl">
+		<thead>
+			<tr>
+				<!-- <th width="36"><input type="checkbox" class="select-all" title="全选/全不选"></th> -->
+				<th width="60">#ID</th>
+                <th width="60">得分</th>
+				<th width="200">班级</th>
+                <th width="140">时间</th>
+
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody>
+			<volist name="datas" id="vo">
+			<tr>
+				<!-- <td><input type="checkbox"></td> -->
+				<td>{$vo.Id}</td>
+                <td>{$vo.score}</td>
+				<td>{$vo.banjiName}</td>                
+                <td>{$vo.ratedate}</td>
+
+                <td>
+					<a class="oper edit" href="__URL__/editRateResult/id/{$vo.Id}" title="编辑"><i class="icon-pencil"></i></a>
+					<a class="oper del" href="javascript:void(0);" data-url="__URL__/delRateResult/id/{$vo.Id}" title="删除"><i class="icon-trash"></i></a>
+                </td>
+			</tr>
+			</volist>
+		</tbody>
+	</table>
+	<table class="table">
+		<tr>
+			<td>
+				<!-- <input type="checkbox" class="select-all" title="全选/全不选">
+				<button type="button" class="btn btn-default btn-sm multi-del" style="margin-left:30px;">批量删除</button> -->
+				&nbsp;
+			</td>
+			<td class="page-box text-right" width="80%">{$page}</td>
+		</tr>
+	</table>
+</div>
+
+<include file="Public/jsLoader" />
+<script type="text/javascript">
+$(function($){
+	
+	$('.del').click(function() {
+		var targetUrl = $.trim($(this).attr('data-url'));
+		$.kw.confirm('确认要删除该记录吗？', function() {
+			window.location.href = targetUrl;
+		});
+	});
+});
+</script>
+<include file="Public/footer" />

@@ -1,0 +1,145 @@
+<include file="Public/header" />
+<link rel="stylesheet" href="__PUBLIC__/script/uploadify/uploadify.css">
+
+<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+<script src="__PUBLIC__/script/jquery/jquery.min.js"></script>
+
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+<style>
+#storeVideoUp .btn-default, #storeVideoUp .btn-default:hover, #storeVideoUp .btn-default:active, #storeVideoUp .btn-default:visited{
+	background-color:#fff;border-color:#ccc;padding:3px 10px 4px;font-size:14px;outline:0;
+}
+
+</style>
+<ol class="breadcrumb">
+	<li class="active">
+        <switch name="ACTION_NAME" >
+        <case value="makeUpdate" break="1">发布</case>
+        <case value="makeUpdate">发布</case>
+        <default />发布
+        </switch>
+        更新
+    </li>
+</ol>
+<form id="editForm" class="form-horizontal" role="form" method="post" action="__SELF__">
+	<input type="hidden" name="id" value='<empty name="id">{:I('get.id',0,'intval');}</empty>'>    
+	<div class="form-group">
+		<label class="col-sm-2 control-label " for="schoolName"></label>
+		<div class="col-sm-10">
+			
+		</div>
+	</div>
+
+
+
+
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label" for="banji_list">我的班级</label>
+        <div class="col-sm-10 form-control-static">
+			<style>
+                #banji_list li{float:left;margin-right:10px;}
+            </style>        
+            <ul class="list-group" id="banji_list">        
+            <volist name="classes" id="class">
+                <li><input type="checkbox" name="class[]" value='{$class[class_name]}'>{$class[class_name]}</li>
+            </volist>
+
+            </ul>  
+        </div>
+    </div>
+   
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="">&nbsp;</label>
+		<div class="col-sm-10">
+        	<button type="button" class="btn btn-success multi-oper" data-type="schoolrefresh" data-cmd="RefreshScene"  >&nbsp;发布更新</button>
+			<button type="reset" class="btn btn-info btn-sm hide">取消</button>
+            
+            <button type="button" class="btn btn-info btn-sm btn-test">父窗口全屏遮罩</button>
+		</div>
+	</div>
+</form>
+
+<div class="my-cover"></div>
+<div id="resWindow" class="modal-dialog" style="display:none;width:600px;top:28px !important;height:auto;">
+	<div class="modal-content">
+		<div id="alert-title" class="modal-header">
+			<button type="button" class="close" data-dismiss="modal">
+				<span aria-hidden="true">×</span><span class="sr-only">Close</span>
+			</button>
+			<h4 class="modal-title">信息提示</h4>
+		</div>
+		<div class="modal-body text-center">
+			<div class="loading-box" style="text-align:center;">
+				<p style="font-size:72px;margin:30px auto 30px"><i class="icon-spinner icon-spin"></i></p>
+				<p style="line-height:28px;">正在处理，请不要关闭当前窗口……</p></div>
+		</div>
+		<div class="modal-footer" style="text-align:center;">
+			<button type="button" class="btn btn-default btn-sm close2">关闭</button>
+		</div>
+	</div>
+</div>
+
+
+<include file="Public/jsLoader" />
+
+<script type="text/javascript">
+$(function($) {
+	var tmpClassid = '{$unid|default=""}';
+	
+	
+	$('button[type="reset"]').click(function(){
+		window.location.href = '__URL__/schoolList';
+	});
+	
+	
+	$('.btn-test').click(function(){
+		window.parent.window.dddddd();
+	});	
+	
+	
+	
+	/* 批量操作终端（组）  */
+	$('.multi-oper').click(function() {
+		
+		var tids = null,
+			type = $.trim($(this).attr('data-type')),
+			cmd = $.trim($(this).attr('data-cmd'));//取到命令
+		
+
+			var gid = '3';
+			var tids = gid;
+		
+		$.kw.confirm('确认要执行该操作吗？', function() {
+			loadingSwitch(1);
+			$.ajax({
+				url:'/Endpoints/soapClientWay',
+				type:'post',
+				async:true,
+				data:{type : type, cmd : cmd, tids : tids, endType : 'x86'},
+				dataType:'json',
+				success:function(re){
+					if (re.stat*1) {
+						$.kw.alert(re.msg);
+					//	loadingResult(1, '发布成功！');
+					} else {
+						//$.kw.alert(re.msg);
+						loadingResult(0, re.msg);
+					}
+				},
+				error:function(){
+					$.kw.alert('由于网络异常导致操作失败，请刷新页面重试....');
+				}
+			});
+		});
+		
+	});	
+
+	
+
+	
+});
+</script>
+<include file="Public/footer" />

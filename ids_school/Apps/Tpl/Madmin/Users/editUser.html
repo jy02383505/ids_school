@@ -1,0 +1,582 @@
+<include file="Public/header" />
+
+<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+<script src="__PUBLIC__/script/jquery/jquery.min.js"></script>
+
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="__PUBLIC__/bootstrap/bootstrap.min.js"></script>
+
+<script>
+	//在ajax后追加教师到对话框，需要绑定一下事件，此代码必须在对话框前面
+	var var_bindInModelTeacher = 1;//不定义它，在教师对话框就不执行绑定，防止调用空函数
+	function bindInModelTeacher(){
+		$('.chk_teacher').on('ifChecked', function(event){
+			var val = $(this).val();
+			var tName = $(this).attr("tName");
+			//检测list，然后加入新的
+			$("#teacher_list li").each(function(){
+				var tmp_bid = $(this).attr("bid");
+				if (tmp_bid == val){
+					//alert('list中已有此记录');
+					return;
+				}			
+			});
+		//	alert("断点ABC");
+			$('#teacher_list_v').html("");
+			$('#teacher_list_v').append('<li class="btn btn-warning btn-sm" bid="' + val + '">' + tName + '<i class="hide glyphicon glyphicon-remove pull-right btn-removefromlist"></i></li>');
+			
+		});		
+	}
+</script>
+
+<script>
+	//在ajax后追加教师到对话框，需要绑定一下事件，此代码必须在对话框前面
+	var var_bindInModelTeacher2 = 1;//不定义它，在教师对话框就不执行绑定，防止调用空函数
+	function bindInModelTeacher2(){
+		$('.this_teacher').on('ifChecked', function(event){
+			var val = $(this).val();
+			var tName = $(this).attr("tName");
+			//alert("-"+val);
+		//	alert("断点123");
+			$("#usrName").val(tName);
+		});		
+	}
+</script>
+
+
+<ol class="breadcrumb">
+	<li><a href="">用户管理</a></li>
+	<li class="active">
+        <switch name="ACTION_NAME" >
+        <case value="addUser" break="1">添加</case>
+        <case value="editUser">修改</case>
+        <default />添加
+        </switch>
+    	用户
+    </li>
+</ol>
+<form id="upassForm" class="form-horizontal" role="form" method="post" action="__SELF__">
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="usrGrp">所属用户组</label>
+		<div class="col-sm-2">
+			<select class="form-control input-sm" name="role_id" id="usrGrp">
+				<option value="">请选择</option>
+				<volist name="roles" id="vo">
+					<eq name="vo.id" value="$user.role_id">
+						<option value="{$vo.id}" selected>{$vo.name}</option>
+					<else/>
+						<option value="{$vo.id}">{$vo.name}</option>
+					</eq>
+				</volist>
+			</select>
+		</div>
+	</div>
+    
+    <?php 
+        if(ACTION_NAME == 'addUser'){
+            $regular_show = '';
+            $teacher_show = '';
+        }elseif(ACTION_NAME == 'editUser' && $user['type'] == 'teacher'){
+            $regular_show = 'hide';
+            $teacher_show = '';
+        }elseif(ACTION_NAME == 'editUser' && !$user['type']){
+            $regular_show = '';
+            $teacher_show = 'hide';
+        }
+     ?>
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="cfmNewPass">类型</label>
+		<div class="col-sm-3">
+            <switch name="user.type" >
+            <case value="teacher" >
+            	<label class="radio-inline {$regular_show}"><input type="radio" name="user_type" class="radio_user_type"  value="" > 普通</label>
+				<label class="radio-inline {$teacher_show}"><input type="radio" name="user_type" class="radio_user_type" value="teacher" checked> 教师</label>
+                <input type="hidden" name="user_type" value="teacher" class="user_type_hidden">
+            </case>
+            <default />
+            	<label class="radio-inline {$regular_show}"><input type="radio" name="user_type" class="radio_user_type" value="" checked> 普通</label>
+				<label class="radio-inline {$teacher_show}"><input type="radio" name="user_type" class="radio_user_type" value="teacher" > 教师</label>
+                <input type="hidden" name="user_type" value="" class="user_type_hidden">
+            </switch>
+		</div>
+	</div>
+    
+  	<div class="form-group " style="margin-bottom:0px;" id="hang_user_type">
+		<label class="col-sm-2 control-label" for="">关联教师</label>
+        <input type="hidden" name="referId" id="referId" value="{$user.referId}">
+        <div class="col-sm-10 " >
+			<style>
+                #teacher_list li{margin-right:10px;}
+				#grade_list li{margin-right:10px;}
+            </style>        
+            <ul class="list-group" id="student_list" >
+                <li type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#studentModal">选择学生</li>
+                <span id="student_list_v">
+                <?php 
+                if ($user['referId'] && $user['type']=='student'){
+                ?>
+                <li class="btn btn-warning btn-sm"  type="button" bid="{$user.referId}">{$user.trueName}<span class="hide" ><i class="hide glyphicon glyphicon-remove pull-right btn-removefromlist" bid="{$user.referId}"></i></span></li>
+                <?php
+                }
+                ?>
+                </span>
+            </ul>
+            
+            <ul class="list-group" id="teacher_list" >
+                <li type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#teacherModal">选择教师</li>
+                <span id="teacher_list_v">
+                <code>教师一旦关联成功无法修改</code>
+                <?php 
+                if ($user['referId'] && $user['type']=='teacher'){
+                ?>
+                <li class="btn btn-warning btn-sm"  type="button" bid="{$user.referId}">{$user.trueName}<span class="hide" ><i class="hide glyphicon glyphicon-remove pull-right btn-removefromlist" bid="{$user.referId}"></i></span></li>
+                <?php
+                }
+                ?>
+                </span>
+            </ul>
+           
+        </div>
+	</div> 
+    
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="usrName">用户名</label>
+		<div class="col-sm-2">
+			<input class="form-control input-sm" type="text" name="account" id="account" value="{$user.account}">
+		</div>
+        <div class="col-sm-2">
+        	<code style="line-height:30px;">用户名不可修改</code>
+            <!-- <button type="button" class="btn btn-default btn-sm hide" data-toggle="modal" data-target="#teacher2Modal">输入教师姓名</button> -->
+        </div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="newPass">密码</label>
+		<div class="col-sm-3">
+			<input class="form-control input-sm" type="password" name="password" id="newPass" value="">
+		</div>
+        <div class="col-sm-3">
+        	<button type="button" class="btn btn-info btn-sm" id="btnSetPwd">设置为初始密码：123456</button>
+        </div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="cfmNewPass">确认密码</label>
+		<div class="col-sm-3">
+			<input class="form-control input-sm" type="password" name="cfgpass" id="cfmpass" value="">
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="cfmNewPass">状态</label>
+		<div class="col-sm-3">
+			<eq name="user.status" value="1">
+				<label class="radio-inline"><input type="radio" name="status" id="status_y" value="1" checked> 启用</label>
+				<label class="radio-inline"><input type="radio" name="status" id="status_n" value="0"> 禁用</label>
+			<else/>
+				<label class="radio-inline"><input type="radio" name="status" id="status_y" value="1"> 启用</label>
+				<label class="radio-inline"><input type="radio" name="status" id="status_n" value="0" checked> 禁用</label>
+			</eq>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="usrEmail">Email</label>
+		<div class="col-sm-5">
+			<input class="form-control input-sm" type="text" name="email" id="usrEmail" value="{$user.email}">
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="usrMobile">电话</label>
+		<div class="col-sm-3">
+			<input class="form-control input-sm" type="text" name="mobile" id="usrMobile" value="{$user.mobile}">
+		</div>
+	</div>
+   
+ 
+<switch name="ACTION_NAME" >
+<case value="addUser" break="1">
+
+</case>
+<case value="editUser">
+
+</case>
+<default />
+
+</switch>
+
+
+    
+    
+   	<div class="form-group " style="margin-bottom:0px;">
+		<label class="col-sm-2 control-label" for="banjiId">可管理班级</label>
+        <div class="col-sm-10  " >
+			<style>
+                #banji_list li{margin-right:10px;}
+            </style>        
+            <ul class="list-group" id="banji_list">
+                <li type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#banjiModal">选择班级</li>
+                <span id="banji_list_v">
+                <volist name="banji_list" id="vo">
+                <li class="btn btn-warning btn-sm"  type="button" bid="{$vo.id}">{$vo.name}<span class="hide" ><i class="hide glyphicon glyphicon-remove pull-right btn-removefromlist" bid="{$vo.id}"></i></span></li>
+                </volist>
+                </span>
+            </ul>
+        </div>
+	</div> 
+    
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="usrRemark">备注</label>
+		<div class="col-sm-8">
+			<textarea class="form-control" name="remark" id="usrRemark">{$user.remark}</textarea>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="">&nbsp;</label>
+		<div class="col-sm-4">
+			<input type="hidden" name="id" value="{$user.id}">
+			<button type="button" class="btn btn-info btn-sm beforeSubmit">保存更改</button>&nbsp;&nbsp;
+			<button type="reset" class="btn btn-default btn-sm">取消</button>
+		</div>
+	</div>
+    
+    <include file="Public/schoolTeacherModal" />
+    <include file="Public/schoolTeacher2Modal" />
+    <include file="Public/schoolBanjiModal" />
+    
+    
+</form>
+
+<include file="Public/jsLoader" />
+<script type="text/javascript" src="__PUBLIC__/script/jquery/jquery.validate.min.js"></script>
+
+
+
+<script type="text/javascript">
+$(function($) {
+	
+	// 判断英文字符
+	jQuery.validator.addMethod("isEnglish", function(value, element) {       
+         return this.optional(element) || /^[A-Za-z]+$/.test(value);       
+    }, "只能包含英文字符。");
+	
+	var uid = {$user.id|default=0};
+	var rules = null;
+	var msgs = null;
+	//alert(uid);
+	
+	if (uid) {
+		rules = {role_id:{required:true},account:{required:true,rangelength:[2,20]},cfgpass:{equalTo:'#newPass'},email:{email:'#usrEmail'},remark:{rangelength:[0,100]}};
+		msgs = {role_id:{required:"所属管理组必填."},account:{required:"用户名必填." ,rangelength:"用户名允许长度2~20."},cfgpass:{equalTo:'两次输入新密码不一致'},email:{email:"邮箱格式不正确."},remark:{rangelength:"备注长度100字符内."}}
+	} else {
+		rules = {role_id:{required:true},account:{required:true,rangelength:[2,20]},password:{required:true},cfgpass:{required:true,equalTo:'#newPass'},remark:{rangelength:[0,100]}};
+		msgs = {role_id:{required:"所属管理组必填."},account:{required:"用户名必填." ,rangelength:"用户名允许长度2~20."},password:{required:"新密码必填."},cfgpass:{required:"确认新密码必填.",equalTo:'两次输入新密码不一致'},email:{email:"邮箱格式不正确."},remark:{rangelength:"备注长度100字符内."}}
+	}
+	$('#upassForm').validate({
+		errorElement : 'span',
+		errorClass : 'help-block',
+		focusInvalid : true,  
+        rules : rules
+        /* {
+        	role_id : {  
+                required : true  
+            },  
+            account : {  
+                required : true,
+                rangelength : [6,20]
+            },
+            password : {  
+                required : true
+            },  
+            cfmpass : {  
+                required : true,
+                equalTo	: '#newPass'
+            },
+            email : {
+            	email : '#usrEmail'
+            }
+        } */,  
+        messages : msgs
+        /* {  
+        	role_id : {  
+                required : "所属管理组必填."  
+            },
+            account : {  
+                required : "用户名必填." ,
+                rangelength : "用户名允许长度6~20."
+            },  
+            password : {  
+                required : "新密码必填."
+            },  
+            cfmpass : {  
+                required : "确认新密码必填.",
+                equalTo : '两次输入新密码不一致'
+            },
+            email : {
+            	email : "邮箱格式不正确."
+            }
+        } */,  
+		
+
+        highlight : function(element) {  
+            $(element).closest('.form-group').addClass('has-error');  
+        },  
+
+        success : function(label) {  
+            label.closest('.form-group').removeClass('has-error');  
+            label.remove();  
+        },  
+
+        errorPlacement : function(error, element) {  
+            element.parent('div').append(error);  
+        },  
+		submitHandler: function(form) {
+			
+			form.submit();
+		}
+	});
+});
+</script>
+
+
+
+
+<script>
+$(document).ready(function() {
+
+	$('button[type="reset"]').click(function(){
+		window.location.href = '__URL__/index';
+	});
+	
+	$('#btnSetPwd').click(function(){
+		$("#newPass").val("123456");
+		$("#cfmpass").val("123456");
+	});	
+	
+	var uid = {$user.id|default=0};	
+		
+    // added by lym -start
+    // 判断是编辑还是新增
+    var actionName = '<?php echo ACTION_NAME; ?>';
+
+    // 编辑时的状态指定：“类型”单选框不得修改；“选择教师”按钮隐藏；用户名只读不可更改。
+    if(actionName == 'editUser'){
+        $('input[name=user_type][type=radio]').attr('disabled', true);
+        $('#hang_user_type').hide();
+        $('#account').attr('readonly', true);
+    }
+
+    teacher_maybe = 'teacher';
+
+    // 由于icheck没有readonly但有disabled属性，在此使用隐藏表单将其值传给php
+    $('input[name=user_type][type=radio]').on('ifChecked', function(){
+        teacher_maybe = $(this).val();
+        $('input[type=hidden][name=user_type]').val(teacher_maybe);
+    })
+
+    // 提交前对表单数据的验证，类型为“教师”但并未勾选的，阻止表单提交。
+    // 提交前对表单数据的验证，一个用户名若绑定了同一个教师id时，阻止表单提交。
+    // 提交前对表单数据的验证，提交按钮点下的一瞬间，对用户名进行判断，重复，则阻止表单提交。
+    $('button.beforeSubmit').click(function(){
+        var uid = '{$Think.get.uid}';
+        var account = $("#account").val();
+        // 编辑时，不做下列判断
+        if(actionName == 'addUser'){
+            // 选中类型为“教师”同时关联列表为空，提示未选择关联教师
+            if($('input[value=teacher][type=radio]').prop('checked') && !$('#teacher_list_v').children('li').length){
+                $.kw.alert('关联教师未选择！');
+                return false;
+            }
+        }
+        // 判断该用户名是否已绑定其他教师。
+        bindRepeat = false;
+        var rid = $('#teacher_list_v').children('li').attr('bid');
+        // 新增时重复的判定
+        $.post('{:U("Ajaxschool/ajax_findTeacher")}', {'user_type': teacher_maybe, 'rid': rid, 'id': uid}, function(data){
+            if(data){
+                bindRepeat = true;
+            }
+        })
+        // 判断用户名是否重复
+        $.post('{:U("Ajaxschool/checkUserNameRepeat")}', {'account':account, 'uid':uid}, function(data){
+            // 编辑时，不做用户名重复的检测
+            if(actionName == 'editUser'){
+                bindRepeat = false;
+            }
+            if(data == '1' && !bindRepeat){
+                $('#upassForm').submit();
+            }else if(bindRepeat){
+                $.kw.alert('该教师已被其他用户名绑定！');
+                return false;
+            }else{
+                $.kw.alert(data);
+                return false;
+            }
+            delete bindRepeat;
+        })
+    })
+    // added by lym -end
+
+	
+	//教师选择 START
+	$('.chk_teacher').on('ifChecked', function(event){
+		var val = $(this).val();
+		var tName = $(this).attr("tName");
+	//	alert(val);
+		//检测list，然后加入新的
+		$("#teacher_list li").each(function(){
+			//alert($(this).attr("bid"));
+			//
+			var tmp_bid = $(this).attr("bid");
+			if (tmp_bid == val){
+				//alert('list中已有此记录');
+				return;
+			}			
+		});
+		$("input[name=referId]").val(val);//设置隐藏表单referId
+		$("#account").val(tName);//将教师名设置为用户名
+	//	$('#teacher_list_v').html("");
+        $('#teacher_list_v code').remove();
+		$('#teacher_list_v').append('<li class="btn btn-warning btn-sm" bid="' + val + '">' + tName + '<i class="hide glyphicon glyphicon-remove pull-right btn-removefromlist"></i></li>');
+		
+	});
+	
+	//从list中删除一条
+	$('.chk_teacher').on('ifUnchecked', function(event){
+		var val = $(this).val();
+		var tName = $(this).attr("tName");
+		//alert(val);
+		//检测list，然后加入新的
+		$("#teacher_list li").each(function(){
+			//alert($(this).attr("bid"));
+			//
+			var tmp_bid = $(this).attr("bid");
+			if (tmp_bid == val){
+				//alert('list中已有此记录');
+				$(this).remove();
+			}			
+		});
+	});
+	//教师选择 END
+	
+});
+</script>
+
+
+<script>
+$(document).ready(function() {
+	//班级选择 START
+	$('.chk_banji').on('ifChecked', function(event){
+		var val = $(this).val();
+		var tName = $(this).attr("tName");
+		//检测list，然后加入新的
+		$("#banji_list li").each(function(){
+			var tmp_bid = $(this).attr("bid");
+			if (tmp_bid == val){
+				//alert('list中已有此记录');
+				return;
+			}			
+		});
+		//$('#banji_list_v').html("");
+		$('#banji_list').append('<li class="btn btn-warning btn-sm" bid="' + val + '">' + tName + '<i class="hide glyphicon glyphicon-remove pull-right btn-removefromlist"></i></li>');
+		
+	});
+	
+	//从list中删除一条
+	$('.chk_banji').on('ifUnchecked', function(event){
+		var val = $(this).val();
+		var tName = $(this).attr("tName");
+		//alert(val);
+		//检测list，然后加入新的
+		$("#banji_list li").each(function(){
+			//alert($(this).attr("bid"));
+			//
+			var tmp_bid = $(this).attr("bid");
+			if (tmp_bid == val){
+				//alert('list中已有此记录');
+				$(this).remove();
+			}			
+		});
+	});
+	//班级选择 END
+	
+	
+	//教师选择选择  START
+	$('.this_teacher').on('ifChecked', function(event){
+		var val = $(this).val();
+		
+		
+		
+		var tName = $(this).attr("tName");
+		//alert(tName);
+		$("#usrName").val(tName);//把老师的姓名填到用户名输入框
+	});
+	
+});
+</script>
+
+<script>
+$(document).ready(function() {
+
+	//用户类型：页面载入时，根据u_type的值，用脚本控制元素显示
+	var u_type = '{$user_type}';//在服务端控制器中，输出变量值到模板
+	switch(u_type)
+	{
+	case 'teacher':
+		$("#hang_user_type").removeClass("hide");//行显示
+		$("#teacher_list").removeClass("hide");//教师显示
+		$("#student_list").addClass("hide");//学生隐藏
+		break;
+	/*case 'student':
+		$("#hang_user_type").removeClass("hide");//行显示
+		$("#teacher_list").addClass("hide");//教师显示
+		$("#student_list").removeClass("hide");//学生隐藏
+		break;*/
+	default:
+		$("#referId").val("0");
+		
+		$("#hang_user_type").addClass("hide");
+	}
+	
+	
+	//用户类型：单选按钮单击时，用脚本控制元素显示/隐藏
+	$("input[name=user_type]").on('ifClicked', function(event){
+	//	alert("您是..." + $(this).val());
+		var user_type = $(this).val();
+	//	$('#teacher_list_v').html("");
+	//	$('#student_list_v').html("");
+		switch(user_type)
+		{
+		case 'teacher':
+			$teacherId =  $("input[name='teacherIdStr[]']:checked").val();
+			$("#referId").val($teacherId);//只要切换就referId=0
+			//$("input[name=referId]").val(val);//设置隐藏表单referId
+		//	$('#student_list_v').html("");
+			$("#hang_user_type").removeClass("hide");//行显示
+			$("#teacher_list").removeClass("hide");//教师显示
+			$("#student_list").addClass("hide");//学生隐藏
+			break;
+		/*
+		case 'student':
+			$studentId =  $("input[name='studentIdStr[]']:checked").val();
+			$("#referId").val($studentId);
+		//	$('#teacher_list_v').html("");
+			$("#hang_user_type").removeClass("hide");//行显示
+			$("#teacher_list").addClass("hide");//教师显示
+			$("#student_list").removeClass("hide");//学生隐藏
+			break;
+			*/
+		default:
+			$("#referId").val("0");
+			$("#hang_user_type").addClass("hide");
+		}
+		
+	});
+	
+	$('#btn_modal_teacher_seach').click(function(){
+		$('#teacher_list_v').html("");
+	});
+
+});
+</script>
+
+
+
+
+<include file="Public/footer" />

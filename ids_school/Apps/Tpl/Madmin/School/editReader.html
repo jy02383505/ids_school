@@ -1,0 +1,75 @@
+<include file="Public/header" />
+<ol class="breadcrumb">
+	<li><a href="">环境监测设备管理</a></li>
+	<li class="active">
+        <switch name="ACTION_NAME" >
+        <case value="addActiClass" break="1">添加</case>
+        <case value="editActiClass">修改</case>
+        <default />添加
+        </switch>
+        环境监测设备信息
+    
+    </li>
+</ol>
+<form id="editClassForm" class="form-horizontal" role="form" method="post" action="__SELF__">
+	
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="Num">设备编码</label>
+		<div class="col-sm-3">
+			<input class="form-control input-sm" type="text" name="Num" id="Num" value="{$classInfo.Num}">
+		</div>
+	</div>  
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="">&nbsp;</label>
+		<div class="col-sm-4">
+			<input type="hidden" name="id" value="{$classInfo.Id}">
+			<button type="submit" class="btn btn-info btn-sm">保存更改</button>&nbsp;&nbsp;
+			<button type="reset" class="btn btn-default btn-sm">取消</button>
+		</div>
+	</div>
+</form>
+
+<include file="Public/jsLoader" />
+<script type="text/javascript" src="__PUBLIC__/script/jquery/jquery.validate.min.js"></script>
+<script type="text/javascript">
+$(function($) {
+	$('button[type="reset"]').click(function(){
+		window.location.href = '__URL__/reader';
+	});
+	
+	$('#editClassForm').validate({
+		errorElement : 'span',
+		errorClass : 'help-block',
+		focusInvalid : true,  
+        rules : {  
+        	Num : {  
+                required : true,
+            },
+       
+        },  
+        messages : {
+        	Num : {  
+                required : "设备编码必填.",
+            },
+  
+        },  
+
+        highlight : function(element) {  
+            $(element).closest('.form-group').addClass('has-error');  
+        },  
+
+        success : function(label) {  
+            label.closest('.form-group').removeClass('has-error');  
+            label.remove();  
+        },  
+
+        errorPlacement : function(error, element) {  
+            element.parent('div').append(error);  
+        },  
+		submitHandler: function(form) {
+			form.submit();
+		}
+	});
+});
+</script>
+<include file="Public/footer" />

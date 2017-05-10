@@ -1,0 +1,459 @@
+<include file="Public/header" />
+<link rel="stylesheet" href="__PUBLIC__/script/uploadify/uploadify.css">
+
+<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+<script src="__PUBLIC__/script/jquery/jquery.min.js"></script>
+
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+
+<style>
+.ul_play {padding:10px 0 0 0;background-color:#f2f2f2;}
+.ul_play li.header{padding:0 10px 0 10px;height:30px;line-height:30px;}
+
+.ul_dateplan {padding:0px 10px 0 10px;background-color:#d7d7d7;}
+.ul_dateplan li{height:30px;line-height:30px;margin:0;background-color:#d7d7d7;}
+.ul_dateplan li.line{height:30px;line-height:30px;border-top:1px #e1e1e1 solid;margin:0;background-color:#d7d7d7;}
+.ul_dateplan li.ul_dateplan_name{height:30px;line-height:30px;font-weight:bold;font-size:14px;border-bottom:1px #e1e1e1 solid;background-color:#d7d7d7;}
+.ul_dateplan li div.td1{float:left;width:160px;height:30px;line-height:30px;}
+.ul_dateplan li div.td2{float:left;width:160px;height:30px;line-height:30px;}
+.ul_dateplan li div.td3{float:left;width:300px;height:30px;line-height:30px;}
+</style>
+<ol class="breadcrumb">
+	<li><a href="{:U('Programs/index')}">节目管理</a></li>
+	<li class="active">
+        <switch name="ACTION_NAME" >
+        <case value="addPlayPlans" break="1">添加</case>
+        <case value="editPlayPlans">修改</case>
+        <default />添加
+        </switch>播放计划
+    
+    </li>
+</ol>
+<form id="editForm" class="form-horizontal" role="form" method="post" action="__SELF__">
+
+
+    
+    
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="storeName">播放计划名称</label>
+		<div class="col-sm-3">
+			<input class="form-control input-sm" type="text" name="aName" id="aName" value="{$album.name}">
+		</div>
+	</div>
+         
+    <div class="form-group">
+		<label class="col-sm-2 control-label" for="banjiId">分辨率</label>
+		<div class="col-sm-2">
+			<select class="form-control input-sm" name="banjiId" id="albumInfo.banjiId">
+				<option value="">请选择</option>
+				<volist name="banjis" id="vo">
+					<eq name="vo.id" value="$album.banjiId">
+						<option value="{$vo.id}" selected> {$vo.name}</option>
+					<else/>
+						<option value="{$vo.id}"> {$vo.name}</option>
+					</eq>
+				</volist>
+                
+                
+			</select>
+		</div>
+	</div> 
+    
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="sex">计划类型</label>
+       	<label  class="col-sm-10 control-label" style="text-align:left;">周计划</label>
+	</div>  
+   
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="storeNote">计划内容</label>
+		<div class="col-sm-8">
+        	<div style="height:30px;">
+            	<label class="col-sm-2 control-label pull-right"><input type="checkbox" value="1" id="expand" checked>全部展开</label>
+            </div>
+			<ul class="ul_play">
+            	<li class="header">
+                	<span class="glyphicon glyphicon-calendar"></span><span style="padding:0 10px 0 10px;">星期一</span><span class="glyphicon glyphicon-chevron-up"></span>
+                	<span class="glyphicon glyphicon-cog " style="margin-left:60px;"> 选择日安排</span>
+                </li>
+                <li class="body">
+                	<ul class="ul_dateplan" >
+                    	<li class="ul_dateplan_name">
+                        	<span class="glyphicon glyphicon-chevron-up"></span>
+                        	<span>这是一个日安排的名称</span>
+                        </li>
+                    	<li>
+                        	<div class="td1">开始时间</div>
+                            <div class="td2">结束时间</div>
+                            <div class="td3">播放节目</div>
+                        </li>
+                    
+                    	<li	class="line">
+                        	<div class="td1">08:00</div>
+                            <div class="td2">08:10</div>
+                            <div class="td3">早间新闻</div>
+                        </li>
+                    	<li	class="line">
+                        	<div class="td1">08:10</div>
+                            <div class="td2">08:25</div>
+                            <div class="td3">开心一刻</div>
+                        </li>                    
+                     	<li	class="line">
+                        	<div class="td1">08:00</div>
+                            <div class="td2">08:10</div>
+                            <div class="td3">奔驰百年汽车广告</div>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            
+			<ul class="ul_play">
+            	<li class="header">
+                	<span class="glyphicon glyphicon-calendar"></span><span style="padding:0 10px 0 10px;">星期一</span><span class="glyphicon glyphicon-chevron-up"></span>
+                	<span class="glyphicon glyphicon-cog " style="margin-left:60px;"> 选择日安排</span>
+                </li>
+                <li class="body">
+                	<ul class="ul_dateplan" >
+                    	<li class="ul_dateplan_name">
+                        	<span class="glyphicon glyphicon-chevron-up"></span>
+                        	<span>这是一个日安排的名称</span>
+                        </li>
+                    	<li>
+                        	<div class="td1">开始时间</div>
+                            <div class="td2">结束时间</div>
+                            <div class="td3">播放节目</div>
+                        </li>
+                    
+                    	<li	class="line">
+                        	<div class="td1">08:00</div>
+                            <div class="td2">08:10</div>
+                            <div class="td3">早间新闻</div>
+                        </li>
+                    	<li	class="line">
+                        	<div class="td1">08:10</div>
+                            <div class="td2">08:25</div>
+                            <div class="td3">开心一刻</div>
+                        </li>                    
+                     	<li	class="line">
+                        	<div class="td1">08:00</div>
+                            <div class="td2">08:10</div>
+                            <div class="td3">奔驰百年汽车广告</div>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            
+ 			<ul class="ul_play">
+            	<li class="header">
+                	<span class="glyphicon glyphicon-calendar"></span><span style="padding:0 10px 0 10px;">星期一</span><span class="glyphicon glyphicon-chevron-up"></span>
+                	<span class="glyphicon glyphicon-cog " style="margin-left:60px;"> 选择日安排</span>
+                </li>
+                <li class="body">
+                	<ul class="ul_dateplan" >
+                    	<li class="ul_dateplan_name">
+                        	<span class="glyphicon glyphicon-chevron-up"></span>
+                        	<span>这是一个日安排的名称</span>
+                        </li>
+                    	<li>
+                        	<div class="td1">开始时间</div>
+                            <div class="td2">结束时间</div>
+                            <div class="td3">播放节目</div>
+                        </li>
+                    
+                    	<li	class="line">
+                        	<div class="td1">08:00</div>
+                            <div class="td2">08:10</div>
+                            <div class="td3">早间新闻</div>
+                        </li>
+                    	<li	class="line">
+                        	<div class="td1">08:10</div>
+                            <div class="td2">08:25</div>
+                            <div class="td3">开心一刻</div>
+                        </li>                    
+                     	<li	class="line">
+                        	<div class="td1">08:00</div>
+                            <div class="td2">08:10</div>
+                            <div class="td3">奔驰百年汽车广告</div>
+                        </li>
+                    </ul>
+                </li>
+            </ul>           
+            
+ 			<ul class="ul_play">
+            	<li class="header">
+                	<span class="glyphicon glyphicon-calendar"></span><span style="padding:0 10px 0 10px;">星期一</span><span class="glyphicon glyphicon-chevron-up"></span>
+                	<span class="glyphicon glyphicon-cog " style="margin-left:60px;"> 选择日安排</span>
+                </li>
+                <li class="body">
+                	<ul class="ul_dateplan" >
+                    	<li class="ul_dateplan_name">
+                        	<span class="glyphicon glyphicon-chevron-up"></span>
+                        	<span>这是一个日安排的名称</span>
+                        </li>
+                    	<li>
+                        	<div class="td1">开始时间</div>
+                            <div class="td2">结束时间</div>
+                            <div class="td3">播放节目</div>
+                        </li>
+                    
+                    	<li	class="line">
+                        	<div class="td1">08:00</div>
+                            <div class="td2">08:10</div>
+                            <div class="td3">早间新闻</div>
+                        </li>
+                    	<li	class="line">
+                        	<div class="td1">08:10</div>
+                            <div class="td2">08:25</div>
+                            <div class="td3">开心一刻</div>
+                        </li>                    
+                     	<li	class="line">
+                        	<div class="td1">08:00</div>
+                            <div class="td2">08:10</div>
+                            <div class="td3">奔驰百年汽车广告</div>
+                        </li>
+                    </ul>
+                </li>
+            </ul>           
+            
+ 			<ul class="ul_play">
+            	<li class="header">
+                	<span class="glyphicon glyphicon-calendar"></span><span style="padding:0 10px 0 10px;">星期一</span><span class="glyphicon glyphicon-chevron-up"></span>
+                	<span class="glyphicon glyphicon-cog " style="margin-left:60px;"> 选择日安排</span>
+                </li>
+                <li class="body">
+                	<ul class="ul_dateplan" >
+                    	<li class="ul_dateplan_name">
+                        	<span class="glyphicon glyphicon-chevron-up"></span>
+                        	<span>这是一个日安排的名称</span>
+                        </li>
+                    	<li>
+                        	<div class="td1">开始时间</div>
+                            <div class="td2">结束时间</div>
+                            <div class="td3">播放节目</div>
+                        </li>
+                    
+                    	<li	class="line">
+                        	<div class="td1">08:00</div>
+                            <div class="td2">08:10</div>
+                            <div class="td3">早间新闻</div>
+                        </li>
+                    	<li	class="line">
+                        	<div class="td1">08:10</div>
+                            <div class="td2">08:25</div>
+                            <div class="td3">开心一刻</div>
+                        </li>                    
+                     	<li	class="line">
+                        	<div class="td1">08:00</div>
+                            <div class="td2">08:10</div>
+                            <div class="td3">奔驰百年汽车广告</div>
+                        </li>
+                    </ul>
+                </li>
+            </ul>           
+            
+ 			<ul class="ul_play">
+            	<li class="header">
+                	<span class="glyphicon glyphicon-calendar"></span><span style="padding:0 10px 0 10px;">星期一</span><span class="glyphicon glyphicon-chevron-up"></span>
+                	<span class="glyphicon glyphicon-cog " style="margin-left:60px;"> 选择日安排</span>
+                </li>
+                <li class="body">
+                	<ul class="ul_dateplan" >
+                    	<li class="ul_dateplan_name">
+                        	<span class="glyphicon glyphicon-chevron-up"></span>
+                        	<span>这是一个日安排的名称</span>
+                        </li>
+                    	<li>
+                        	<div class="td1">开始时间</div>
+                            <div class="td2">结束时间</div>
+                            <div class="td3">播放节目</div>
+                        </li>
+                    
+                    	<li	class="line">
+                        	<div class="td1">08:00</div>
+                            <div class="td2">08:10</div>
+                            <div class="td3">早间新闻</div>
+                        </li>
+                    	<li	class="line">
+                        	<div class="td1">08:10</div>
+                            <div class="td2">08:25</div>
+                            <div class="td3">开心一刻</div>
+                        </li>                    
+                     	<li	class="line">
+                        	<div class="td1">08:00</div>
+                            <div class="td2">08:10</div>
+                            <div class="td3">奔驰百年汽车广告</div>
+                        </li>
+                    </ul>
+                </li>
+            </ul>           
+            
+ 			<ul class="ul_play">
+            	<li class="header">
+                	<span class="glyphicon glyphicon-calendar"></span><span style="padding:0 10px 0 10px;">星期一</span><span class="glyphicon glyphicon-chevron-up"></span>
+                	<span class="glyphicon glyphicon-cog " style="margin-left:60px;"> 选择日安排</span>
+                </li>
+                <li class="body">
+                	<ul class="ul_dateplan" >
+                    	<li class="ul_dateplan_name">
+                        	<span class="glyphicon glyphicon-chevron-up"></span>
+                        	<span>这是一个日安排的名称</span>
+                        </li>
+                    	<li>
+                        	<div class="td1">开始时间</div>
+                            <div class="td2">结束时间</div>
+                            <div class="td3">播放节目</div>
+                        </li>
+                    
+                    	<li	class="line">
+                        	<div class="td1">08:00</div>
+                            <div class="td2">08:10</div>
+                            <div class="td3">早间新闻</div>
+                        </li>
+                    	<li	class="line">
+                        	<div class="td1">08:10</div>
+                            <div class="td2">08:25</div>
+                            <div class="td3">开心一刻</div>
+                        </li>                    
+                     	<li	class="line">
+                        	<div class="td1">08:00</div>
+                            <div class="td2">08:10</div>
+                            <div class="td3">奔驰百年汽车广告</div>
+                        </li>
+                    </ul>
+                </li>
+            </ul>           
+                        
+            
+		</div>
+	</div>
+ 
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="">&nbsp;</label>
+		<div class="col-sm-4">
+			<input type="hidden" name="id" value="{$album.id}">
+			<button type="submit" class="btn btn-info btn-sm">保存更改</button>&nbsp;&nbsp;
+			<button type="reset" class="btn btn-default btn-sm">取消</button>
+		</div>
+	</div>   
+    
+
+</form>
+
+<!--zjh add start 模态对话框-->
+<include file="Public/resourceBox" />
+<include file="Public/systemLayoutBox" />
+<!--zjh add end 模态对话框-->
+
+
+
+<include file="Public/jsLoader" />
+<script type="text/javascript" src="__PUBLIC__/script/uploadify/jquery.uploadify.js"></script>
+<script type="text/javascript" charset="utf-8" src="__PUBLIC__/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="__PUBLIC__/ueditor/ueditor.all.js"> </script>
+<script type="text/javascript" charset="utf-8" src="__PUBLIC__/ueditor/lang/zh-cn/zh-cn.js"></script>
+<script type="text/javascript">
+$(function($) {
+	var tmpClassid = '{$unid|default=""}';
+	
+	$('button[type="reset"]').click(function(){
+		window.location.href = '__URL__/albumList';
+	});
+	
+});
+</script>
+
+
+<script type="text/javascript" src="__PUBLIC__/script/jquery/jquery.validate.min.js"></script>
+<script type="text/javascript">
+$(function($) {
+	
+	$('#editForm').validate({
+		errorElement : 'span',
+		errorClass : 'help-block',
+		focusInvalid : true,  
+        rules : {  
+        	aName : {  
+                required : true,
+            },
+        	banjiId : {  
+				required : true,
+            },
+		//	sortnum : {
+		//		required : true,
+        //        digits:true
+		//	},
+            description : {
+				required : true,
+			},
+        },  
+        messages : {
+        	aName : {  
+                required : "相册名称必填.",
+            },
+        	
+        	banjiId : {  
+                required : "所属班级必选.",
+            },
+        //	sortnum : {  
+        //        required : "排序必填",digits:"请输入整数.",
+        //    },
+            description : {  
+                required : "相册介绍必填.",
+            },
+        },  
+
+        highlight : function(element) {  
+            $(element).closest('.form-group').addClass('has-error');  
+        },  
+
+        success : function(label) {  
+            label.closest('.form-group').removeClass('has-error');  
+            label.remove();  
+        },  
+
+        errorPlacement : function(error, element) {  
+            element.parent('div').append(error);  
+        },  
+		submitHandler: function(form) {
+			form.submit();
+		}
+	});
+});
+</script>
+
+
+
+<script>
+$(document).ready(function() {
+
+	
+	//展开或关闭各星期的日详细
+	$('#expand').on('ifChecked', function(event){
+		var val = $(this).val();
+		$(".ul_dateplan").toggle();
+	});
+	//END
+	
+	
+	//展开或关闭各星期的日详细
+	$('#expand').on('ifUnchecked', function(event){
+		var val = $(this).val();
+		$(".ul_dateplan").toggle();
+	});
+	//END
+});
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+<include file="Public/footer" />

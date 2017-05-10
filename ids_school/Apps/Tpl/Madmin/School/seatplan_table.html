@@ -1,0 +1,476 @@
+<include file="Public/header" />
+
+
+
+<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+<script src="__PUBLIC__/script/jquery/jquery.min.js"></script>
+
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="__PUBLIC__/bootstrap/bootstrap.min.js"></script>
+
+
+<style>
+#storeVideoUp .btn-default, #storeVideoUp .btn-default:hover, #storeVideoUp .btn-default:active, #storeVideoUp .btn-default:visited{background-color:#fff;border-color:#ccc;padding:3px 10px 4px;font-size:14px;outline:0;}
+
+#div_out{
+	clear:both;background-color:#FFFFFF;width:100%;min-height:700px;height:700px;
+}
+#div_left{float:left;width:460px;min-width:460px;min-height:700px;hight:100%;background-color:#FFFFFF;padding:10px;}
+#div_right{float:left;min-width:800px;min-height:700px;width:100% auto;hight:100%;overflow:hidden;background-color:#FFFFFF;}
+#div_left_1{clear:both;background-color:#FFFFFF;width:100%;height:10px;}
+#div_left_2{clear:both;background-color:#FFFFFF;width:100%;height:90px;}
+#div_left_3{clear:both;background-color:#FFFFFF;width:100%;min-height:300px;margin:10px 0 0 0 ;}
+#div_left_2_left{float:left;width:100%;height:100%;}
+#div_left_2_right{float:left;width:0px;height:100%;display:none;}
+
+#div_left_2_left_header{clear:both;width:100%;height:30px;line-height:30px;font-size:200%;}
+#div_left_2_left_desc{clear:both;width:100%;height:90px;line-height:30px;font-size:12px;}
+#div_left_2_right_btn{float:right;width:60px; font-family:"黑体",Georgia,Serif;font-size:300%;text-align:center;height:60px;line-height:60px;background-color:#E9E9E4;border:solid 1px #E0E0E0;}
+
+#ul_students{clear:both;height:auto;marign:0 auto;}
+#ul_students li{float:left;width:86px;height:30px;line-height:30px;border:solid 1px #E0E0E0;margin:1px;padding:2px;}
+
+#ul_teacher_lession li.li_current{border:0px solid #000000;background-color:#E0E0E0;}
+
+#div_stop{clear:both;width:100%;height:30px;background-color:#FFFFFF;border-bottom:solid 1px #E0E0E0;}
+
+#div_right_1{clear:both;width:100%;height:60px;line-height:60px;font-family:"黑体",Georgia,Serif;font-size:300%;text-align:center;}
+
+#seatTable{width:100%;min-height:600px;}
+#seatTable td{text-align:center;vertical-align : middle;border:solid 1px #000000;height:40px;}
+.div_the_seat{width:100%;height:100%;line-height:100%;}
+.theSeat{width:80px;}
+.tdrow{width:80px;}
+.div_one_teacher_lession{margin:1px;height:28px;background-color:#efefed;}
+.current{background-color:#11949a;color:#FFFFFF;/*border:solid 1px #006699;*/}
+
+/*
+.drag{
+	position:absolute; width:100px;height:100px;
+	background-color:#FF0000;
+	top:10px;left:10px; 
+	padding:0; 
+}*/
+
+/*
+ * 鼠标提示条
+*/
+.div_message{
+	position:absolute; min-width:100px;width:auto;height:30px;top:0px;left:0px;padding:10px;
+	background-color:#FFFFFF;display:none;
+}
+#test{display:none;}
+
+
+/**
+ * 工具条
+*/
+#div_left_toolbar{padding:10px 5px;background-color:#FFFFFF5;}
+
+/**
+ * 移动的块
+*/
+#moving{width:86px;height:30px;border:1px #16a085 solid;position:absolute;z-index:999;top:0;left:0;padding:2px;}
+
+/**
+ * 鼠标指针
+*/
+.cursor_del{cursor:url('__PUBLIC__/images/cursor/del.ico'),auto;}
+.cursor_edit{cursor:url('__PUBLIC__/images/cursor/edit.ico'),auto;}
+
+</style>
+<ol class="breadcrumb">
+	<li><a href="{:U('School/lessionTableList')}">座位表管理</a></li>
+	<li class="active">
+       	设置座位表 
+    </li>
+    <li></li>
+</ol>
+
+<input type="hidden" name="banjiId" id="banjiId" value="{$banjiId}">
+<input type="hidden" name="roomId" id="roomId" value="{$roomId}">
+
+<div id="moving" class="hide"></div>
+
+<!--div_out start-->
+<div id="div_out" >
+	<!--div_left start-->
+	<div id="div_left">
+    	<!--div_left_1 start-->
+		<div id="div_left_1">
+           
+        </div>
+        <!--div_left_1 end-->
+        
+        <!--div_left_2 start-->
+		<div id="div_left_2">
+        	<div id="div_left_2_left">
+                <div id="div_left_2_left_header">本班学生（{$banjiName}）
+                </div>
+                <div id="div_left_2_left_desc">
+                行数和列数，在“修改教室”时设置。
+                </div>  
+            </div>          
+        	<div id="div_left_2_right">
+
+            </div>
+        </div>
+        <!--div_left_2 end-->
+        
+        <!--div_left_toolbar start-->
+        <div id="div_left_toolbar">
+            <B>当前操作方式：</B>
+            <input type="radio" name="dotype" value="resetone" checked> 删除 &nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="radio" name="dotype" value="setone"> 设置 &nbsp;&nbsp;&nbsp;&nbsp;
+            
+            <!--<input type="radio" name="dotype" value="resetall"> 清空整个座位表-->
+        </div>
+        <!--div_left_toolbar end-->
+        
+        <!--div_left_3 start-->
+		<div id="div_left_3">      
+        	<ul id="ul_students"> 
+                <volist name="datas_student" id="vo">
+                <li class="theStudent" studentId="{$vo.id}" studentName="{$vo.name}" >{$vo.name}</li>
+                </volist>
+            </ul>
+        </div>
+        <!--div_left_3 end-->    
+        
+	</div>
+    <!--div_left end-->
+    
+    <!--div_right start-->
+	<div id="div_right">
+		<div id="div_right_1">
+        	座位表
+        </div>
+        <!--div_right_2 start-->
+		<div id="div_right_2">
+            <table width="100%"  id="seatTable">
+
+            
+            <tr style="background-color:#dcdcdc;">
+            <td >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+            <for start="1" end="$col+1" name="h">
+            <td >{$h}</td>
+            </for>
+            </tr>
+            <tr>
+            <td style="background-color:#dcdcdc;"></td>
+            <td colspan="{$col}" style="background-color:#f5f5f5;"><h5>讲台</h5></td>
+            </tr>
+            
+                        
+            <for start="1" end="$line+1" name="i">
+              <tr>
+              	<td class="tdrow" style="background-color:#dcdcdc;"><div class="div_td" row="" line="{$i}" col="{$j}" recordId="" studentId="" studentName="" >{$i}</div></td>
+              	<for start="1" end="$col+1" name="j">
+                	<?php
+                    	$had = 0;//记
+                    	foreach($datas_seat_table as $kkk=>$vvv){
+                        	if ($vvv['line'] == $i && $vvv['col'] == $j ){
+                            	if ( $vvv['studentId'] && $vvv['studentName']){
+                                    echo "<td data-id='".$vvv['id']."' data-studentid='".$vvv['studentId']."' pos='".$i."-".$j."' line='". $i ."' col='". $j ."' class='theSeat cursor_del'>";
+                                    echo 	$vvv['studentName'];
+                                    echo "</td>";
+                                    break;//中止循环
+                                }else{
+                                	//如果此座位（单元格）没有学生，显示位置：行-列
+                                    echo "<td data-id='".$vvv['id']."' data-studentid='0' pos='".$i."-".$j."' line='". $i ."' col='". $j ."' class='theSeat'>";
+                                    echo 	$i."-".$j;
+                                    echo "</td>";                               
+                                	break;
+                                }
+                            }                        	
+                        }
+                        
+
+                    ?>
+                
+                
+                </for>
+              </tr>
+			</for>
+
+
+
+              
+              
+            </table>
+        </div>
+        <!--div_right_2 end-->   
+         
+    </div><!--div_right end-->
+</div>
+<!--div_out end-->
+
+<div id='test'>0,0</div>
+
+<include file="Public/jsLoader" />
+<script type="text/javascript" src="__PUBLIC__/script/myplugins/jq.kw.js"></script>
+<script>
+$(document).ready(function() {
+	var curStudentId = 0;//当前学生ID
+	var curStudentName = "";//当前学生姓名
+	var banjiId = 0;//班级ID
+	var roomId = 0;//教室ID
+	
+	banjiId = $("#banjiId").val();
+	roomId = $("#roomId").val();
+	
+	//标记是否在移动
+	var move = false;
+		
+	
+	//座位表单元格，也就是座位
+	$('.theSeat').click(function(){
+		var pos="";
+		var recordId = 0,line=0,col=0;//记录自增ID
+		pos = $(this).attr("pos");//如：2-6,4-3
+		line = $(this).attr("line");//行
+		col = $(this).attr("col");//列
+		recordId = $(this).attr("data-id");
+	//	alert(pos);
+	//	alert(recordId +";"+ curStudentId +";"+ curStudentName +";"+ banjiId +";"+ roomId +";"+ line +";"+ col);
+		
+		//如果当前学生不为空
+		var tmp = $(this);
+		if (curStudentId){
+			/*
+			var title = '确认将【'+curStudentName+'】安排在此座位？';
+			if (confirm(title)){
+
+			}else{
+				move = false;	
+				$("#moving").addClass("hide");
+			}*/
+			
+			$.ajax({
+				url:'__URL__/editSeatPlan',
+				type:'post',
+				data:"dotype=setOne&banjiId="+banjiId+"&roomId="+roomId+"&line="+line+"&col="+col+"&id="+recordId+"&studentId="+curStudentId+"&rnd="+Math.random(),
+				async:true,//false为同步
+				dataType:'json',
+				success:function(re) {
+					if (re.stat * 1 > 0){
+						//alert(re.msg);
+						tmp.html(curStudentName);
+						tmp.attr("data-studentid",curStudentId);
+						//设置
+						move = false;//正在移动，否
+						$("#moving").addClass("hide");
+					}else{
+						alert(re.msg);//失败提示
+					}
+				},
+				error:function() {
+					alert('由于网络异常导致操作失败，请刷新页面重试....');
+				}
+			});
+			
+			
+			
+		}else{
+			/*
+			$.kw.confirm('确认要清空此座位吗？', function() {
+			});	*/
+			$.ajax({
+				url:'__URL__/editSeatPlan',
+				type:'post',
+				data:"dotype=setOne&banjiId="+banjiId+"&roomId="+roomId+"&line="+line+"&col="+col+"&id="+recordId+"&studentId="+curStudentId+"&rnd="+Math.random(),
+				async:true,//false为同步
+				dataType:'json',
+				success:function(re) {
+					if (re.stat * 1 > 0){
+						tmp.html(line+"-"+col);
+						tmp.attr("data-studentid","0");
+						tmp.removeClass("cursor_del");
+						//rmp.addClass("cursor_edit");
+					}else{
+						alert(re.msg);//失败提示
+					}
+				},
+				error:function() {
+					alert('由于网络异常导致操作失败，请刷新页面重试....');
+				}
+			}); 
+		
+		}
+		
+	});
+
+	//学生列表，单击某个学生姓名时
+	$('.theStudent').click(function(){
+		curStudentId = $(this).attr("studentId");
+		curStudentName = $(this).attr("studentName");
+		
+		//alert(curStudentId + curStudentName);
+		//$('#div_left_toolbar input:first').iCheck('check');
+		//$('#div_left_toolbar input:first').iCheck('uncheck');
+		
+		$("#div_left_toolbar input[value='setone']").iCheck("check");//设置value=setone的radio为选中状态
+		
+		$(".theStudent").each(function(){
+			$(this).removeClass("current");
+			$(this).css("border","solid 1px #E0E0E0");
+		});		
+		$(this).addClass("current");
+		$(this).css("border","solid 1px #006699");
+		
+			
+//		$.kw.alert("您选择了："+curStudentName+"，请在右侧座位表中单击一个位置进行座位设置");
+		
+		//获取学生Id和学生姓名
+		curStudentId = $(this).attr("studentId");
+		curStudentName = $(this).attr("studentName");		
+		
+		//获取当前学生表格的坐标和长宽
+		var left_cur = $(this).offset().left;
+		var top_cur = $(this).offset().top;
+		var width_cur = $(this).width();
+		var height_cur = $(this).height();
+		//alert(width_cur);
+		
+		//让移动的div与表格的单元格大小匹配
+		$("#moving").css("width",width_cur+'px');
+		$("#moving").css("height",height_cur+'px');
+		$("#moving").css("line-height",height_cur + 'px');	
+		$("#moving").css("text-align",'center');
+		
+		$("#moving").css("top",top_cur+'px');
+		$("#moving").css("left",left_cur+'px');
+				
+	//	_x=e.pageX-parseInt($(".drag").css("left")); 
+	//	_y=e.pageY-parseInt($(".drag").css("top")); 
+		
+
+		move=true; 
+		$("#moving").html($(this).html());//移动块上显示学生姓名
+		$("#moving").removeClass("hide");
+			//$("#moving").show();
+
+		
+		
+		
+		
+	});
+
+	//点击“清除一个座位”的单选按钮
+	$("#div_left_toolbar input[value='resetone']").on('ifChecked', function(event){
+		$(".theStudent").each(function(){
+			$(this).removeClass("current");
+			$(this).css("border","solid 1px #E0E0E0");//把左侧学生列表的显示全部设为未点击样式
+			
+			curStudentId = 0;
+			curStudentName = "";//此时再单击单元格即为清空座位
+			
+			$(".theSeat").each(function(){
+				
+				if ($(this).attr("data-studentid") > 0){
+					$(this).removeClass("cursor_edit");//点了删除单选按钮，所有的座位指针均为删除样式
+					$(this).addClass("cursor_del");
+				}else{
+				//	$(this).css("background-color","#FF0000");
+					$(this).removeClass("cursor_edit");//点了删除单选按钮，所有的座位指针均为删除样式
+					$(this).removeClass("cursor_del");			
+				}
+			});			
+			
+			
+			
+			move = false;	
+			$("#moving").addClass("hide");			
+		});	
+	});
+	
+	//点击"设置一个座位"的单选按钮
+	$("#div_left_toolbar input[value='setone']").on('ifChecked', function(event){
+		//alert(event.type + ' callback');
+		var stunum = $(".theStudent").size();
+		if (stunum == 0){alert("无学生");
+		}else{
+			//alert(stunum);	
+		}
+		$(".theStudent").each(function(){
+			$(this).removeClass("current");
+			$(this).css("border","solid 1px #E0E0E0");//把左侧学生列表的显示全部设为未点击样式
+		});	
+		
+		$(".theStudent").first().addClass("current");
+		$(".theStudent").first().css("border","solid 1px #006699");
+				
+		curStudentId = $(".theStudent").first().attr("studentId");
+		curStudentName = $(".theStudent").first().attr("studentName");
+		
+		move=true; 
+		$("#moving").html(curStudentName);//移动块上显示学生姓名
+		$("#moving").removeClass("hide");
+		
+		$(".theSeat").each(function(){
+			if ($(this).attr("data-id")){
+				$(this).removeClass("cursor_del");//点了设置一个座位单选按钮，所有的座位指针均为删除样式
+				$(this).addClass("cursor_edit");
+			}
+		});
+	});	
+	
+	//鼠标移动中
+	$(document).mousemove(function(e){
+		if (move){
+			var width_moving = $("#moving").width();
+			var height_moving = $("#moving").height();
+			$("#moving").css("top",e.pageY + 30 +'px');
+			$("#moving").css("left",e.pageX + 30 +'px');	
+		}
+	});	
+	
+	//鼠标进入座位单元格
+	$(".theSeat").on("mouseenter",function(){
+		$(this).css("background-color","#16a085");
+		//alert("鼠标进入");
+
+		if (move){
+			
+			var left_cur = $(this).offset().left;
+			var top_cur = $(this).offset().top;
+			
+			var width_cur = $(this).width();
+			//alert(left_cur);
+			var height_cur = $(this).height();
+			
+			//设置移动块
+			$("#moving").removeClass("hide");
+			
+			$("#moving").css("background-color","#FFFFFF");
+			$("#moving").css("width",width_cur + 'px');
+			$("#moving").css("height",height_cur + 'px');
+			$("#moving").css("line-height",height_cur + 'px');
+			$("#moving").css("text-align",'center');
+			
+			$("#moving").css("top",top_cur+'px');
+			$("#moving").css("left",left_cur+'px');	
+		}else{
+			
+
+		}
+	});	
+	
+	//鼠标离开一个座位单元格
+	$(".theSeat").on("mouseleave",function(){
+		//alert("鼠标离开");
+		$(this).css("background-color","#FFFFFF");
+	//	$("#moving").addClass("hide");
+
+	});			
+	
+	//鼠标离开表格
+	$("#seatTable").on("mouseleave",function(){
+		$("#moving").css("height",'30px');
+		$("#moving").css("line-height",'30px');
+		$("#moving").css("width",'87px');
+		$("#moving").css("text-align",'center');
+	});			
+		
+});
+</script>

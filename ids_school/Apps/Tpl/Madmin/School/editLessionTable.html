@@ -1,0 +1,793 @@
+<include file="Public/header" />
+
+
+
+<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+<script src="__PUBLIC__/script/jquery/jquery.min.js"></script>
+
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="__PUBLIC__/bootstrap/bootstrap.min.js"></script>
+
+
+<style>
+#storeVideoUp .btn-default, #storeVideoUp .btn-default:hover, #storeVideoUp .btn-default:active, #storeVideoUp .btn-default:visited{background-color:#fff;border-color:#ccc;padding:3px 10px 4px;font-size:14px;outline:0;}
+
+#div_out{
+	clear:both;background-color:#FFFFFF;width:100%;min-height:700px;height:700px;
+}
+#div_left{float:left;min-width:400px;min-height:700px;hight:100%;background-color:#FFFFFF;padding:10px;}
+#div_middle{float:left;min-width:60px;width:60px;height:400px;background-color:#FFFFFF;	}
+#div_right{float:left;min-width:700px;min-height:700px;width:100% auto;hight:100%;overflow:hidden;background-color:#FFFFFF;}
+#div_left_1{clear:both;background-color:#FFFFFF;width:100%;height:50px;}
+#div_left_2{clear:both;background-color:#FFFFFF;width:100%;height:60px;}
+#div_left_3{clear:both;background-color:#FFFFFF;width:100%;min-height:300px;margin:10px 0 0 0 ;}
+#div_left_2_left{float:left;width:320px;height:100%;background-color:#11959a;color:#FFFFFF;}
+#div_left_2_right{float:left;width:60px;height:100%;}
+
+#div_left_2_left_header{clear:both;width:100%;height:30px;line-height:30px;font-size:200%;}
+#div_left_2_left_desc{clear:both;width:100%;height:20px;line-height:20px;font-size:12px;}
+#div_left_2_right_btn{float:right;width:60px; font-family:"黑体",Georgia,Serif;font-size:300%;font-weight:bold;text-align:center;height:60px;line-height:60px;border:solid 1px #E0E0E0;background-color:#c2c2c2;color:#555555;}
+
+#ul_teacher_lession{background-color:#ebeeee;}
+#ul_teacher_lession li.ul_teacher_lession_header{clear:both;width:100%;height:35px;line-height:35px;background-color:#ebeeee;color:#000;font-size:10pt;font-weight:bold;}
+#ul_teacher_lession li.li_teacher_lession{clear:both;margin-bottom:2px;background-color:#e7e8e8;}
+	#ul_teacher_lession li dt.one_teacher_lession{float:left;width:100px;height:35px;line-height:35px;cursor:pointer;text-align:center;}
+	#ul_teacher_lession li dd.one_teacher{float:left;width:180px;height:35px;line-height:35px;text-align:center;overflow:hidden;}
+	#ul_teacher_lession li dd.one_op{float:left:width:80px;height:35px;line-height:35px;text-align:center;text-align:center;}
+	#ul_teacher_lession li dd.one_op span{padding:10px;font-size:10pt;}
+
+#ul_teacher_lession li.li_teacher_lession_footer{height:30px;line-height:30px;}
+	#ul_teacher_lession li.li_teacher_lession_footer span{padding:10px;font-size:10pt;}
+	
+#ul_help{
+	position: relative;
+	width:380px;height:88px;
+	background-image: url("__PUBLIC__/images/cursor/pleaseSelect.png"); 
+	left: 0px;
+	top: 20px;	
+	border:0px #FF0000 solid;
+}
+#ul_help li.li_help{height:20px;line-height:20px;}
+	#ul_help li.li_help div{margin-left:0px;}
+	
+	
+.div_one_teacher_lession{margin:0px;height:35px;line-height:35px;background-color:#e7e8e8;text-align:center;color:#000;}
+
+#div_stop{clear:both;width:100%;height:30px;background-color:#FFFFFF;border-bottom:solid 1px #E0E0E0;
+
+}
+
+
+
+/**
+ * 中间工具条部分
+*/
+
+
+/**
+ * 右侧
+*/
+
+#div_right_1{clear:both;width:100%;height:60px;line-height:60px;font-family:"黑体",Georgia,Serif;font-size:300%;text-align:center;}
+
+#lession_table{width:100%;min-height:600px;}
+#lession_table td{text-align:center;vertical-align : middle;border:solid 1px #000000;width:12%;}
+
+
+.tdbgcolor{background-color:#11959a;color:#FFFFFF;}/*单元格热点背景*/
+.td_lesstion{font-size:14px;height:68px;}
+
+#test{display:none;}
+
+/*
+.drag{
+	position:absolute; width:100px;height:100px;
+	background-color:#FF0000;
+	top:10px;left:10px; 
+	padding:0; 
+}*/
+
+/*
+ * 鼠标提示条
+*/
+.div_message{
+	position:absolute; min-width:100px;width:auto;height:30px;top:0px;left:0px;padding:10px;
+	background-color:#84c8c8;display:none;
+}
+
+/**
+ * 鼠标指针
+*/
+.cursor_del{cursor:url('/public/images/cursor/del.ico'),auto;}
+.cursor_edit{cursor:url('/public/images/cursor/edit.ico'),auto;}
+
+
+</style>
+<ol class="breadcrumb">
+	<li><a href="{:U('School/lessionTableList')}">课程表管理</a></li>
+	<li class="active">
+        <switch name="ACTION_NAME" >
+        <case value="addLessionTable" break="1">添加</case>
+        <case value="editLessionTable">修改</case>
+        <default />添加
+        </switch>
+       	课程表 
+    </li>
+    <li>{$datas_banji['name']}</li>
+</ol>
+
+<div class="div_message">提示</div>
+
+<input type="hidden" name="tbId" id="tbId" value="{$id}"><!--课程表ID-->
+
+<!--div_out start-->
+<div id="div_out" >
+	<!--div_left start-->
+	<div id="div_left">
+    	<!--div_left_1 start-->
+		<div id="div_left_1">
+           
+        </div>
+        <!--div_left_1 end-->
+        
+        <!--div_left_2 start-->
+		<div id="div_left_2">
+        	<div id="div_left_2_left">
+            	<div style="padding:5px;">
+                <div id="div_left_2_left_header">本班科目教师对应关系
+                </div>
+                <div id="div_left_2_left_desc">
+                先设置本班科目教师对应关系，再设置课程表<br>
+               <!-- 点击<span class="glyphicon glyphicon-pause" aria-hidden="true" id="btn_pause"></span>所在行取消科目选择-->
+                </div>  
+                </div>
+            </div>          
+        	<div id="div_left_2_right">
+            	<div id="div_left_2_right_btn" data-toggle="modal" data-target="#banjiSubjectTeacherModal" title="点此新增科目教师对应关系">
+                +
+                </div>
+            </div>
+        </div>
+        <!--div_left_2 end-->
+        
+        <!--div_left_3 start-->
+		<div id="div_left_3">      
+        	<ul id="ul_teacher_lession"> 
+            	<li class="ul_teacher_lession_header">
+                    <dt style="float:left;width:100px;height:35px;line-height:35px;font-weight:bold;text-align:center;">科目</dt>
+                    <dd style="float:left;width:180px;height:35px;line-height:35px;font-weight:bold;text-align:center;">教师</dd>
+                    <dd style="float:left;width:80px;height:35px;line-height:35px;text-align:center;">操作</dd>
+                </li>
+				<span id="banji_subject_teacher_list">
+                <volist name="subjectsChoose" id="row">
+                    <li attr-data-id="{$row.id}" class="li_teacher_lession" attr-id="{$row.id}">
+                        <dt class="one_teacher_lession" attr-lession="{$row.subjectName}" attr-teacher="{$row.teacherName}">
+                            {$row.subjectName}
+                        </dt>
+                        <dd class="one_teacher">{$row.teacherName}</dd>
+                        <dd class="one_op">
+                            <span class="glyphicon glyphicon-remove btn_del_ts" title="删除" aria-hidden="true"></span>
+                            <span class="glyphicon glyphicon-cog btn_edit_ts" title="修改" style="cursor:pointer;" aria-hidden="true"></span>
+                        </dd>
+                    </li>
+                </volist>
+				<!--
+				<li attr-data-id="3"><dt class="one_teacher_lession" attr-lession="物理" attr-teacher="李小二">物理</dt><dd>李小二<span class="glyphicon glyphicon-remove pull-right btn_del_ts" style="line-height:30px;" title="删除" aria-hidden="true"></span><span class="glyphicon glyphicon-cog pull-right btn_edit_ts" title="修改" style="line-height:30px;margin-right:20px;" aria-hidden="true"></span></dd></li>
+				<li attr-data-id="4"><dt class="one_teacher_lession" attr-lession="政治" attr-teacher="李小三">政治</dt><dd>李小三<span class="glyphicon glyphicon-remove pull-right btn_del_ts" style="line-height:30px;" title="删除" aria-hidden="true"></span><span class="glyphicon glyphicon-cog pull-right btn_edit_ts" title="修改" style="line-height:30px;margin-right:20px;" aria-hidden="true"></span></dd></li>
+				<li attr-data-id="5"><dt class="one_teacher_lession" attr-lession="数学" attr-teacher="李小四">数学</dt><dd>李小四<span class="glyphicon glyphicon-remove pull-right btn_del_ts" style="line-height:30px;" title="删除" aria-hidden="true"></span><span class="glyphicon glyphicon-cog pull-right btn_edit_ts" title="修改" style="line-height:30px;margin-right:20px;" aria-hidden="true"></span></dd></li>
+				<li attr-data-id="6"><dt class="one_teacher_lession" attr-lession="历史" attr-teacher="李小五">历史</dt><dd>李小五<span class="glyphicon glyphicon-remove pull-right btn_del_ts" style="line-height:30px;" title="删除" aria-hidden="true"></span><span class="glyphicon glyphicon-cog pull-right btn_edit_ts" title="修改" style="line-height:30px;margin-right:20px;" aria-hidden="true"></span></dd></li>
+                -->
+                </span>
+
+                 <li class="li_teacher_lession_footer hide">
+                	<span class="glyphicon glyphicon-trash" aria-hidden="true"  id="btn_clear_one_lession0" title="清空一个课程设置"></span> 
+                	<span class="glyphicon glyphicon-refresh" aria-hidden="true"  id="btn_reload" title="刷新页面" onclick="javascript:window.location.reload();" style="margin-left:20px;"></span>
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"  id="btn_reset_all" style="margin-left:20px;" title="清空整个课程表"></span> 
+                </li>
+                           
+
+            </ul>
+            <ul id="ul_help" class="hide">
+                <li class="li_help hide"><div>☉点击科目名称选中，然后在课程表中单击设置</div></li>
+                <li class="li_help hide" ><div>☉在已选中的科目名称上单击，可取消选中状态</div></li>
+            </ul>
+            <!--<div id="div_stop " ><span class="glyphicon glyphicon-pause" aria-hidden="true" id="btn_pause"></span> 点此取消科目选择</div>-->
+        </div>
+        <!--div_left_3 end-->    
+        
+	</div>
+    <!--div_left end-->
+
+    <!--中间工具条-->
+    <div id="div_middle" style="background-color:#FFFFFF;">
+        <div class="glyphicon glyphicon-trash" aria-hidden="true" id="btn_clear_one_lession" style="margin-top:130px;clear::both;width:100%;padding:15px;height:60px;font-size:20pt;background-color:#ebeeee;" title="清空一个课程设置"></div> 
+		<div class="glyphicon glyphicon-pencil" aria-hidden="true" id="btn_edit_lession" style="margin-top:10px;clear::both;width:100%;padding:15px;height:60px;font-size:20pt;background-color:#ebeeee;" title="清空一个课程设置"></div>
+    </div>
+    
+    <!--div_right start-->
+	<div id="div_right">
+		<div id="div_right_1">
+        	<span style="position:absolute; top:60px; left:-320px;width:160px;height:30px;border:solid 1px #ff33ff;font-size:12px;">{$datas_banji['name']}</span>&nbsp;&nbsp;课程表
+        </div>
+  
+        <!--div_right_2 start-->
+		<div id="div_right_2">
+            <table width="100%"  id="lession_table">
+			<tr class="lessionTableHeader" style="font-weight:bold;">
+                <td></td>
+                <td>星期一</td>
+                <td>星期二</td>
+                <td>星期三</td>
+                <td>星期四</td>
+                <td>星期五</td>
+                <td>星期六</td>
+                <td>星期日</td>
+			</tr>
+            
+            <volist name="lessTable" id="vo">
+            <tr>
+            <td class="left_0" style="font-weight:bold;">第{$i}节</td>
+            <td class="td_lesstion" attr-data='{$vo[0]}' attr-pos="{$i}-1" attr-id="{$vo[0]['id']}" >{$vo[0]['name']}<br>{$vo[0]['teacherName']}</td>
+            <td class="td_lesstion" attr-data='{$vo[1]}' attr-pos="{$i}-2" attr-id="{$vo[1]['id']}" >{$vo[1]['name']}<br>{$vo[1]['teacherName']}</td>
+            <td class="td_lesstion" attr-data='{$vo[2]}' attr-pos="{$i}-3" attr-id="{$vo[2]['id']}" >{$vo[2]['name']}<br>{$vo[2]['teacherName']}</td>
+            <td class="td_lesstion" attr-data='{$vo[3]}' attr-pos="{$i}-4" attr-id="{$vo[3]['id']}" >{$vo[3]['name']}<br>{$vo[3]['teacherName']}</td>
+            <td class="td_lesstion" attr-data='{$vo[4]}' attr-pos="{$i}-5" attr-id="{$vo[4]['id']}" >{$vo[4]['name']}<br>{$vo[4]['teacherName']}</td>
+            <td class="td_lesstion" attr-data='{$vo[5]}' attr-pos="{$i}-6" attr-id="{$vo[5]['id']}" >{$vo[5]['name']}<br>{$vo[5]['teacherName']}</td>
+            <td class="td_lesstion" attr-data='{$vo[6]}' attr-pos="{$i}-7" attr-id="{$vo[6]['id']}" >{$vo[6]['name']}<br>{$vo[6]['teacherName']}</td>
+            </tr>
+            </volist>
+              
+              
+            </table>
+        </div>
+        <!--div_right_2 end-->   
+         
+    </div><!--div_right end-->
+</div>
+<!--div_out end-->
+
+<div id='test' style="display:none;">0,0</div>
+<div id='status' style="display:none;">listioning ... </div>
+
+<!--zjh add start 模态对话框-->
+<include file="Public/schoolBanjiSubjectTeacherModal" /><!--科目与教师对应关系对话框-->
+<!--zjh add end 模态对话框-->
+
+<script type="text/javascript" src="__PUBLIC__/script/myplugins/jq.kw.js"></script>
+<script type="text/javascript" src="__PUBLIC__/script/jquery/jquery.validate.min.js"></script>
+
+
+<script language="javascript">
+$(document).ready(function() {
+	//
+	<eq name="banjiId" value="0">
+		var banjiId = 0;
+	<else/>
+		var banjiId = {$banjiId|default=0};
+	</eq>
+	
+	var move=false;//移动标记 
+	//var _x,_y;//鼠标离控件左上角的相对位置
+	var cur_lt_record_id = 0;//当前科目_教师关系的记录id
+	var cur_lession = '';//当前课程名
+	var cur_teacher = "";//当前教师，不是必须的
+	var clear_one_lession = 0;//清除一个课程设置按钮状态
+	var pointX=0;
+	var pointY=0;
+	var set_one_lession = 0;//正处在设置单元格状态中为1
+	
+	/**
+	 * 对应关系的行上按下左键
+	*/
+	$(".one_teacher_lession,.one_teacher").mousedown(function(e){ 
+		//alert("左键按下");
+
+		//在当前行上重复单击
+		if ($(this).parent().attr("attr-id") == cur_lt_record_id ){
+			not_set_one_lession();
+			$("#status").html("已取消当前课程的选中状态");
+			$(this).parent().css("background-color", "");
+			reset();
+			return;
+		}
+		
+		reset();
+		if (clear_one_lession == 1){
+			not_del_lession();//确保不在删除课程状态
+			HideMessage();//隐藏消息
+		}
+		
+		
+		
+		//首次左击
+		move=true; 
+		
+		//获取当前点击的课程信息
+		cur_lession = $(this).attr("attr-lession");
+		cur_teacher = $(this).attr("attr-teacher");//不是必须的
+		cur_lt_record_id =  $(this).parent().attr("attr-id");//当前科目_教师关系的记录id
+		in_set_lession();
+		//alert("cur_lt_record_id="+cur_lt_record_id);
+		
+		//设置被点击行的父级为当前状态（反显）
+		$(this).parent().siblings("li").each(function(index) {
+			//alert(index); 0,1,2,3,4
+			$(this).css("background-color", "");
+		});		
+		$(this).parent().css("background-color", "#99cccc");
+		
+		//这里可得到鼠标X坐标
+		//pointX = e.pageX;
+		//这里可以得到鼠标Y坐标
+		//pointY = e.pageY;
+		
+		ShowMessage("移动指针到课程表单元格后单击进行设置，在当前科目上单击取消");
+	}); 
+	
+	/**
+	 * 鼠标移动事件
+	*/
+	$(document).mousemove(function(e){ 
+		//这里可得到鼠标X坐标
+		pointX = e.pageX;
+		
+		//这里可以得到鼠标Y坐标
+		pointY = e.pageY;
+		$("#test").html(pointX+','+pointY );
+		if(move){ 
+			$(".div_message").css('left',pointX + 60 + "px");
+			$(".div_message").css('top',pointY + 20 + "px");
+		}
+	});
+
+
+	//点击单元格（即课程表中的一格）
+	$('.td_lesstion').click(function(){
+		var pos = $(this).attr("attr-pos");
+		var tbId = $("#tbId").val();//课程表ID
+		var lsId = $(this).attr("attr-id");//课程ID
+		var btsId = cur_lt_record_id;//班级教师科目关系表id
+		
+		if (!tbId ){
+			alert("课程表ID无效，请重新进入");
+			return;
+		}else{
+		//	alert(tbId);
+		}
+		
+		if (!lsId ){
+			alert("课程ID无效");
+			return;
+		}else{
+		//	alert(lsId);
+		
+		}
+	
+		//判断是否重设课程按钮处于按下状态
+		var resetone =0;
+		var confirmWord = '';
+		if (clear_one_lession){
+			resetone = "yes";
+		}else{
+			resetone = "no";
+			//如果不是重置单元格课程，则当前课程必选
+			if (!btsId ){
+		//		alert("请在左侧选择一个科目教师对应关系");
+				return;
+			}else{
+			//	alert('当前班级教师课程:'+btsId);
+			}				
+		}
+		//alert(resetone);
+
+		var currid = $(this).parent().parent().attr("attr-data-id");
+		//alert("此处代码随后将会替换为ajax" + "，当前pos=" + pos);
+		
+		var tmp = $(this);
+		//更新表格的某一格
+		$.ajax({
+			url:'__URL__/ajaxSetLession',
+			type:'post',
+			data:"lsId="+lsId+"&btsId="+btsId+"&resetone="+resetone+"&rnd="+Math.random(),
+			async:true,//false为同步
+			dataType:'json',
+			success:function(re) {
+				if (re.stat * 1 > 0){
+					//alert(re.msg);
+					//alert(re.data);
+					tmp.html(re.data);//这儿用$(this)是错误的
+				}else{
+					alert(re.msg);
+					//alert(re.data);//失败提示	
+					
+				}
+			},
+			error:function() {
+				alert('由于网络异常导致操作失败，请刷新页面重试....');
+			}
+		}); 
+		//	window.location.reload();
+		
+
+		
+		
+	});
+	
+	/*$('#div_stop').click(function(){	
+		//alert("暂停设置，清理");
+		reset();
+	});*/
+	
+	function reset(){
+		move=false;//移动标记 
+		//var _x,_y;//鼠标离控件左上角的相对位置
+		cur_lt_record_id = 0;//当前科目_教师关系的记录id
+		cur_lession = '';//当前课程名
+		cur_teacher = "";//当前教师，不是必须的		
+		
+		$(".div_message").html("");
+		$(".div_message").css('display','none');
+		$("#ul_teacher_lession").find('li').each(function(index) {
+			//$(this).removeClass("li_current");
+			//alert(index); 0,1,2,3,4
+			$(this).css("background-color", "");
+		});
+	}
+	
+	//新增按钮（鼠标进入）
+	$("#div_left_2_right_btn").mouseover(function(){
+		$("#model_doType").val("add");
+		$("#currentId").val("0");//当前记录id
+		$("#modal-title-bst").html("新增本班科目教师对应关系");
+		
+		//下拉列表初始化
+		$("#model_subjectId option[value='0']").attr("selected", "selected");
+		$("#model_teacherId option[value='0']").attr("selected", "selected");		
+		
+		$("#div_left_2_right_btn").css("background-color","#FFFFFF");
+		$("#div_left_2_right_btn").css("cursor","pointer");
+	});
+	
+	//新增按钮（鼠标离开）
+	$("#div_left_2_right_btn").mouseout(function(){
+		$("#div_left_2_right_btn").css("background-color","#E9E9E4");
+	});
+	
+	//按钮：科目-教师列表中的删除
+	
+	$('.btn_del_ts').click(function(){	
+		var tmp = $(this);
+		$.kw.confirm('确认要删除所选择的记录吗？', function() {
+			var currid = tmp.parent().parent().attr("attr-data-id");
+			//alert("ID=" + currid);
+			$.ajax({
+				url:'__URL__/delBanjiSubjectTeacher',
+				type:'post',
+				data:"rid="+currid+"&rnd="+Math.random(),
+				async:true,//false为同步
+				dataType:'json',
+				success:function(re) {
+					if (re.stat * 1 > 0){
+						//alert(re.msg);
+						//alert(re.data);
+						window.location.reload();
+					}else{
+						alert(re.msg);
+						//alert(re.data);//失败提示	
+						
+					}
+	
+				},
+				error:function() {
+					alert('由于网络异常导致操作失败，请刷新页面重试....');
+				}
+			}); 
+			
+			
+		});
+		
+	});	
+	
+	//修改
+	$('.btn_edit_ts').click(function(){	
+		$("#model_doType").val("edit");
+		
+		var currid = $(this).parent().parent().attr("attr-id");	
+		//alert(currid);
+		$("#currentId").val(currid);//当前记录id	
+		$("#modal-title-bst").html("修改本班科目教师对应关系");
+		
+		var teacherId = 0;
+		var subjectId = 0;
+		
+		//通过ajax获取到teacher和subject的id
+			//var currid = tmp.parent().parent().attr("attr-data-id");
+			//alert("ID=" + currid);
+			$.ajax({
+				url:'__GROUP__/Ajaxschool/getSubjectTeacherId/',
+				type:'post',
+				data:"rid="+currid+"&rnd="+Math.random(),
+				async:true,//false为同步
+				dataType:'json',
+				success:function(re) {
+					if (re.stat * 1 > 0){
+						//alert(re.msg);
+						
+						//window.location.reload();
+						teacherId = re.data.teacherId;
+						subjectId = re.data.subjectId;//alert(subjectId);
+						
+		
+		//预选中下拉列表
+		$("#model_subjectId option[value='"+subjectId+"']").attr("selected", "selected");
+		$("#model_teacherId option[value='"+teacherId+"']").attr("selected", "selected");
+		
+		$('#banjiSubjectTeacherModal').modal({ keyboard: false });   // initialized with no keyboard
+		$('#banjiSubjectTeacherModal').modal('show');                // 初始化后立即调用 show 方法
+
+						
+						
+					}else{
+						alert(re.msg);
+						//alert(re.data);//失败提示	
+						
+					}
+	
+				},
+				error:function() {
+					alert('由于网络异常导致操作失败，请刷新页面重试....');
+				}
+			});
+		
+		
+		
+		
+
+		//
+		
+	});		
+	
+	//按钮：清空一个课程设置
+	$('#btn_clear_one_lession').click(function(){
+		reset();
+		
+		//确保不在设置课程状态
+		not_set_one_lession();
+		
+		if (clear_one_lession == 1){
+			not_del_lession();
+			HideMessage()//隐藏移动提示
+		}else{
+			in_del_lession();
+			ShowMessage("移动到课程表中单元格单击，可清除已设置的课程");//显示移动提示
+		}
+	});		
+	
+	//按钮：设置一节课程
+	$('#btn_edit_lession').click(function(){
+		reset();
+		
+		//确保删除按钮为初始状态
+		not_del_lession();
+		
+		if (set_one_lession == 1){
+			not_set_one_lession();//
+
+		}else{
+			in_set_lession();
+			
+
+		}
+	});	
+		
+		
+	/**
+	 * 退出删除课程状态（或确保不在删除课程状态）
+	*/
+	function not_del_lession(){
+		clear_one_lession = 0;
+		$("#btn_clear_one_lession").css("color","#000000");
+		$("#btn_clear_one_lession").css("background-color","#ebeeee");	
+		$(".td_lesstion").removeClass("cursor_del");//课程表单元格鼠标不能是删除图标		
+	}
+	
+	/**
+	 * 进入删除课程状态
+	*/	
+	function in_del_lession(){
+		clear_one_lession = 1;
+		$("#btn_clear_one_lession").css("color","#FFFFFF"); 
+		$("#btn_clear_one_lession").css("background-color","#11959a");
+		$(".td_lesstion").addClass("cursor_del");//课程表单元格鼠标为删除		
+	}
+		
+	
+	/**
+	 * 退出编缉设置课程状态（不在：设置及重新设置一个课程状态）
+	*/
+	function not_set_one_lession(){
+		//确保不在设置课程状态
+		set_one_lession = 0;//确保不在设置课程状态		
+		$("#btn_edit_lession").css("color","#000000");
+		$("#btn_edit_lession").css("background-color","#ebeeee");
+		$(".td_lesstion").removeClass("cursor_edit");//指针不能是编缉
+		$("#ul_help").addClass("hide");
+	}
+		
+	/**
+	 * 进入设置课程状态
+	*/	
+	function in_set_lession(){
+		set_one_lession = 1;
+		$("#btn_edit_lession").css("color","#FFFFFF"); 
+		$("#btn_edit_lession").css("background-color","#11959a");
+			
+		
+		if (cur_lt_record_id == 0){
+			//alert("请选择一个对应关系");	
+			ShowMessage("请选择一个科目教师对应关系");//显示移动提示
+			$("#ul_help").removeClass("hide");
+		}else{
+			ShowMessage("移动到课程表中单元格单击，可设置课程");//显示移动提示
+			$(".td_lesstion").addClass("cursor_edit");//课程表单元格鼠标为修改
+			$("#ul_help").addClass("hide");
+		}
+	}
+				
+	/**
+	 * 显示并设置移动提示
+	*/
+	function ShowMessage(str){
+		move=true; 
+		if (str == ""){str="消息提示未设置"}
+		$(".div_message").html(str);
+		$(".div_message").css('display','block');
+		$(".div_message").css('left',pointX+20+"px");
+		$(".div_message").css('top',pointY+20+"px");
+		$("#status").html(str);			
+		
+	}
+		
+	/**
+	 * 显示并设置移动提示
+	*/
+	function HideMessage(){
+		move=false; 
+		if (str == ""){str="消息提示未设置"}
+		$(".div_message").html(str);
+		$(".div_message").css('display','none');
+		$(".div_message").css('left',pointX+20+"px");
+		$(".div_message").css('top',pointY+20+"px");
+		$("#status").html(str);			
+		
+	}		
+		
+	/**
+	 * 清空课程表
+	*/
+	$('#btn_reset_all').click(function(){
+		var tbId = $("#tbId").val();//课程表ID
+		
+		if (!tbId ){
+			alert("课程表ID无效，请重新进入");
+			return;
+		}else{
+		//	alert(tbId);
+		}
+		var confirmWord = "确认要空此课程表吗";
+		
+		var tmp = $(this);
+		$.kw.confirm(confirmWord, function() {
+			var currid = tmp.parent().parent().attr("attr-data-id");
+			
+			//
+			$.ajax({
+				url:'__URL__/ajaxResetLessionTable',
+				type:'post',
+				data:"tbId="+tbId +"&rnd="+Math.random(),
+				async:true,//false为同步
+				dataType:'json',
+				success:function(re) {
+					if (re.stat * 1 > 0){
+						//alert(re.msg);
+						//alert(re.data);
+						window.location.reload();
+					}else{
+						alert(re.msg);
+						//alert(re.data);//失败提示	
+						
+					}
+				},
+				error:function() {
+					alert('由于网络异常导致操作失败，请刷新页面重试....');
+				}
+			}); 
+		//	
+		});
+	});	
+	
+	
+	
+	
+	
+	
+	
+	
+	//鼠标经过
+	$(".li_teacher_lession").mouseover(function(){
+//		$(this).css("background-color","#e7e8e6");
+	});
+	
+	//鼠标离开
+	$(".li_teacher_lession").mouseout(function(){
+//		$(this).css("background-color","#e0e0e0");
+	});	
+	
+});
+</script>
+
+
+
+<script language="javascript">
+$(document).ready(function() {
+
+	//模态对话框提交：班级科目教师
+	$('#saveBanjiSubjectTeacher').click(function(){	
+		//新增还是修改
+		var tbId = $("#tbId").val();
+		var currentId = $("#currentId").val();
+		var doType = $("#model_doType").val();//add or edit
+		var teacherId = $("#model_teacherId").val();
+		var subjectId = $("#model_subjectId").val();
+		var banjiId = 0;
+		var roomId = {$Think.get.roomId};
+
+        $.post('{:U("saveBanjiSubjectTeacher")}', {roomId: roomId, doType: doType, tbId: tbId, currentId: currentId, teacherId: teacherId, subjectId: subjectId}, function(data){
+            if(data.stat * 1 > 0){
+                $.kw.alert(data.msg);
+                window.location.reload();
+            }else{
+                $.kw.alert(data.msg);
+            }
+        }, 'json')
+		
+	});	
+	
+	
+
+});
+</script>
+
+<script language="javascript">
+$(document).ready(function() {
+	//课程单元格的热点变色
+	$(".td_lesstion").hover( 
+		function () { 
+			$(this).addClass("tdbgcolor"); 
+		}, 
+		function () { 
+			$(this).removeClass("tdbgcolor"); 
+		} 
+	); 
+
+    // ajax获取根据科目过滤后的教师，并动态局部刷新页面
+    $('#model_subjectId').change(function(){
+        var banjiId = {$banjiId|default=0};
+        $.post('{:U("Ajaxschool/ajax_filtTeacherThroughSubjectOrBanji")}', {subjectId: this.value, banjiId: banjiId}, function(data){
+            if(data){
+                $('#model_teacherId option:not(:first)').remove();
+                for(var i=0; i<data.length; i++){
+                    $('#model_teacherId').append("<option value='" + data[i].id + "'>" + data[i].name + "</option>");
+                }
+            }else{
+                $('#model_teacherId option:not(:first)').remove();
+            }
+        }, 'json')
+    })
+
+});
+</script>
+
+
+
+<include file="Public/footer" />

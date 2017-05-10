@@ -1,0 +1,284 @@
+<include file="Public/header" />
+<link rel="stylesheet" href="__PUBLIC__/script/uploadify/uploadify.css">
+
+
+
+<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+<script type="text/javascript" src="__PUBLIC__/script/jquery/jquery-1.11.0.min.js"></script>
+
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="__PUBLIC__/bootstrap/bootstrap.min.js"></script>
+
+
+
+<style>
+#storeVideoUp .btn-default, #storeVideoUp .btn-default:hover, #storeVideoUp .btn-default:active, #storeVideoUp .btn-default:visited{background-color:#fff;border-color:#ccc;padding:3px 10px 4px;font-size:14px;outline:0;}
+
+
+
+</style>
+<ol class="breadcrumb">
+	<li><a href="{:U('School/schoolList')}">学校管理</a></li>
+	<li class="active">
+        <switch name="ACTION_NAME" >
+        <case value="addCard" break="1">添加</case>
+        <case value="editCard">修改</case>
+        <default />添加
+        </switch>
+        IC卡片
+    </li>
+</ol>
+<form id="editForm" class="form-horizontal" role="form" method="post" action="__SELF__">
+	  
+	<div class="form-group">
+		<label class="col-sm-2 control-label " for="name"><span class="required">*</span>卡号</label>
+		<div class="col-sm-2">
+			<input class="form-control input-sm" type="text" name="code" id="code" value="{$datas.code}" >
+		</div>
+        <div class="col-sm-2"><span class="help-block"></span></div>
+	</div>
+    
+	<div class="form-group">
+		<label class="col-sm-2 control-label " for="name"><span class="required">*</span>内码</label>
+		<div class="col-sm-2">
+			<input class="form-control input-sm" type="text" name="num" id="num" value="{$datas.num}" >
+		</div>
+        <div class="col-sm-2"><span class="help-block"></span></div>
+	</div>    
+    
+	<div class="form-group">
+		<label class="col-sm-2 control-label " for="name"><span class="required">*</span>卡类型</label>
+		<div class="col-sm-2">
+			<select class="form-control input-sm" name="classId" id="classId">
+				<option value="">请选择</option>
+				<volist name="cardtype_list" id="vo">
+					<eq name="vo.id" value="$datas.cardtype">
+						<option value="{$vo.id}" selected>{$vo.space} {$vo.name}</option>
+					<else/>
+						<php> if ($vo['has_children'] > 0) { </php>
+						<option value="{$vo.id}" disabled>{$vo.space} {$vo.name}</option>
+						<php> } else { </php>
+						<option value="{$vo.id}">{$vo.space} {$vo.name}</option>
+						<php> } </php>
+					</eq>
+				</volist>
+			</select>
+            
+		</div>
+        <div class="col-sm-2"><span class="help-block"></span></div>
+	</div>
+    
+    <assign name="isLocked" value="{$datas.isLocked}" />
+    
+	<div class="form-group hide" id="types"> 
+		<label class="col-sm-2 control-label " for="sex"><span class="required">*</span>持卡人类型</label>
+		<div class="col-sm-2">
+        	<if condition=" $datas.type eq '1' ">
+        	<label class="radio-inline" id="p1"><input type="radio" name="types" id="" value="2" class="types"> 学生</label>
+            <label class="radio-inline" id="p2"><input type="radio" name="types" id="" value="1" class="types" checked > 教师</label>
+            <else />
+        	<label class="radio-inline" id="p1"><input type="radio" name="types" id="" value="2" class="types" checked  > 学生</label>
+            <label class="radio-inline" id="p2"><input type="radio" name="types" id="" value="1" class="types" > 教师</label>
+            </if>
+		</div>
+        <div class="col-sm-2"><span class="help-block"></span></div>
+	</div>  
+    
+ 	<div class="form-group hide" style="margin-bottom:0px;">
+		<label class="col-sm-2 control-label" for="student_list"><span class="required">*</span>持卡人</label>
+        <div class="col-sm-10  pre-scrollable" >
+			<style>
+                #student_list li{margin-right:10px;}
+            </style>        
+            <ul class="list-group">
+                <if condition="datas.type  eq '2' ">
+
+                </if>
+               
+
+                
+                <switch name="datas.type">
+                <case value="1">
+                	<li type="button" class="btn btn-default btn-sm manual-work " style="display:none" data-toggle="modal" data-target="#studentModal" id="btn_sel_student">选择学生</li>
+                    <li type="button" class="btn btn-default btn-sm auto-work" data-toggle="modal" data-target="#teacherModal" id="btn_sel_teacher">选择教师</li>
+                </case>
+                <case value="2">
+                	<li type="button" class="btn btn-default btn-sm manual-work " data-toggle="modal" data-target="#studentModal" id="btn_sel_student">选择学生</li>
+                    <li type="button" class="btn btn-default btn-sm auto-work" style="display:none" data-toggle="modal" data-target="#teacherModal" id="btn_sel_teacher">选择教师</li>
+                </case>
+                <default />
+                	<li type="button" class="btn btn-default btn-sm manual-work " data-toggle="modal" data-target="#studentModal" id="btn_sel_student">选择学生--</li>
+                    <li type="button" class="btn btn-default btn-sm auto-work" data-toggle="modal" data-target="#teacherModal" id="btn_sel_teacher" style="display:none">选择教师----</li>
+                
+                </switch>
+                
+                
+                
+                
+               <if condition="ACTION_NAME  eq 'addCard' ">
+                <else /> 
+                	
+                </if>
+                
+                
+                <span id="user_list_v">
+                <volist name="user_list" id="vo">
+                <li class="btn btn-warning btn-sm"  type="button" bid="{$vo.id}">{$vo.name}<span class="hide" ><i class="hide glyphicon glyphicon-remove pull-right btn-removefromlist" bid="{$vo.id}"></i></span></li>
+                </volist>
+                </span>
+            </ul>
+        </div>
+	</div>     
+    
+	<div class="form-group">
+		<label class="col-sm-2 control-label " for="sex"><span class="required">*</span>状态</label>
+		<div class="col-sm-2">
+        	<assign name="isLocked" value="{$datas.isLocked}" />
+        	<if condition="($datas.isLocked eq '0') OR ($datas.isLocked eq '')  OR empty($isLocked) ">
+        	<label class="radio-inline"><input type="radio" name="isLocked" id="isLocked1" value="0" checked > 正常</label>
+            <else />
+            <label class="radio-inline"><input type="radio" name="isLocked" id="isLocked1" value="0" > 正常</label>
+            </if>
+            <label class="radio-inline"><input type="radio" name="isLocked" id="isLocked2" value="1" <eq name="datas.isLocked" value="1">checked</eq> > 锁定</label>
+		</div>
+        <div class="col-sm-2"><span class="help-block"></span></div>
+	</div>  
+   
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="">&nbsp;</label>
+		<div class="col-sm-4">
+			<input type="hidden" name="uuid" value="{$uuid}">
+			<input type="hidden" name="id" value='<empty name="id">{:I('get.id',0,'intval');}</empty>'>  
+			<button type="submit" class="btn btn-info btn-sm">保存更改</button>&nbsp;&nbsp;
+			<button type="reset" class="btn btn-info btn-sm">取消</button>
+		</div>
+	</div>
+
+<!--zjh add start 模态对话框-->
+    <include file="Public/schoolTeacherModal" />
+    <include file="Public/schoolstudentModal" />
+<!--zjh add end 模态对话框-->
+
+
+
+</form>
+
+
+
+<include file="Public/jsLoader" />
+
+<script type="text/javascript">
+$(function($) {
+	$('button[type="reset"]').click(function(){
+		window.location.href = '__URL__/cardList';
+	});
+
+});
+</script>
+
+
+
+
+<script type="text/javascript" src="__PUBLIC__/script/jquery/jquery.validate.min.js"></script>
+<script type="text/javascript">
+$(function($) {
+	
+	// 判断英文字符
+	jQuery.validator.addMethod("isEnglish", function(value, element) {       
+         return this.optional(element) || /^[A-Za-z]+$/.test(value);       
+    }, "只能包含英文字符。");
+	
+	
+	$('#editForm').validate({
+		errorElement : 'span',
+		errorClass : 'help-block',
+		focusInvalid : true,  
+        rules : {  
+			code:{
+				required: true,//名称带方括号验证不了
+			},
+        	num : {  
+                required : true,
+            },
+
+        },  
+        messages : {
+			code :{
+				required :"卡号必填",	//名称带方括号验证不了
+			},
+        	num : {  
+                required : "内码必填",
+            },
+
+        },  
+		
+
+        highlight : function(element) {  
+            $(element).closest('.form-group').addClass('has-error');  
+        },  
+
+        success : function(label) {  
+            label.closest('.form-group').removeClass('has-error');  
+            label.remove();  
+        },  
+
+        errorPlacement : function(error, element) {  
+            element.parent('div').append(error);  
+        },  
+		submitHandler: function(form) {
+			form.submit();
+		}
+	});
+});
+</script>
+
+
+
+
+<script>
+$(document).ready(function() {
+
+	$('#types ins').click(function() {
+		
+		var type = $(this).siblings(':radio[name="types"]').val();//$("p").siblings(".selected"),查找每个 p 元素的所有类名为 "selected" 的所有同胞元素
+		//alert(type);
+		$("#user_list_v").html("");//清除可视的已选择
+		switchAddType(type);
+	});
+	
+	$('#types label.radio-inline').click(function() {
+		//alert("2");
+		var type = $(this).find(':radio[name="types"]').first().val();
+		switchAddType(type);
+	});
+	
+	function switchAddType(type){
+        if(type=='1'){
+            $('.manual-work').hide();
+            $('.auto-work').show();
+           // $('#starttime').rules('remove');
+            
+        }else{
+            $('.manual-work').show();
+            $('.auto-work').hide();
+           // $('#endtime').rules('remove');
+        }
+    }
+
+	
+
+
+});
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<include file="Public/footer" />

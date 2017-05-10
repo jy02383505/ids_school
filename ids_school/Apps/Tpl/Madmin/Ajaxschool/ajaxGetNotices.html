@@ -1,0 +1,53 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<!-- <meta charset="{CHARSET}"> -->
+		<title>test</title>
+		<style>
+			*{
+			padding 0px;
+			margin 0px;
+			}
+		</style>
+
+	</head>
+
+	<body>
+	<!-- <body onload="onload()"> -->
+		<div class="marquees">
+			<h1>test!!!</h1>
+			<marquee behavior="scroll" direction="left" class="title" hspace="15px">111</marquee>
+			<marquee direction ="up" height="200" color="ff00ff" scrollamount="2" class="content" hspace="15px">211</marquee>
+		</div>
+	</body>
+	<script src="__PUBLIC__/script/jquery/jquery.min.js"></script>
+	<script type="text/javascript">
+	// function onload(){
+		// banjiId=window.AndroidWebView.getBanJiId();
+		// noticeItemClassId=window.AndroidWebView.getNoticeItemClassId();
+		// noticeWidth=window.AndroidWebView.getNoticeWidth();
+		// noticeHeight=window.AndroidWebView.getNoticeHeight();
+		banjiId='';
+		noticeItemClassId='3c855553-8169-4b7a-9a7a-84b7fbf8683b';
+		noticeWidth='478px';
+		noticeHeight='304px';
+
+	// }
+	$.post('{:U("Ajaxschool/ajaxGetNotices")}', r={banjiId: banjiId, noticeItemClassId: noticeItemClassId, noticeWidth: noticeWidth, noticeHeight: noticeHeight}, function(data){
+		alert('done');
+		var htmlStr = '';
+		console.log('---data---');
+		console.log(data);
+		console.log(r);
+		for(var i = 0; i < data.notices.length; i++){
+			htmlStr += '<marquee behavior="scroll" direction="left" class="title" hspace="15px">' + data.notices.title + '</marquee>';
+			htmlStr += '<marquee direction ="up" height="200" color="ff00ff" scrollamount="2" class="content" hspace="15px">' + data.notices.content + '</marquee>';
+		}
+		$('.marquees').append(htmlStr);
+		$('.title').css({'height': noticeHeight * 0.15, 'width': noticeWidth})
+		$('.content').css({'height': noticeHeight * 0.85, 'width': noticeWidth})
+	// })
+	}, 'json')
+	</script>
+</html>

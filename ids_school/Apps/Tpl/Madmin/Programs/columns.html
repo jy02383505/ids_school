@@ -1,0 +1,342 @@
+<include file="Public/header" />
+
+<ol class="breadcrumb">
+	<li><a href="__URL__/index">节目管理</a></li>
+	<li><a href="__URL__/groups/id/{$program.program_classid}">栏目组管理</a></li>
+	<li class="active">栏目列表</li>
+</ol>
+
+<style type="text/css">
+	#write_check_message{display:none;border:0px #FF0000 solid;overflow:hidden;}/*附加消息输入框，默认隐藏*/
+</style>
+
+<div class="row well">
+	<div class="col-md-6">
+		<form class="form-inline edit-form" role="form" method="get" action="__SELF__">
+			<table class="table">
+				<tbody>
+					<tr>
+						<td class="text-right" width="90"><b>所属节目：</b></td>
+						<td>
+							{$program.program_name}
+						</td>
+						<td class="text-right" width="90"><b>所属栏目组：</b></td>
+						<td>
+							{$group.dirgroup_name}
+						</td>
+						<td class="text-right" width="90"><b>模板：</b></td>
+						<td>
+							<volist name="tpls" id="tpl" key="k">
+								<if condition="$k eq 1">
+									{$tpl}
+								<else/>
+									<b>，</b>{$tpl}
+								</if>
+							</volist>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</form>
+	</div>
+	<div class="col-md-6 text-right">
+		<table class="table">
+			<tbody>
+				<tr>
+					<td style="border:0;">
+						<a href="__URL__/addColumn/gid/{$group.dirgroup_classid}" type="button" class="btn btn-info btn-sm" id="addNewColumn">新建栏目</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<div class="data-list">
+	<table class="table table-hover list-tbl">
+		<thead>
+			<tr>
+				<th width="60">#ID</th>
+                <th width="60">#ID</th>
+				<th>栏目名称</th>
+				<th>图标</th>
+				<th>状态</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody>
+			<volist name="columns" id="vo">
+			<tr>
+            	<td><input type="checkbox" value="{$vo.classid}"></td>
+				<td>{$vo.id}</td>
+                <td checked="{$vo.checked}">
+                    <switch name="vo.checked">
+                        <case value="-1"><span class="check-bh">已驳回</span></case>
+                        <case value="1"><span class="check-ys">已审核</span></case>
+                        <default /><span class="check-ds">待审核</span>
+                    </switch>
+                </td>
+				<td>
+					<eq name="vo.has_children" value="1">
+						<a href="__URL__/columns/pid/{$program.program_classid}/id/{$group.dirgroup_classid}/cid/{$vo.classid}" title="管理文章">{$vo.dir_name}</a>
+					<else/>
+						<a href="__URL__/articles/gid/{$group.dirgroup_classid}/id/{$vo.classid}" title="管理文章">{$vo.dir_name}</a>
+					</eq>
+					<switch name="vo.dir_type">
+						<case value="spotdir"><i class="icon-map-marker" title="热点地图" style="color:#888;position:relative;top:1px;font-size:14px;"></i></case>
+						<case value="routedir"><i class="icon-retweet" title="热点地图" style="color:#888;position:relative;top:1px;font-size:14px;"></i></case>
+					</switch>
+				</td>
+				<td>
+					<notempty name="vo.dir_ico_path">
+						<img src="__ROOT__/{$Think.config.upload_root_path}{$vo.dir_ico_path}" style="max-width:40px;max-height:40px;">
+					</notempty>
+				</td>
+				<td>
+					<eq name="vo.status" value="1">
+						<i class="icon-ok" style="color:#3c763d;"></i>
+					<else/>
+						<i class="icon-remove" style="color:#a94442;"></i>
+					</eq>
+				</td>
+				<td>
+					<a class="oper edit" href="__URL__/editColumn/gid/{$group.dirgroup_classid}/id/{$vo.classid}" title="编辑"><i class="icon-pencil"></i></a>
+					<neq name="vo.has_children" value="1">
+					<a class="oper edit" href="__URL__/articles/gid/{$group.dirgroup_classid}/id/{$vo.classid}" title="管理文章"><i class="icon-sitemap"></i></a>
+					</neq>
+					<a class="oper del" href="javascript:void(0);" data-gid="{$group.dirgroup_classid}" data-id="{$vo.classid}" data-url="__URL__/delColumn/gid/{$group.dirgroup_classid}/id/{$vo.classid}" title="删除"><i class="icon-trash"></i></a>
+				</td>
+			</tr>
+			</volist>
+			<tr>
+            <td colspan="10">
+                <div class="form-group" id="write_check_message">
+                    <label class="col-sm-1 control-label text-right" for="Num">附加消息</label>
+                    <div class="col-sm-11">
+                        <textarea class="form-control" rows="3" name="checkMessage" id="checkMessage"></textarea>
+                        <span id="checkMessage-error" class="help-block"></span>
+                    </div>
+                </div>           
+            </td>
+            </tr>
+		</tbody>
+	</table>
+	<table class="table">
+		<tr>
+			<td>
+				<input type="checkbox" class="select-all" title="全选/全不选">
+				<!-- <button type="button" class="btn btn-default btn-sm multi-del" style="margin-left:30px;">批量删除</button> -->&nbsp;
+                
+				<button type="button" class="btn btn-default btn-sm multi-check_pass" style="margin-left:10px;">审核通过</button>
+                <button type="button" class="btn btn-default btn-sm multi-check_not_pass" style="margin-left:10px;">取消审核</button>
+                <button type="button" class="btn btn-default btn-sm multi-check_rebut" style="margin-left:10px;">驳回</button>
+			</td>
+			<td class="page-box text-right" width="80%">&nbsp;</td>
+		</tr>
+	</table>
+</div>
+
+<include file="Public/jsLoader" />
+<script type="text/javascript">
+$(function($){
+	
+	var dirgroupClassId = $.trim('{$Think.get.id|default=""}');
+	var columnClassId = $.trim('{$Think.get.cid|default=""}');
+	var treeId = $.trim('{$Think.get.treeId|default=""}');
+	
+	//if (treeId == '') {
+		if (dirgroupClassId != '' || columnClassId != '') {
+			var nodeUnid = columnClassId != '' ? columnClassId : dirgroupClassId,
+				programTrees = window.parent.programTree,
+				nodeObj = programTrees.getNodeByParam("unid", nodeUnid, null);
+	
+			//programTrees.expandNode(nodeObj, true, false, true);
+			$('#programs', window.parent.frame_left_menu.document).find('a').removeClass('curSelectedNode');
+			$("#" + nodeObj.tId + "_a", window.parent.frame_left_menu.document).addClass('curSelectedNode');
+			
+		}
+	//}
+	
+	/* $('.del').click(function() {
+		var targetUrl = $.trim($(this).attr('data-url'));
+		$.kw.confirm('确认要删除吗？', function() {
+			window.location.href = targetUrl;
+		});
+	}); */
+	
+	$('.del').click(function() {
+		var group_clazzid = $.trim($(this).attr('data-gid')),
+			clazzid = $.trim($(this).attr('data-id'));
+		
+		if (clazzid == '' || group_clazzid == '') {
+			$.kw.alert('页面数据错误，请刷新页面重试……');
+			return false;
+		}
+		
+		$.kw.confirm('确认要删除该栏目组吗？', function() {
+			$.ajax({
+				type:'POST',
+				url:'__URL__/delColumn',
+				data:{'id' : clazzid, 'gid' : group_clazzid},
+				async:false,
+				dataType:'json',
+				beforeSend:function() {
+					
+				},
+				success:function(re) {
+					if (re.stat*1) {
+						var programTrees = window.parent.programTree;
+						var nodeObj = programTrees.getNodeByParam("unid", clazzid, null);
+							
+						programTrees.removeNode(nodeObj);
+						
+						$.kw.alert('操作成功！', '', function() {
+							window.location.reload();
+						});
+					} else {
+						$.kw.alert(re.msg);
+					}
+				},
+				error:function() {
+					$.kw.alert('操作失败！请重试……');
+				}
+			});
+		});
+	});
+	
+	
+	//批量审核通过	
+	$('.table .multi-check_pass').click(function(){
+		var aids = '',
+			requestURL = params = null;
+			checkedItems = $('.list-tbl').first().find('tbody').first().find(':checkbox:checked');
+			$.each(checkedItems, function(i, o){
+				aids += $(o).val() + ';';
+			});
+		
+			requestURL = '__URL__/multiCheckDir';
+			params = {aids : aids,checkedType:'ys'};
+		$("#write_check_message").css({"display":"none"});
+		if (checkedItems.size() > 0) {
+			$.kw.confirm('确认要通过审核吗？', function() {
+				$.ajax({
+					url:requestURL,
+					type:'post',
+					async:false,
+					data:params,
+					dataType:'json',
+					success:function(re){
+						var d = re.msg+"<br>"+re.debug;
+						if (re.stat*1) {
+							$.kw.alert(d, '', function() {
+								window.location.reload();
+							});
+						} else {
+							$.kw.alert(d);
+						}
+					},
+					error:function(){
+						$.kw.alert('由于网络异常导致操作失败，请刷新页面重试....');
+					}
+				});
+			});
+		} else {
+			$.kw.alert('至少选择一条记录！');
+		}
+	});	
+	
+	//批量取消审核	
+	$('.table .multi-check_not_pass').click(function(){
+		var aids = '',
+			requestURL = params = null;
+			checkedItems = $('.list-tbl').first().find('tbody').first().find(':checkbox:checked');
+			$.each(checkedItems, function(i, o){
+				aids += $(o).val() + ';';
+			});
+			
+			requestURL = '__URL__/multiCheckDir';
+			params = {aids : aids,checkedType:'ds'};
+		$("#write_check_message").css({"display":"none"});		
+		if (checkedItems.size() > 0) {
+			$.kw.confirm('确认要通过审核吗？', function() {
+				$.ajax({
+					url:requestURL,
+					type:'post',
+					async:false,
+					data:params,
+					dataType:'json',
+					success:function(re){
+						if (re.stat*1) {
+							$.kw.alert('操作成功！', '', function() {
+								window.location.reload();
+							});
+						} else {
+							$.kw.alert(re.msg);
+						}
+					},
+					error:function(){
+						$.kw.alert('由于网络异常导致操作失败，请刷新页面重试....');
+					}
+				});
+			});
+		} else {
+			$.kw.alert('至少选择一条记录！');
+		}
+	});	
+
+	//批量驳回	
+	$('.table .multi-check_rebut').click(function(){
+		var aids = '',
+			requestURL = params = null;
+			checkedItems = $('.list-tbl').first().find('tbody').first().find(':checkbox:checked');
+			$.each(checkedItems, function(i, o){
+				aids += $(o).val() + ';';
+			});
+			
+			var checkMessageValue = $("#checkMessage").val();
+			
+			requestURL = '__URL__/multiCheckDir';
+			params = {aids : aids,checkedType:'bh',checkMessage:checkMessageValue};
+			
+		if (checkedItems.size() > 0) {
+			$("#write_check_message").css("display","block");
+			
+			//alert(checkMessage);
+			if (checkMessageValue == ""){
+				$("#write_check_message").addClass("has-error");
+				$("#checkMessage-error").html("驳回时，附加消息必须填写，长度为1至255个字符，超长部分将被截断");
+				//alert("请输入附加消息");
+				return;
+			}
+			$.kw.confirm('确认要通过审核吗？', function() {
+				$.ajax({
+					url:requestURL,
+					type:'post',
+					async:false,
+					data:params,
+					dataType:'json',
+					success:function(re){
+						if (re.stat*1) {
+							$.kw.alert('操作成功！', '', function() {
+								window.location.reload();
+							});
+						} else {
+							$.kw.alert(re.msg);
+						}
+					},
+					error:function(){
+						$.kw.alert('由于网络异常导致操作失败，请刷新页面重试....');
+					}
+				});
+			});
+		} else {
+			$.kw.alert('至少选择一条记录！');
+		}
+	});		
+	
+	
+	
+	
+});
+</script>
+<include file="Public/footer" />

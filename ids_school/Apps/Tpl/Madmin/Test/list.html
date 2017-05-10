@@ -1,0 +1,111 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Index</title>
+
+<!-- 新 Bootstrap 核心 CSS 文件 -->
+<link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+<!-- 可选的Bootstrap主题文件（一般不用引入） -->
+<link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+
+<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+<script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+<style>
+
+	body{background-color:#999;}
+	#top{
+		clear:both;width:100%;height:100px;border-bottom:#FF0000 solid 1px;
+	}
+	#main{
+		clear:both;width:100%;
+	}
+	#footer{
+		background-color:#096; z-index:999; position:fixed; bottom:0; left:0; width:100%; _position:absolute;
+		 _top: expression_r(documentElement.scrollTop + documentElement.clientHeight-this.offsetHeight); overflow:visible;
+		 height:60px;
+	}
+
+</style>
+
+
+</head>
+
+<body>
+<div style='padding:20px;'>
+    
+    <div id='top'>
+    
+    </div>
+    
+    <div id="main">
+    
+        <div class="jumbotron" style="padding:40px;">
+          <h1>欢迎光临，这是我的一个控制器!</h1>
+          <p>访问方式是，在地址栏输入　http://test1.touch.com/Test/index　</p>
+          <p><a class="btn btn-primary btn-lg" href="javascript:alert('你能再傻一点么')" role="button">点我试试</a></p>
+          
+          
+          
+        </div>
+    
+    
+    
+        <div class="panel panel-default" style='margin-top:20px;'>
+            <div class="panel-body">
+            标题列表
+            </div>
+            <div class="panel-footer">
+                <ul>
+                    <volist name="myList" id="vo">
+                    	<li>{$vo.id}.{$vo.title}</li>
+                    </volist>
+                </ul>    
+            </div>
+        </div>   
+    
+        <div class="panel panel-default" style='margin-top:20px;'>
+            <div class="panel-body">
+            标题列表（表格显示）
+            </div>
+            <div class="panel-footer">
+                <table class="table table-bordered">
+                    	<tr>
+                        <td width='40'>ID</td>
+                        <td width="400">标题</td>
+                        <td width="100">截取英文</td>
+                        <td width="100">截取中文</td>
+                        <td width="200">截取中文（扩展函数库）</td>
+                        <td>其它</td>
+                        </tr>
+                    <volist name="myList" id="vo">
+                    	<tr>
+                        <td>{$vo.id}</td>
+                        <td>{$vo.title}</td>
+                        <td>{$vo.title|substr=0,8}</td>
+                        <td>{$vo.title|mb_substr=###,0,5,'utf-8'}</td>
+                        <td>{$vo.title|msubstr=5,5,'utf-8',true}</td>
+                        <td></td>
+                        </tr>
+                    </volist>
+                </table>   
+            </div>
+        </div>   
+    
+
+    </div>
+    
+    <div id="footer">
+    1111111111111111
+    
+    </div>
+
+</div>
+</body>
+</html>

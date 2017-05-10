@@ -1,0 +1,39 @@
+<!-------摄像头模态对话框---------->
+<div class="modal fade" id="cameraModal" draggable='true' style="margin-top:200px;" tabindex='-1'>
+    <div class="modal-dialog modal-lg">
+    	<div class="modal-content">
+    		<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">摄像头选择</h4>
+			</div>
+			<div class="modal-body" >
+                <div class="col-sm-12  pre-scrollable" style="clear:both;height:300px;">
+					<div class="row "><br></div>
+                    <?php
+                        $cameraIdArray = array();
+                        $cameraIdArray = explode(',',$cameraIds);
+                    ?>
+                    <volist name="camera_list" id="vo">
+                        <?php                            	
+                            if ( in_array($vo['Id'],$cameraIdArray) )
+                            {
+                                $ck="checked";
+                            }else{
+                                $ck=" ";
+                            }
+                        ?>
+                        <div class="col-md-2">
+                            <label><input type="<eq name='cameraModalSelType' value='radio'>radio<else/>checkbox</eq>" value="{$vo.Id}"  name="cameraIdStr[]" id="chk_camera_{$vo.Id}" tName='{$vo.code}'  <?php echo $ck;?> class='chk_camera' >{$vo.space} {$vo.code}</label>
+                        </div>
+                    </volist> 
+
+				</div>
+                <div style="clear:both;width:100%;height:1px;"></div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-dismiss="modal">确定</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-------摄像头模态对话框---------->

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta charset="UTF-8">
+    <title>{$Think.config.b_sitetitle}</title>
+    <link rel="stylesheet" href="__PUBLIC__/style/reset.css">
+    <link rel="shortcut icon" href="__PUBLIC__/images/favicon.ico">
+    <script>
+        var programTree = null;
+        var root = "__ROOT__";
+    </script>
+</head>
+
+
+<style>	
+	@CHARSET "UTF-8";
+	
+	html, body, div, span, applet, object, iframe,
+	h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+	a, abbr, acronym, address, big, cite, code,
+	del, dfn, em, img, ins, kbd, q, s, samp,
+	small, strike, strong, sub, sup, tt, var,
+	b, u, i, center,
+	dl, dt, dd, ol, ul, li,
+	fieldset, form, label, legend,
+	table, caption, tbody, tfoot, thead, tr, th, td,
+	article, aside, canvas, details, embed, 
+	figure, figcaption, footer, header, hgroup, 
+	menu, nav, output, ruby, section, summary,
+	time, mark, audio, video {
+		margin: 0;
+		padding: 0;
+		border: 0;
+		vertical-align: baseline;
+	}
+
+	.cover_dv1{position: absolute; top: 0; left: 0; width: 100%; height: 100%;min-width:1000px;min-height:600px; padding: 0px; background-color:#000000; z-index:999999; overflow: hidden;opacity:0.98}
+	.cover_dv_exit{position:absolute;width:40px;height:20px;line-height:40px;text-align:center;border:0px solid red;right:0px;top:0px;color:#FFFFFF;cursor:hand;}/*退出*/
+	.cover_dv3{width:100%;mine-height:300px;height:300px;text-align:center;}
+	.cover_icon_infor{margin-top:200px;font-size:100px;}
+	.cover_runing{margin-top:200px;}
+	.cover_content{padding:20px;text-align:center;color:#FFFFFF;}
+	.cover_dv6{width:100%;margin-left:auto;margin-right:auto;text-align:center;}
+	.hide{display:none;}
+
+</style>
+
+<script type="text/javascript" src="__PUBLIC__/script/jquery/jquery-1.11.0.min.js"></script>
+<script type="text/javascript">
+	//显示遮罩层(标题,内容,图标类)，只能放$(document).ready外面
+	function showCover(content){
+		if (content !=""){
+			$(".cover_content").html(content);
+		}	
+
+		$(".cover_dv1").removeClass("hide");
+	}	
+	
+	//测试用
+	function fun2(){
+		alert("index.html/fun2(...)");
+	} 
+	
+	//设置标题，图标，提示内容等，，只能放$(document).ready外面
+	function setItem(content){
+		//document.getElementById("cover_content").innerHTML = content;
+		$("#cover_content").html(content);
+	}
+	
+	//隐藏大图标
+	function hideInfoIcon(){
+		$(".cover_icon_infor").addClass("hide");
+	}
+	
+	//隐藏进行中动画
+	function hideRuningIcon(){
+		$(".cover_runing").addClass("hide");
+	}	
+	//显示进行中动画
+	function showRuningIcon(content){
+		setItem(content);
+		hideInfoIcon();
+		$(".cover_runing").addClass("hide");
+		$(".cover_dv1").removeClass("hide");
+	}		
+	//显示大图标
+	function showInfoIcon(content){
+		setItem(content)
+		hideRuningIcon();
+		$(".cover_icon_infor").removeClass("hide");
+		$(".cover_dv1").removeClass("hide");
+	}
+	
+	
+	
+$(document).ready(function() {	
+	//弹框隐藏
+	$('.cover_dv_exit').click(function() {
+		$(".cover_dv1").addClass("hide");
+	});
+	
+	//弹框确定按钮
+	$('.btn-ok').click(function() {
+		$(".cover_dv1").addClass("hide");
+	});
+	
+	
+	
+
+});
+</script>  
+
+	</head>
+	<body >
+        <iframe src="__URL__/main.html" id="iframe" frameborder="0" scrolling="no" width="100%" height="1000"></iframe>
+        
+        <div id="cover_dv1" class="cover_dv1 hide">
+            <div class="cover_dv_exit">X</div>
+            <div id="coverContent" class="cover_dv3">
+                <div class="glyphicon glyphicon-info-sign cover_icon_infor" ></div>
+                <div class="cover_runing" id="cover_runing"><img src="__ROOT__/public/images/page-loading.gif"></div>
+            </div>
+            <div class="cover_content" id="cover_content">正在执行，请不要关闭本窗口</div>
+            <div class="cover_dv6">
+                <button type="button" class="btn btn-primary btn-xm btn-ok">确定</button>
+            </div>
+        </div>
+    	
+        
+    
+	</body>
+</html>
+
+
+

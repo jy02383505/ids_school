@@ -1,0 +1,174 @@
+<include file="Public/header" />
+
+<ol class="breadcrumb">
+	<li><a href="">用户管理</a></li>
+	<li class="active">用户列表</li>
+</ol>
+
+<div id="pluginsInfo" class="row well">
+	<form class="form-inline edit-form" role="form" method="get" action="__SELF__">
+		<!-- <div class="col-md-12">
+			<div class="form-group">
+				<label class="control-label">用户名：</label>
+				<input type="text" class="form-control input-sm" name="account" value="{$Think.get.account}" style="width:182px;">
+				<button type="submit" class="btn btn-info btn-sm">搜索</button>
+			</div>
+		</div> -->
+		<table class="table">
+			<tbody>
+				<tr>
+					<td width="200">
+						<input type="text" class="form-control input-sm" name="account" value="{$Think.get.account}" style="width:182px;" placeholder="用户名关键字">
+						
+					</td>
+                    <td width="60" style="display:none;">
+                        <select class="form-control input-sm" name="user_type" id="user_type">
+                            <option value="">范围</option>
+                    		<!--<option value="student" <eq name="user_type" value="student">selected</eq> >学生</option>-->
+                            <option value="teacher" <eq name="user_type" value="teacher">selected</eq> >教师</option>
+                            <option value="other" <eq name="user_type" value="other">selected</eq> >其它</option>
+                        </select>
+                    </td>  
+                        <?php 
+                        switch ($user_type){
+                            case 'teacher':
+                                $banji_sel_str = '可管理班级';
+                                $banji_show = 1;
+                                break;
+                                /*
+                            case 'student':
+                                $banji_sel_str = '所在班级';
+                                $banji_show = 1;
+                                break;
+                                */
+                            default:
+                                $banji_sel_str = '可管理班级';
+                                $banji_show = 1;
+                        }
+                        ?>  
+                                  
+                    <td width="80" class="<?php if (!$banji_show){ echo 'hide'; }?>" id="td_banji">
+                        <select class="form-control input-sm" name="banjiId" id="banjiId">
+                            <option value=""><?php echo $banji_sel_str;?></option>
+                            <volist name="banjis" id="vo">
+                                <eq name="vo.id" value="$banjiId">
+                                    <option value="{$vo.id}" selected>{$vo.name}</option>
+                                <else/>
+                                    <option value="{$vo.id}">{$vo.name}</option>
+                                </eq>
+                            </volist>
+                        </select>
+
+                    </td>
+                        
+                    <td><button type="submit" class="btn btn-info btn-sm">搜索</button>
+                    </td>
+                    <td>
+                    </td>
+                    <td align="right"><a href="{:U('Users/addUser')}" type="button" class="btn btn-info btn-sm" id="addNew">添加用户</a></td>
+				</tr>
+			</tbody>
+		</table>
+	</form>
+</div>
+
+<div class="data-list">
+	<table class="table table-hover list-tbl">
+		<thead>
+			<tr>
+				<!-- <th width="36"><input type="checkbox" class="select-all" title="全选/全不选"></th> -->
+				<th>#ID</th>
+				<th>用户名</th>
+                <th>姓名</th>
+				<th>所属组</th>
+				<th>状态</th>
+                <th>可管理班级</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody>
+			<volist name="users" id="vo">
+			<tr>
+				<!-- <td><input type="checkbox"></td> -->
+				<td>{$vo.id}</td>
+				<td>{$vo.account}</td>
+                 <td><eq name="vo.type" value="teacher">[{$vo.type_cn}]{$vo.trueName}</eq></td>
+				<td>{$vo.role}</td>
+				<td>
+					<eq name="vo.status" value="1">
+						<i class="icon-ok" style="color:#3c763d;"></i>
+					<else/>
+						<i class="icon-remove" style="color:#a94442;"></i>
+					</eq>
+				</td>
+                <td>
+                	{$vo.user_banji_list_cn}
+                </td>
+				<td>
+					<php>	if (checkAccess('Users', 'editUser')) {	</php>
+					<a class="oper edit" href="__URL__/editUser/uid/{$vo.id}" title="编辑"><i class="icon-pencil"></i></a>
+					<php>	}	</php>
+					<php>	if (checkAccess('Users', 'delUser')) {	</php>
+					<a class="oper del" href="javascript:void(0);" data-url="__URL__/delUser/uid/{$vo.id}" title="删除"><i class="icon-trash"></i></a>
+					<php>	}	</php>
+				</td>
+			</tr>
+			</volist>
+		</tbody>
+	</table>
+	<table class="table">
+		<tr>
+			<td>
+				<!-- <input type="checkbox" class="select-all" title="全选/全不选">
+				<button type="button" class="btn btn-default btn-sm multi-del" style="margin-left:30px;">批量删除</button> -->
+				&nbsp;
+			</td>
+			<td class="page-box text-right" width="80%">{$page}</td>
+		</tr>
+	</table>
+</div>
+
+<include file="Public/jsLoader" />
+<script type="text/javascript">
+$(function($){
+	$('.del').click(function() {
+		var targetUrl = $.trim($(this).attr('data-url'));
+		$.kw.confirm('确认要删除吗？', function() {
+			window.location.href = targetUrl;
+		});
+	});
+});
+</script>
+
+<script language="javascript">
+$(document).ready(function() {
+
+	 $("#user_type").change(function(){
+		var user_type = $("#user_type").val();
+		switch (user_type){
+			case 'teacher':
+				$("#banjiId option:first").remove();
+				$("#banjiId").prepend("<option value=''>管理班级</option>");
+				$("#td_banji").removeClass("hide");
+				//$("#banjiId option:first").attr("text", "管理班级");
+				break;
+			case 'student':
+				$("#banjiId option:first").remove();
+				$("#banjiId").prepend("<option value=''>所在班级</option>");
+				$("#td_banji").removeClass("hide");
+				//$("#banjiId option:first").attr("text", "所在班级");
+				break;
+			default:
+				$("#td_banji").addClass("hide");
+		}
+	 });
+
+
+});
+</script>
+
+;
+
+
+
+<include file="Public/footer" />

@@ -1,0 +1,116 @@
+<include file="Public/header" />
+
+<ol class="breadcrumb">
+	<li><a href="">商场管理</a></li>
+	<li><a href="">活动管理</a></li>
+	<li class="active">活动列表</li>
+</ol>
+
+<div id="" class="row well">
+	<div class="col-md-9" style="padding-top:5px;">
+		<form class="form-inline edit-form" role="form" method="get" action="__SELF__">
+        
+            <div class="form-group">
+                <label for="keyboard">关键字：</label>
+                <input type="text" class="form-control" name="keyboard" id="keyboard" placeholder="关键字" value="{$Think.get.keyboard}" style="width:182px;">
+            </div>      
+            <div class="form-group">
+                <label for="searchtype">字段：</label>
+                <select class="form-control" name="searchtype" id="searchtype">
+                    <option value="aName" <eq name="Think.get.searchtype" value="aName"> selected = selected</eq> >活动名称</option>
+                    <option value="ID" <eq name="Think.get.searchtype" value="ID"> selected = selected</eq> >ID</option>
+                </select>
+                
+				<label for="aClassId"></label>
+                <select class="form-control input-sm" name="aClassId" id="aClassId">
+                    <option value="">活动分类</option>
+                    <volist name="aClassId" id="vo">
+                        <eq name="Think.get.aClassId" value="$vo.ID">
+                            <option value="{$vo.ID}"  selected = selected >{$vo.space} {$vo.tName}</option>
+                        <else/>
+                            <php> if ($vo['has_children'] > 0) { </php>
+                            <option value="{$vo.ID}" disabled>{$vo.space} {$vo.tName}</option>
+                            <php> } else { </php>
+                            <option value="{$vo.ID}">{$vo.space} {$vo.tName}</option>
+                            <php> } </php>
+                        </eq>
+                    </volist>
+                </select>  
+                
+                <button type="submit" class="btn btn-info btn-sm">搜索</button>
+			</div>
+  
+
+		</form>
+	</div>
+	<div class="col-md-3 text-right">
+		<table class="table">
+			<tbody>
+				<tr>
+					<td style="border:0;">
+						<a href="__URL__/addActivities/" type="button" class="btn btn-info btn-sm" id="addActivities">添加活动</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<div class="data-list">
+	<table class="table table-hover list-tbl">
+		<thead>
+			<tr>
+				<!-- <th width="36"><input type="checkbox" class="select-all" title="全选/全不选"></th> -->
+				<th>#ID</th>
+				<th>活动名称</th>
+				<th>海报图</th>
+                <th>分类</th>
+                <th>时间</th>
+                <th>相关店铺</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody>
+			<volist name="datas" id="vo">
+			<tr>
+				<!-- <td><input type="checkbox"></td> -->
+				<td>{$vo.ID}</td>
+                <td>{$vo.aName}</td>
+				<td>{$vo.mainImage}</td>
+                <td >{$vo.actiClassName}</td>
+                <td >{$vo.Starttime}<br>{$vo.Endtime}</td>
+                <td>------</td>
+
+				<td>
+					<a class="oper edit" href="__URL__/editActivities/id/{$vo.ID}" title="编辑"><i class="icon-pencil"></i></a><!--zjh add shop{$vo.spottype}中的shop-->
+					<a class="oper del" href="javascript:void(0);" data-url="__URL__/delActivities/ID/{$vo.ID}" title="删除"><i class="icon-trash"></i></a>
+				</td>
+			</tr>
+			</volist>
+		</tbody>
+	</table>
+	<table class="table">
+		<tr>
+			<td>
+				<!-- <input type="checkbox" class="select-all" title="全选/全不选">
+				<button type="button" class="btn btn-default btn-sm multi-del" style="margin-left:30px;">批量删除</button> -->
+				&nbsp;
+			</td>
+			<td class="page-box text-right" width="80%">{$page}</td>
+		</tr>
+	</table>
+</div>
+
+<include file="Public/jsLoader" />
+<script type="text/javascript">
+$(function($){
+	
+	$('.del').click(function() {
+		var targetUrl = $.trim($(this).attr('data-url'));
+		$.kw.confirm('确认要删除该活动吗？', function() {
+			window.location.href = targetUrl;
+		});
+	});
+});
+</script>
+<include file="Public/footer" />

@@ -1,0 +1,369 @@
+<include file="Public/header" />
+<link rel="stylesheet" href="__PUBLIC__/script/uploadify/uploadify.css">
+
+
+
+<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+<script src="__PUBLIC__/script/jquery/jquery.min.js"></script>
+
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="__PUBLIC__/bootstrap/bootstrap.min.js"></script>
+<script language="javascript" type="text/javascript" src="__PUBLIC__/My97DatePicker/WdatePicker.js"></script>
+
+<ol class="breadcrumb">
+	<li><a href="{:U('School/banjiHonors')}">班级荣誉</a></li>
+	<li class="active">
+        <switch name="ACTION_NAME" >
+        <case value="addHonor" break="1">添加</case>
+        <case value="editHonor">修改</case>
+        <default />添加
+        </switch>
+        荣誉
+    </li>
+</ol>
+
+<div class="container-fluid ">
+<form id="editForm" class="form-horizontal " role="form" method="post" action="__SELF__">
+	<div class="form-group">
+		<label class="col-sm-2 control-label " for="type">荣誉名称</label>
+		<div class="col-sm-2">
+			<input class="form-control input-sm" type="text" name="type" id="type" value="{$datas.type}" placeholder='请输入荣誉名称'>
+		</div>
+        <div class="col-sm-2"><span class="help-block"></span></div>
+	</div>
+    
+	<div class="form-group" style="margin-top:0;">
+    	<div class="row">
+            <label class="col-sm-2 control-label" for="">图标</label>
+            <div class="col-sm-5">
+                <div class="up-image-box" style="position:relative;">
+                    <button id="file_upload_icon" class="btn btn-default" name="file_upload_icon" type="file" style="float:left;"></button>
+    				
+                    <div id="uploadfyQueueList1"></div> 
+                    <div class="showimg clearfix" style="clear:both;">
+                        <notempty name="datas['icon']">
+                            <span style="margin-left:0px;"><img src="/{$datas.icon}?{:rand()}" /></span>
+                        </notempty>
+                    </div>
+                    <input type="hidden" name="icon" id="icon" value="{$datas.icon}">
+                </div>
+            </div>
+        </div>
+    	<div class="row">
+        
+		</div>       
+	</div>
+    
+	<div class="form-group">
+		<label class="col-sm-2 control-label " for="level">等级</label>
+		<div class="col-sm-2">
+			<input class="form-control input-sm" type="text" name="level" id="level" value="{$datas.level}" placeholder='请输入等级'>
+		</div>
+        <div class="col-sm-2"><span class="help-block"></span></div>
+	</div>
+    
+	<div class="form-group">
+		<label class="col-sm-2 control-label " for="organization">颁奖机构</label>
+		<div class="col-sm-2">
+			<input class="form-control input-sm" type="text" name="organization" id="organization" value="{$datas.organization}" placeholder='请输入颁奖机构'>
+		</div>
+        <div class="col-sm-2"><span class="help-block"></span></div>
+	</div> 
+     
+	<div class="form-group">
+		<label class="col-sm-2 control-label " for="datetime">获奖日期</label>
+		<div class="col-sm-2">
+			<input type="text" class="form-control input-sm" name="datetime" id="datetime" value="{$datas.datetime}" style="width:182px;" onClick="WdatePicker()" placeholder='获奖日期'>
+		</div>
+        <div class="col-sm-2"><span class="help-block"></span></div>
+	</div> 
+ 
+	<div class="form-group" style="margin-top:0;">
+    	<div class="row">
+            <label class="col-sm-2 control-label" for="">证书照片</label>
+            <div class="col-sm-5">
+                <div class="up-image-box" style="position:relative;">
+                    <button id="file_upload_photo" class="btn btn-default" name="file_upload_photo" type="file" style="float:left;"></button>
+    				
+                    <div id="uploadfyQueueList1"></div> 
+                    <div class="showimg clearfix" style="clear:both;">
+                        <notempty name="datas['imagepath']">
+                            <span style="margin-left:0px;"><img src="/{$datas.imagepath}?{:rand()}" /></span>
+                        </notempty>
+                    </div>
+                    <input type="hidden" name="photo" id="photo" value="{$datas.imagepath}">
+                </div>
+            </div>
+        </div>
+    	<div class="row">
+        
+		</div>       
+	</div>
+    
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="description">介绍</label>
+		<div class="col-sm-5">
+			 <textarea class="form-control" name="description" id="description" rows="4">{$datas.description}</textarea> 
+			<!--<script id="description" name="description" type="text/plain" style="height:280px;">{$datas.description}</script>-->
+		</div>
+	</div>
+    
+    <div class="form-group">
+		<label class="col-sm-2 control-label" for="banjiId">班级</label>
+		<div class="col-sm-2">
+			<select class="form-control input-sm" name="banjiId" id="banjiId">
+				<option value="">请选择</option>
+				<volist name="banjis" id="vo">
+					<eq name="vo.id" value="$datas.banjiId">
+						<option value="{$vo.id}" selected>{$vo.name}</option>
+					<else/>
+						<option value="{$vo.id}">{$vo.name}</option>
+					</eq>
+				</volist>
+			</select>
+		</div>
+	</div>   
+
+
+        
+    
+
+
+
+   
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="">&nbsp;</label>
+		<div class="col-sm-4">
+			<input type="hidden" name="uuid" value="{$uuid}">
+			<input type="hidden" name="id" value='<empty name="id">{:I('get.id',0,'intval');}</empty>'>  
+			<button type="submit" class="btn btn-info btn-sm">保存更改</button>&nbsp;&nbsp;
+			<button type="reset" class="btn btn-info btn-sm">取消</button>
+		</div>
+	</div>
+</form>
+</div>
+
+
+
+
+<include file="Public/jsLoader" />
+<script type="text/javascript" src="__PUBLIC__/script/jquery/jquery.validate.min.js"></script>
+<script type="text/javascript">
+$(function($) {
+	
+	// 判断英文字符
+	jQuery.validator.addMethod("isEnglish", function(value, element) {       
+         return this.optional(element) || /^[A-Za-z]+$/.test(value);       
+    }, "只能包含英文字符。");
+	
+	
+	$('#editForm').validate({
+		errorElement : 'span',
+		errorClass : 'help-block',
+		focusInvalid : true,  
+        rules : {  
+			type:{
+				required: true,//名称带方括号验证不了
+			},
+        	level : {  
+                required : true,
+            },	
+        	organization : {  
+                required : true,
+            },	
+        	datetime : {  
+                required : true,
+            },	
+        	banjiId : {  
+                required : true,
+            },			
+
+        },  
+        messages : {
+			type :{
+				required :"荣誉名称必填",	//名称带方括号验证不了
+			},
+        	level : {  
+                required : "等级必填",
+            },
+        	organization : {  
+                required : "颁奖单位必填",
+            },
+        	datetime : {  
+                required : "获奖时间必填",
+            },
+        	banjiId : {  
+                required : "班级必须选择",
+            },
+
+        },  
+		
+
+        highlight : function(element) {  
+            $(element).closest('.form-group').addClass('has-error');  
+        },  
+
+        success : function(label) {  
+            label.closest('.form-group').removeClass('has-error');  
+            label.remove();  
+        },  
+
+        errorPlacement : function(error, element) {  
+            element.parent('div').append(error);  
+        },  
+		submitHandler: function(form) {
+			form.submit();
+		}
+	});
+});
+</script>
+
+
+
+<script type="text/javascript" src="__PUBLIC__/script/uploadify/jquery.uploadify.js"></script>
+<script type="text/javascript">
+$(function($) {
+	var data_id = "{$datas.id}";
+	$('button[type="reset"]').click(function(){
+		window.location.href = '__URL__/banjiHonors';
+	});
+	
+	// Uploadify 批量上传
+	initUpload();
+	function initUpload(){
+		
+		$('#file_upload_photo').uploadify({
+			'debug' : false,
+			'multi' : false,
+			'auto' : true,
+			'fileObjName' : 'myUpfile',
+			'fileTypeDesc' : '图片',
+			'fileTypeExts' : '*.jpeg; *.jpg; *.png; *.bmp',
+			'buttonText' : '<i class="icon-upload"></i>上传图片',
+			'width' : 100,
+			'buttonClass' : 'uploadify',
+			'swf'      : '__PUBLIC__/script/uploadify/uploadify.swf',
+			'formData'     : {dataType : 'image', savename :'banji_honor_'+data_id, isMyUpRoot : 1,appModel:'school',isDBWrite:1,dataType:'image',dataID:data_id,folderName:''},//'formData'     : {dataType : 'image', savename : 'logo', isMyUpRoot : 1},
+			'uploader' : '{:U("Ajaxschool/uploadify_banji_honor")}',
+			'queueID'  : 'uploadfyQueueList1',
+			'removeCompleted' : true,
+			'removeTimeout' : 3,
+			'overrideEvents' : ['onUploadSuccess', 'onSelectError'],
+			'onSelectError' : function(file, errorCode, errorMsg) {
+				//console.log(errorCode);
+				//console.log(errorMsg);
+				switch (errorCode) {
+					case -110:
+						alert('【文件上传失败提示】\n\n ' + file.name + ' : 文件大小超过最大上传限制50MB！\n\n 请示使用 [ 大文件上传 ] 工具进行上传.');
+						break;
+					case -130:
+						alert('【文件上传失败提示】\n\n ' + file.name + ' : 文件类型不正确.');
+						break;
+				}
+			},
+			'onUploadSuccess' : function(file, data, response) {
+				var re = $.parseJSON(data);
+				if (re.stat*1) {
+					//alert(re.savePath);
+					$('#' + file.id).find('.data').html('<span class="text-success">&nbsp;上传成功</span>');
+					$('#file_upload_photo').closest('div.up-image-box').find(".showimg").first().html('<span><img src="' + re.url + '?' + Math.random() + '" /></span>');
+					$('#file_upload_photo').closest('div.up-image-box').find(".gcovers").first().val(re.resourceid);
+					$('#photo').val(re.savePath);//图片路径存储在表单，数据库中将存它re.url
+					//alert(re.url);
+				} else {
+					$('#' + file.id).addClass('text-danger').find('.data').html('<span>&nbsp;'+re.msg+'</span>');
+					$('#' + file.id).find('.uploadify-progress-bar').first().css({width : 0});
+				}
+			}
+		});
+		
+		$('#file_upload_icon').uploadify({
+			'debug' : false,
+			'multi' : false,
+			'auto' : true,
+			'fileObjName' : 'myUpfile',
+			'fileTypeDesc' : '图片',
+			'fileTypeExts' : '*.jpeg; *.jpg; *.png; *.bmp',
+			'buttonText' : '<i class="icon-upload"></i>上传图片',
+			'width' : 100,
+			'buttonClass' : 'uploadify',
+			'swf'      : '__PUBLIC__/script/uploadify/uploadify.swf',
+			'formData'     : {dataType : 'image', savename :'banji_honor_'+data_id, isMyUpRoot : 1,appModel:'school',isDBWrite:1,dataType:'image',dataID:data_id,folderName:''},//'formData'     : {dataType : 'image', savename : 'logo', isMyUpRoot : 1},
+			'uploader' : '{:U("Ajaxschool/uploadify_banji_honor")}',
+			'queueID'  : 'uploadfyQueueList1',
+			'removeCompleted' : true,
+			'removeTimeout' : 3,
+			'overrideEvents' : ['onUploadSuccess', 'onSelectError'],
+			'onSelectError' : function(file, errorCode, errorMsg) {
+				//console.log(errorCode);
+				//console.log(errorMsg);
+				switch (errorCode) {
+					case -110:
+						alert('【文件上传失败提示】\n\n ' + file.name + ' : 文件大小超过最大上传限制50MB！\n\n 请示使用 [ 大文件上传 ] 工具进行上传.');
+						break;
+					case -130:
+						alert('【文件上传失败提示】\n\n ' + file.name + ' : 文件类型不正确.');
+						break;
+				}
+			},
+			'onUploadSuccess' : function(file, data, response) {
+				var re = $.parseJSON(data);
+				if (re.stat*1) {
+					//alert(re.savePath);
+					$('#' + file.id).find('.data').html('<span class="text-success">&nbsp;上传成功</span>');
+					$('#file_upload_icon').closest('div.up-image-box').find(".showimg").first().html('<span><img src="' + re.url + '?' + Math.random() + '" /></span>');
+					$('#file_upload_icon').closest('div.up-image-box').find(".gcovers").first().val(re.resourceid);
+					$('#icon').val(re.savePath);//图片路径存储在表单，数据库中将存它re.url
+					//alert(re.url);
+				} else {
+					$('#' + file.id).addClass('text-danger').find('.data').html('<span>&nbsp;'+re.msg+'</span>');
+					$('#' + file.id).find('.uploadify-progress-bar').first().css({width : 0});
+				}
+			}
+		});
+	}
+	
+	$("#editForm").submit(function(e){
+		$('#file_upload_photo').uploadifyUpload();
+	});
+
+
+	
+
+	
+});
+</script>
+
+
+
+
+
+
+<script language="javascript">
+$(document).ready(function() {
+	//点击登陆，post提交
+	$('#gradeId').change(function(){
+		$("#banjiId").empty();//清空班级select
+		var gradeId=$("#gradeId").val();//当前选择的年级
+		
+		//alert(gradeId);
+		
+		//查找当前所选年级的全部班级JSON，追加到班级select
+		$.get("__GROUP__/School/getBanjiListJson/gradeId/"+gradeId+"/cache/" + Math.random(),function(data,status){
+			var re = $.parseJSON(data);
+			//alert(data);
+			json = eval(re);
+			for(var i=0; i<re.length; i++) 
+			{ 
+				//alert(json[i].id+" " + json[i].name);
+				$("#banjiId").append("<option value='"+ json[i].id +"'>"+ json[i].name +"</option>"); 
+			} 
+		});
+		
+		
+	});
+
+
+});
+</script>
+<include file="Public/footer" />

@@ -1,0 +1,100 @@
+<include file="Public/header" />
+
+<ol class="breadcrumb">
+    <li><a href="__GROUP__/Endpoints/index/et/{$Think.get.et|default='x86'}">班牌管理</a></li>
+    <li class="active">班牌组列表</li>
+</ol>
+
+<div id="pluginsInfo" class="row well hide">
+    <form class="form-inline edit-form" role="form" method="get" action="__SELF__">
+        <table class="table">
+            <tbody>
+                <tr>
+                    <td class="text-right" width="90"><b>组名称：</b></td>
+                    <td>
+                        <input type="text" class="form-control input-sm" id="epgName" name="name" value="{$Think.get.name}" style="width:182px;">
+                        <button type="submit" class="btn btn-info btn-sm">搜索</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+</div>
+
+
+<div class="data-list">
+    <table class="table table-hover list-tbl">
+        <thead>
+            <tr>
+                <!-- <th width="36"><input type="checkbox" class="select-all" title="全选/全不选"></th> -->
+                <!-- <th>#ID</th> -->
+                <th>组名称</th>
+                <th><eq name="Think.get.et" value="azad">节目播放表<else />应用模板</eq></th>
+                <th>操作</th>
+                <th class="text-right" style="width:280px">
+                    <a href="__URL__/add/et/{$Think.get.et|default='x86'}" type="button" id="addNewEndGrp" class="btn btn-info btn-xs" style="margin-left:12px;">添加班牌组</a>
+                    <a href="__GROUP__/Endpoints/index/et/{$Think.get.et|default='x86'}" type="button" id="addNewEndGrp" class="btn btn-info btn-xs" style="margin-left:12px;">返回</a>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <volist name="groups" id="vo">
+            <tr>
+                <!-- <td><input type="checkbox"></td> -->
+                <!-- <td>{$vo.id}</td> -->
+                <td>
+                    {$vo.space}
+                    <eq name="vo.has_children" value="1">
+                        <i class="icon-caret-down" style="cursor:pointer;"></i>
+                    <else/>
+                        <i class="icon-caret-right" style="cursor:pointer;"></i>
+                    </eq>
+                    &nbsp;&nbsp;
+                    {$vo.groupname}
+                </td>
+                <td><span>{$vo.tplname}</span></td>
+                <td colspan="2">
+                    <php>   if (checkAccess('EndpointsGroups', 'edit')) {   </php>
+                    <a class="oper edit" href="__URL__/edit/et/{$Think.get.et|default='x86'}/id/{$vo.id}" title="编辑"><i class="icon-pencil"></i></a>
+                    <php>   }   </php>
+                    <a class="oper edit" href="__GROUP__/Endpoints/index/et/{$Think.get.et|default='x86'}/epgId/{$vo.id}" title="查看下属班牌"><i class="icon-sitemap"></i></a>
+                    <php>   if (checkAccess('EndpointsGroups', 'del')) {    </php>
+                    <a class="oper del" href="javascript:void(0);" data-url="__URL__/del/id/{$vo.id}" title="删除"><i class="icon-trash"></i></a>
+                    <php>   }   </php>
+                </td>
+            </tr>
+            </volist>
+        </tbody>
+    </table>
+    <table class="table">
+        <tr>
+            <td>
+                <!-- <input type="checkbox" class="select-all" title="全选/全不选">
+                <button type="button" class="btn btn-default btn-sm multi-del" style="margin-left:30px;">批量删除</button> -->&nbsp;
+            </td>
+            <td class="page-box text-right" width="80%">{$page}</td>
+        </tr>
+    </table>
+</div>
+
+<include file="Public/jsLoader" />
+<script type="text/javascript">
+$(function($){
+    
+    var endType = '{$Think.get.et|default="x86"}',
+        is_up_tree = {$Think.get.isUpTree|default=0};
+    
+    if (is_up_tree) {
+        //window.parent.frame_left_menu.location.reload();
+        window.parent.frame_left_menu.location.href = '__GROUP__/Index/leftFrame/menuID/endPoints/et/' + endType + '/noDef/1';
+    }
+    
+    $('.del').click(function() {
+        var targetUrl = $.trim($(this).attr('data-url'));
+        $.kw.confirm('确认要删除吗？', function() {
+            window.location.href = targetUrl;
+        });
+    });
+});
+</script>
+<include file="Public/footer" />

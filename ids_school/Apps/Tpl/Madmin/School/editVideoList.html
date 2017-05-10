@@ -1,0 +1,328 @@
+<include file="Public/header" />
+<link rel="stylesheet" href="__PUBLIC__/script/uploadify/uploadify.css">
+
+<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+<script src="__PUBLIC__/script/jquery/jquery.min.js"></script>
+
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="__PUBLIC__/bootstrap/bootstrap.min.js"></script>
+
+<link rel="stylesheet" href="__PUBLIC__/script/plupload2/jquery.ui.plupload/flick/jquery-ui.css" type="text/css" />
+<link rel="stylesheet" href="__PUBLIC__/script/plupload2/jquery.ui.plupload/css/jquery.ui.plupload.css" type="text/css" />
+
+<style>
+#storeVideoUp .btn-default, #storeVideoUp .btn-default:hover, #storeVideoUp .btn-default:active, #storeVideoUp .btn-default:visited{background-color:#fff;border-color:#ccc;padding:3px 10px 4px;font-size:14px;outline:0;}
+.resname{padding:10px 0;}
+.resname{display:inline-block;width:580px;}
+#filelist li{width:100%;height:30px;line-height:30px;}
+</style>
+<ol class="breadcrumb">
+	<li><a href="{:U('School/videoList')}">视频管理</a></li>
+	<li class="active">
+        <switch name="ACTION_NAME" >
+        <case value="addVideoList" break="1">添加</case>
+        <case value="editVideoList">修改</case>
+        <default />添加
+        </switch>视频
+    
+    </li>
+</ol>
+
+<form id="editForm" class="form-horizontal" role="form" method="post" action="__SELF__">
+    <input type="hidden" name="banjiId" id="banjiId" value="{$banjiId}" >
+    <input type="hidden" name="videoGroupId" id="videoGroupId" value="{$videoGroupId}" >
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="aName">视频标题</label>
+		<div class="col-sm-3">
+			<input class="form-control input-sm" type="text" name="name" id="aName" value="{$data.title}"/>
+		</div>
+	</div>
+
+    
+    <div class="form-group" style="margin-bottom:0px;">
+		<label class="col-sm-2 control-label" for="">上传视频</label>
+		<div class="col-sm-10">
+            <button id="hugeFileUp" class="btn btn-default" type="button" style="display:inline-block;height:30px;line-height:16px;"><i class="icon-upload-alt"></i>&nbsp;大文件上传</button>
+            <div class="help-tips" style="position:relative;display:inline-block;font-size:18px;height:30px;line-height:30px;margin-left:8px;top:4px;">
+                <i class="icon-question-sign"></i>
+                <div class="text-left" style="position:absolute;top:36px;right:-10px;width:225px;font-size:12px;line-height:18px;background:#f0f0f0;border:1px solid #e0e0e0;padding:8px;border-radius:3px;-moz-border-radius:3px;-webkit-border-radius:3px;display:none;z-index:99;">
+                    <ul style="margin:0;list-style-type:disc;list-style-position:inside;">
+                        <li>大文件上传：允许上传50MB以上的文件.</li>
+                    </ul>
+                </div>
+            </div>
+		</div>
+	</div> 
+    
+    <div class="form-group" style="margin-top:0px;">
+		<label class="col-sm-2 control-label" for=""></label>
+        <div class="col-sm-10">
+            <ul id="filelist">
+            </ul>
+        </div>
+	</div>        
+            
+	<notempty name="data.filename">
+        <div class="form-group">
+        <label class="col-sm-2 control-label" for="storeShortname">视频文件</label>
+            <div class="resinfo col-sm-1 icon-film">
+                <div class="resname" value="{$data.filename}">
+                {$data.filename}
+                </div>
+            </div>
+        </div>
+	</notempty> 
+    <input type="hidden" name="oldFilePath" class="oldFilePath" value="{$data.filePath}"/>
+    <input type="hidden" name="oldSize" value="{$data.filesize}"/>
+    <input type="hidden" id="filePath" name="filePath"/>
+    <input type="hidden" id="filesize" name="filesize"/>
+    <input type="hidden" id="filename" name="filename"/>
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="storeNote">视频介绍</label>
+		<div class="col-sm-4">
+			<!-- <textarea class="form-control" name="note" id="storeNote" rows="4">{$store.note}</textarea> -->
+			<textarea class="form-control" rows="3" name='description' id='description'>{$data.description}</textarea>
+		</div>
+	</div>
+    
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="">&nbsp;</label>
+		<div class="col-sm-4">
+			<input type="hidden" name="id" value="{$data.id}">
+			<button type="submit" class="btn btn-info btn-sm">保存更改</button>&nbsp;&nbsp;
+			<button type="reset" class="btn btn-default btn-sm">取消</button>
+		</div>
+	</div>
+    <div id="upArea"></div>
+    
+	<div class="my-cover" style="display:none;"></div>
+
+    <div id="PLUploader"><!--大文件上传弹窗-->
+        <span id="clsBtn" style="font-size:26px;position:absolute;top:-4px;right:2px;cursor:pointer;z-index:1005;" title="关闭"><i class="icon-remove-sign"></i></span>
+        <div id="uploader">
+            <p>Your browser doesn't have Flash, Silverlight or HTML5 support.</p>
+        </div>
+    </div>
+</form>
+
+
+<!--zjh add start 模态对话框-->
+
+
+<!--zjh add end 模态对话框-->
+
+<include file="Public/jsLoader" />
+<script type="text/javascript" src="__PUBLIC__/script/uploadify/jquery.uploadify.js"></script>
+
+
+<script type="text/javascript" src="__PUBLIC__/script/jquery/jquery.validate.min.js"></script>
+
+<script type="text/javascript" src="__PUBLIC__/script/plupload2/plupload.full.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/script/plupload2/jquery.ui.plupload/flick/jquery-ui.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/script/plupload2/jquery.ui.plupload/jquery.ui.plupload.js"></script>
+<script type="text/javascript" src="__PUBLIC__/script/plupload2/i18n/zh_CN.js"></script>
+
+
+<script type="text/javascript">
+$(document).ready(function() {
+
+	//取消按钮
+	$('button[type="reset"]').click(function(){
+		window.location.href = '__URL__/videoList/type/videoFileList/id/{$groupId}';
+	});
+	
+	//数据有效性检测
+    $('#editForm').validate({
+		errorElement : 'span',
+		errorClass : 'help-block',
+		focusInvalid : true,  
+        rules : {  
+        	name : {  
+                required : true,
+            },
+
+        },  
+        messages : {
+        	name : {  
+                required : "视频标题必填.",
+            },
+
+        },  
+
+        highlight : function(element) {  
+            $(element).closest('.form-group').addClass('has-error');  
+        },  
+
+        success : function(label) {  
+            label.closest('.form-group').removeClass('has-error');  
+            label.remove();  
+        },  
+
+        errorPlacement : function(error, element) {  
+            element.parent('div').append(error);  
+        },  
+		submitHandler: function(form) {
+			form.submit();
+		}
+	});
+    
+    var succCount = failedCount = 0, errMsg = '';
+
+    
+    $('#upArea').delegate('#closeBtn', 'click', function(){
+		$('#upArea').hide();
+		hideFramesMasklayer();
+		//window.location.reload();
+	});
+
+	$("#uploader").plupload({
+		runtimes : 'html5,silverlight,flash,html4',
+		url : '__GROUP__/Ajaxhandle/videoPlupload',
+		chunk_size: '1mb',
+        multi_selection: false,
+		rename : false,
+		dragdrop: false,
+		prevent_duplicates: true,
+		multipart_params : {catID : $('#filePath').val()},
+        // multipart_params : {catID : $('.filePath').val()},
+
+        
+		filters : {
+			max_file_size : '0',
+		},
+
+		views: {
+			list: true,
+			thumbs: true, // Show thumbs
+			active: 'list'
+		},
+
+		flash_swf_url : '__PUBLIC__/script/plupload2/Moxie.swf',
+		silverlight_xap_url : '__PUBLIC__/script/plupload2/Moxie.xap',
+
+		init : {
+            // 检测所上传的文件是否需要分片
+			BeforeUpload: function(up, file) {
+				// up.setOption('multipart_params', {catID : $('.filePath').val()});
+                up.setOption('multipart_params', {catID : $('#filePath').val()});
+				$.ajax({
+					url:'__GROUP__/Ajaxhandle/checkFilePartsComm',
+					type:'post',
+					data:{filename : file.name},
+					async:false,
+					success:function(re) {
+						if (re*1) {
+							var hasUpChunks = re * 1;							
+							file.loaded = hasUpChunks * 1024 * 1024;
+						}
+					}
+				});
+			},
+            FilesAdded: function (up, files) {
+                $.each(up.files, function (i, file) {
+                    if (up.files.length <= 1) {
+                        return;
+                    }
+     
+                    up.removeFile(file);
+                });
+            },
+			ChunkUploaded: function(up, file, info) {
+				//console.log(file);
+				var re = $.parseJSON(info.response);
+				if (re.error) {
+					file.loaded = 0;
+					file.destroy();
+				}
+			},
+
+			FileUploaded: function(up, file, info) {
+				// Called when file has finished uploading
+				var fileEle = $('#' + file.id), actionClass, iconClass;
+				var re = $.parseJSON(info.response);
+
+				if (re.error) {
+					actionClass = 'ui-state-error plupload_failed';
+					iconClass = 'ui-icon-alert';
+					fileEle.find('.plupload_file_name').first().append('&nbsp;&nbsp;<i style="color:#a94442"><b>[Error]:</b>' + re.error.message + '</i>');
+				} else {
+					
+					
+					actionClass = 'plupload_done';
+					
+					iconClass = 'ui-icon-circle-check';
+					if (!$.isEmptyObject(re.result)) {
+						var new_type_html = '';
+						new_type_html += '<li class="clearfix">';
+						new_type_html += '<div class="resinfo" data-id="' + re.result.id + '" data-onlyRead="1">';
+						new_type_html += '<span class="ftype-icon">';
+						switch (re.result.type) {
+							case 'image' : new_type_html += '<i class="icon-picture" data-url="' + re.result.url + '"></i>'; break;
+							case 'video' : new_type_html += '<i class="icon-film"></i>'; break;
+							case 'music' : new_type_html += '<i class="icon-music"></i>'; break;
+							default : new_type_html += '<i class="icon-file"></i>';
+						}
+						new_type_html += '</span>';
+						new_type_html += '<span class="resname">' + re.result.pic + '</span></div>';
+					//	new_type_html += '<div class="opers fr">';
+					//	new_type_html += '<a href="javascript:void(0);" class="del" data-id="' + re.result.id + '" title="删除"><i class="icon-trash"></i></a> ';
+					//	new_type_html += '</div>';
+						new_type_html += '</li>';
+					
+						$('#filePath').val(re.result.filePath);//完整路径
+						$('#filename').val(re.result.filename);//完整文件名
+                        $('#filesize').val(re.result.size);
+						$("#filelist").html(new_type_html);
+						//dynamicCalcHeight();
+					}
+					
+					fileEle.removeClass('plupload_done ui-state-default').addClass(actionClass).find('.plupload_action_icon').first().removeClass('ui-icon-circle-check').addClass(iconClass);
+					
+					//up.removeFile(file);
+				}
+
+			},
+
+			UploadComplete: function(up, files) {
+				// Called when all files are either uploaded or failed
+                /* $.each(files, function(i, f) {
+					up.removeFile(f);
+				}); */
+			},
+ 
+            Error: function(up, errors) {
+                // Called when error occurs
+                //console.log(errors);
+            }
+		}
+	});
+	
+	$('#PLUploader').delegate('#clsBtn', 'click', function(){
+		$('#PLUploader').hide();
+		hideFramesMasklayer();
+		if ($('#uploader').plupload('getFiles').length > 0) {
+			$('#uploader').plupload('clearQueue');
+		}
+		//window.location.reload();
+	});
+
+	$('#hugeFileUp').click(function() {
+		$('#PLUploader').show();
+		showFramesMasklayer();
+	});
+    $('.help-tips').hover(
+		function() {
+			$(this).children('div').first().show();
+		},
+		function() {
+			$(this).children('div').first().hide();
+		}
+	);
+});
+</script>
+
+
+
+
+
+<include file="Public/footer" />

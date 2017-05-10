@@ -1,0 +1,187 @@
+<extend name="Public:baseRight"/>
+
+<block name="style">
+    <style>
+        .carousel{
+            position: relative;
+        }
+        .carouselWindow{
+            width: 478px;
+            height: 304px;
+            margin:0 auto;
+            position: relative;
+            overflow: hidden;
+            outline: 1px solid red;
+        }
+        .item_list{
+            position: relative;
+        }
+        .item_list .oneNotice{
+            float: left;
+        }
+        .indicator{
+            position: relative;
+            text-align: center;
+            bottom: 40px;
+        }
+        .indicator button{
+            background-color: transparent;
+            border: 0px;
+            margin-left: 15px;
+            color: rgba(255, 180, 0, 0.7);
+            outline: none;
+        }
+        .indicator button.active{
+            color: #fff;    
+        }
+        .indicator button>span{
+            border-radius: 7px;
+        }
+        .indicator button:hover{
+            color: #fff;
+        }
+        .indicator button>span:hover{
+            box-shadow: 0px 0px 1px 1px rgba(0, 0, 0, 0.8);
+        }
+        .title{
+            font-size: {$configuration[titleFontsize]}px;
+            /*color: {$configuration[titleForeground]};*/
+        }
+        .content{
+            font-size: {$configuration[ContentFontsize]}px;
+            /*color: {$configuration[ContentForeground]};*/
+        }
+    </style>
+</block>
+
+<block name="content">
+    <div class="carouselWindow">
+        <div class="item_list"></div>
+    </div>
+</block>
+
+<!--<block name="content">
+    <div class="carouselWindow">
+        <div class="item_list">
+            <volist name="notices" id="row">
+                <div class="oneNotice <?php if($i == 1){echo 'active';} ?>" style="width:478px;" rel={$i}>
+                    <div class="titleWindow" style="width:478px;">
+                        <span class="title">
+                            {$row[title]}
+                        </span>
+                    </div>
+                    <div class="contentWindow" style="width:478px;">
+                        <span class="content">
+                            {$row[content]}
+                        </span>
+                    </div>
+                </div>
+            </volist>
+        </div>
+    </div>
+</block>-->
+
+<block name="script">
+    <script>
+        var result = {$notices};
+        console.log(result);
+        // 让幻灯片转！
+        // $('.indicator button:first').addClass('active');
+        var itemHeight = $(".carouselWindow").height();
+        var itemSum = $(".item_list .oneNotice").size();
+        var itemReelHeight = itemHeight * itemSum;
+        $('.item_list').css('height', itemReelHeight);
+
+        htmlStr = '';
+        // 滚动,检测是否到达最后一张幻灯片并给出处理方式
+        for(var i = 0; i < result.length; i++){
+            if(i == 0){
+                var active = 'active';
+            }else{
+                var active = '';
+            }
+
+            htmlStr += '<div class="oneNotice ' + active + '" rel="' + i + '">';
+            htmlStr += '<div class="titleWindow" style="width:478px;">';
+            htmlStr += '<span class="title">';
+            htmlStr += result[i]['title'];
+            htmlStr += '</span>';
+            htmlStr += '</div>';
+            htmlStr += '<div class="contentWindow" style="width:478px;">';
+            htmlStr += '<span class="content">';
+            htmlStr += result[i]['content'];
+            htmlStr += '</span>';
+            htmlStr += '</div>';
+            htmlStr += '</div>';
+        }
+
+        $('.item_list').html(htmlStr);
+
+        $('.oneNotice').each(function(i){
+            var realWidth = $(this).find('.title').css('width');
+            var windowWidth = $(this).find('.titleWindow').css('width');
+            var realHeight = $(this).find('.content').css('height');
+            var windowHeight = $(this).find('.contentWindow').css('height');
+            console.log('No.'+i+'  realWidth:'+realWidth+';windowWidth'+windowWidth+';realHeight'+realHeight+';windowHeight'+windowHeight+'.');
+        })
+        
+        function rotate(end, selector='.item_list', direction='top'){
+            if(end){
+                var triggerID = itemSum - 1;
+                var item_listPosition = triggerID * itemHeight;
+
+                // 设置指示灯样式
+                $('.oneNotice').removeClass('active');
+                $active.addClass('active');
+
+                $(selector).animate({
+                    direction: -item_listPosition
+                }, 500, function(){
+                    $(this).css(direction, '0px');
+                });
+            }else{
+                var triggerID = $active.attr('rel') - 1;
+                var item_listPosition = triggerID * itemHeight;
+
+                $('.oneNotice').removeClass('active');
+                $active.addClass('active');
+
+                $(selector).animate({
+                    direction: -item_listPosition
+                }, 500);
+            }
+        };
+
+        function rotateSwitch(){
+            play = setInterval(function(){
+                $active = $('.oneNotice.active').next();
+                rel = $('.oneNotice.active').attr('rel');
+                if(rel == $('.item_list .oneNotice').size()){
+                    $active = $('.oneNotice:first');
+                    end = true;
+                }else{
+                    end = false;
+                }
+                rotate(end);
+            }, 1000);
+        };
+
+
+        // // 鼠标停留事件
+        // $('.item_list a').hover(function(){
+        //     clearInterval(play);
+        // }, function(){
+        //     rotateSwitch();
+        // });
+
+        // // 指示灯的点击事件
+        // $('.indicator button').click(function(){
+        //     $active = $(this);
+        //     clearInterval(play);
+        //     rotate();
+        //     rotateSwitch();
+        //     return false;
+        // });
+        // rotateSwitch();
+    </script>
+</block>

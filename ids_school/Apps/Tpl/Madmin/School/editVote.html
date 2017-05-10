@@ -1,0 +1,413 @@
+<include file="Public/header" />
+<link rel="stylesheet" href="__PUBLIC__/script/uploadify/uploadify.css">
+
+
+
+<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+<script src="__PUBLIC__/script/jquery/jquery.min.js"></script>
+
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="__PUBLIC__/bootstrap/bootstrap.min.js"></script>
+<script language="javascript" type="text/javascript" src="__PUBLIC__/My97DatePicker/WdatePicker.js"></script>
+
+<ol class="breadcrumb">
+	<li><a href="{:U('School/banjiHonors')}">投票管理</a></li>
+	<li class="active">
+        <switch name="ACTION_NAME" >
+        <case value="addVote" break="1">添加</case>
+        <case value="editVote">修改</case>
+        <default />添加
+        </switch>
+        投票
+    </li>
+</ol>
+
+<div class="container-fluid ">
+<form id="editForm" class="form-horizontal " role="form" method="post" action="__SELF__">
+	<div class="form-group">
+		<label class="col-sm-2 control-label " for="datetime"></label>
+		<div class="col-sm-5">
+			<label class="control-label " >修改后，必须点击保存按钮，并且原有的投票结果将被清除</label>
+		</div>
+        <div class="col-sm-2"><span class="help-block"></span></div>
+	</div>
+
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="description"><span class="required">*</span>投票名称</label>
+		<div class="col-sm-4">
+			 <input type="text" class="form-control input-sm" name="name" id="name" value="{$datas.name}">
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="description"><span class="required">*</span>投票内容</label>
+		<div class="col-sm-5">
+			 <textarea class="form-control" name="content" id="content" rows="4">{$datas.content}</textarea> 
+			<!--<script id="description" name="description" type="text/plain" style="height:280px;">{$datas.description}</script>-->
+		</div>
+	</div>
+    
+	<div class="form-group">
+		<label class="col-sm-2 control-label " for="datetime"><span class="required">*</span>截止日期</label>
+		<div class="col-sm-2">
+			<input type="text" class="form-control input-sm" name="endtime" id="endtime" value="{$datas.endtime}" style="width:182px;" onClick="WdatePicker()" placeholder='截止日期'>
+		</div>
+        <div class="col-sm-2"><span class="help-block"></span></div>
+	</div>
+    
+   	<div class="form-group ">
+		<label class="col-sm-2 control-label" for="banjiId"><span class="required">*</span>班级</label>
+        <div class="col-sm-10  " >
+                <volist name="banjis" id="vo">
+                <label class="checkbox-inline " style="margin-right:20px;"><input type="checkbox" name="banjiId[]" id="banjiId_{$vo.id}" class="radio_user_type" <?php if (in_array($vo['id'],$banjiIdArr)){ echo "checked";} ?>  value="{$vo.id}"> {$vo.name}</label>
+                </volist>
+        </div>
+	</div> 
+    
+
+    
+ 	<div class="form-group" style="background-color:#F3F3F3;">
+		<label class="col-sm-2 control-label " for="datetime"><span class="required">*</span>选项</label>
+		<div class="col-sm-1" style="width:50px;">
+			<a class="btn btn-default btn-sm" href="#" role="button" id="btnAppend"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
+		</div>
+		<div class="col-sm-5" >
+        	
+		</div>
+	</div>
+	
+    <div id="option_list">
+    <eq name="ACTION_NAME" value="addVote">
+        <div class="form-group">
+            <label class="col-sm-2 control-label " for="datetime">1.</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control input-sm vote_option" name="option_content[]" id="option_content_{$k}" value="{$vo.content}" placeholder='请输入选项内容'>
+            </div>
+            <div class="col-sm-2"><span class="help-block"></span></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label " for="datetime">2.</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control input-sm vote_option" name="option_content[]" id="option_content_{$k}" value="{$vo.content}" placeholder='请输入选项内容'>
+            </div>
+            <div class="col-sm-2">
+            	
+            	
+            </div>
+        </div>
+    </eq>
+    
+ 
+    
+    
+    
+    <eq name="ACTION_NAME" value="editVote">
+        <volist name="datasOpt" id="vo" key="k">
+        <div class="form-group">
+            <label class="col-sm-2 control-label " for="datetime">{$k}.</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control input-sm vote_option" name="option_content[]" id="option_content_{$k}" value="{$vo.content}" attr_opt_id ="{$vo.id}" attr_vote_id ="{$datas.id}" placeholder='请输入选项内容'>
+            </div>
+            <div class="col-sm-2">
+            	<?php
+                if ($k > 2){
+                ?>
+            	<a class="btn btn-default btn-sm btnRemove" href="#" role="button" attr_opt_id ="{$vo.id}" attr_vote_id ="{$datas.id}" ><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></a>
+                <?php
+                }
+                ?>
+            </div>
+        </div>
+        </volist>
+    </eq> 
+    
+    
+	</div> 
+
+
+
+   
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="">&nbsp;</label>
+		<div class="col-sm-2">
+			<input type="hidden" name="uuid" value="{$uuid}">
+			<input type="hidden" name="id" value='<empty name="id">{:I('get.id',0,'intval');}</empty>'>  
+			<button type="submit" class="btn btn-info btn-sm">保存更改</button>&nbsp;&nbsp;
+			<button type="reset" class="btn btn-info btn-sm">取消</button>
+		</div>
+        
+	</div>
+    
+	<include file="Public/schoolBanjiModal" />
+</form>
+</div>
+
+
+
+
+<include file="Public/jsLoader" />
+<script type="text/javascript" src="__PUBLIC__/script/jquery/jquery.validate.min.js"></script>
+<script type="text/javascript">
+$(function($) {
+	var data_id = "{$datas.id}";
+	$('button[type="reset"]').click(function(){
+		window.location.href = '__URL__/votesList';
+	});
+		
+	// 判断英文字符
+	jQuery.validator.addMethod("isEnglish", function(value, element) {       
+         return this.optional(element) || /^[A-Za-z]+$/.test(value);       
+    }, "只能包含英文字符。");
+	
+	
+	$('#editForm').validate({
+		errorElement : 'span',
+		errorClass : 'help-block',
+		focusInvalid : true,  
+        rules : {  
+			content:{
+				required: true,//名称带方括号验证不了
+			},
+        	endtime : {  
+                required : true,
+            },
+			vote_option:{
+				required : true,
+			},
+
+
+        },  
+        messages : {
+			content :{
+				required :"投票内容必填",	//名称带方括号验证不了
+			},
+        	endtime : {  
+                required : "截止日期必填",
+            },
+        	vote_option : {  
+                required : "选项必填",
+            },
+        },  
+		
+
+        highlight : function(element) {  
+            $(element).closest('.form-group').addClass('has-error');  
+        },  
+
+        success : function(label) {  
+            label.closest('.form-group').removeClass('has-error');  
+            label.remove();  
+        },  
+
+        errorPlacement : function(error, element) {  
+            element.parent('div').append(error);  
+        },  
+		submitHandler: function(form) {
+			var item = $("input[name='banjiId[]']:checked").length;
+			if (!item){
+				alert("请至少选择一个班级");	
+				return;
+			}
+
+			form.submit();
+		}
+	});
+});
+</script>
+
+
+<script>
+$(document).ready(function() {
+	
+	<switch name="ACTION_NAME" >
+	<case value="addVote" break="1">
+		var voteid = 0;
+	</case>
+	<case value="editVote">
+		voteid = {$datas.id};
+	</case>
+	<default />
+		var voteid = 0;
+	</switch>
+			
+	//追加按钮
+	$('#btnAppend').click(function(){
+		var option_num = 0;//现有的实际数量
+
+		//追加
+		var html = '';
+		option_num = $('.vote_option').length;
+	//	alert("原先有选项个数："+option_num);
+		var newOptId = 0;
+	
+		if (voteid){
+			$.ajax({
+				url:'__GROUP__/Ajaxschool/addVoteOption',
+				type:'post',
+				data:"voteid="+voteid+"&rnd="+Math.random(),
+				async:true,//false为同步
+				dataType:'json',
+				success:function(re) {
+					if (re.stat * 1 > 0){
+						//var datas = re.data;
+						//alert(datas);
+					//	alert(re.data);
+						newOptId = re.data;
+
+					html = '' 
+						+ '<div class="form-group">'
+						+ '		<label class="col-sm-2 control-label " for="datetime">' + (option_num+1) + '.</label>'
+						+ '		<div class="col-sm-4">'
+						+ '			<input type="text" class="form-control input-sm vote_option" name="option_content[]" attr_opt_id ="'+ newOptId +'" attr_vote_id ="' + voteid + ' id="option_content_' + (option_num+1) + '" value="" placeholder="请输入选项内容">'
+						+ '		</div>'
+						+ '		<div class="col-sm-1">'
+						+ '			<a class="btn btn-default btn-sm btnRemove" href="#" role="button" attr_opt_id ="'+ newOptId +'" attr_vote_id ="' + voteid + '"  ><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></a>'
+						+ '		</div>'
+						+ '</div>';
+					$("#option_list").append(html);	
+						
+						
+					}else{
+						newOptId = 0;
+					}
+	
+				},
+				error:function() {
+					alert('由于网络异常导致操作失败，请刷新页面重试....');
+				}
+			}); 
+		}else{
+			newOptId = 0;
+			voteid = 0;
+			html = '' 
+				+ '<div class="form-group">'
+				+ '		<label class="col-sm-2 control-label " for="datetime">' + (option_num+1) + '.</label>'
+				+ '		<div class="col-sm-4">'
+				+ '			<input type="text" class="form-control input-sm vote_option" name="option_content[]" attr_opt_id ="'+ newOptId +'" attr_vote_id ="' + voteid + ' id="option_content_' + (option_num+1) + '" value="" placeholder="请输入选项内容">'
+				+ '		</div>'
+				+ '		<div class="col-sm-1">'
+				+ '			<a class="btn btn-default btn-sm btnRemove" href="#" role="button" attr_opt_id ="'+ newOptId +'" attr_vote_id ="' + voteid + '"  ><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></a>'
+				+ '		</div>'
+				+ '</div>';
+			$("#option_list").append(html);	
+		
+		
+		}
+	
+
+
+		
+
+		
+	});
+	
+	//按钮，对于代码加的按钮无效
+	$('.btnRemove').click(function(){	
+		//alert("编缉状态，取到id后直接删除，id="+$(this).attr("attr_id"));
+		//ajax删除
+		var it = $(this);
+		var voteid = $(this).attr("attr_vote_id");//主题id
+		var optid = $(this).attr("attr_opt_id");//选项id
+	//	alert("voteid="+voteid);
+	//	alert("optid="+optid);
+		$.ajax({
+			url:'__GROUP__/Ajaxschool/delVoteOption',
+			type:'post',
+			data:"voteid="+voteid+"&optid="+optid,
+			async:true,//false为同步
+			dataType:'json',
+			success:function(re) {
+				//alert(re);
+				if (re.stat * 1 > 0){
+					//var datas = re.data;
+				//	alert(re.stat);
+				//	alert(re.data);
+					it.parent().parent().remove();//删除前端选项
+					
+				}else{
+						
+				}
+
+			},
+			error:function() {
+				alert('由于网络异常导致操作失败，请刷新页面重试....');
+			}
+		}); 
+	});
+	
+	//删除按钮，绑定事件
+	$(document).on('click',".btnRemove",function(event){
+		var voteid = $(this).attr("attr_vote_id");
+		var optid = $(this).attr("attr_opt_id");
+		if (voteid*optid){
+			$.ajax({
+				url:'__GROUP__/Ajaxschool/delVoteOption',
+				type:'post',
+				data:"voteid="+voteid+"&optid="+optid,
+				async:true,//false为同步
+				dataType:'json',
+				success:function(re) {
+					if (re.stat * 1 > 0){
+						//var datas = re.data;
+						//alert(datas);
+						//alert(re.data);
+						$(this).parent().parent().remove();//删除前端选项
+						
+					}else{
+							
+					}
+	
+				},
+				error:function() {
+					alert('由于网络异常导致操作失败，请刷新页面重试....');
+				}
+			}); 
+		}else{
+			$(this).parent().parent().remove();//删除前端选项
+		}
+	});	
+	
+	$(document).on('change',".vote_option",function(event){	
+		//在编缉状态下，新增加的ajax提交后，新增，原有的更新
+		
+		
+		var it = $(this);
+//		var voteid = $(this).attr("attr_vote_id");//主题id
+		var optid = $(this).attr("attr_opt_id");//选项id
+		var optValue = $(this).val();
+	//	alert(optid);
+		if (voteid && optid){
+			$.ajax({
+				url:'__GROUP__/Ajaxschool/editVoteOption',
+				type:'post',
+				data:"voteid="+voteid+"&optid="+optid+"&optValue="+optValue,
+				async:true,//false为同步
+				dataType:'json',
+				success:function(re) {
+					if (re.stat * 1 > 0){
+						//var datas = re.data;
+					//	alert(re.stat);
+					//	alert(re.data);
+						//it.parent().parent().remove();//删除前端选项
+						
+					}else{
+							
+					}
+	
+				},
+				error:function() {
+					alert('由于网络异常导致操作失败，请刷新页面重试....');
+				}
+			});
+		}
+	});		
+
+});
+</script>
+
+
+
+
+
+
+<include file="Public/footer" />

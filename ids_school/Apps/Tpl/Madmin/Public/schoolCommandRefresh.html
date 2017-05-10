@@ -1,0 +1,110 @@
+<!--
+这是左侧全屏弹窗
+<div class="my-cover"></div>
+<div id="resWindow" class="modal-dialog" style="display:none;width:600px;top:28px !important;height:auto;">
+	<div class="modal-content">
+		<div id="alert-title" class="modal-header">
+			<button type="button" class="close" data-dismiss="modal">
+				<span aria-hidden="true">×</span><span class="sr-only">Close</span>
+			</button>
+			<h4 class="modal-title">信息提示</h4>
+		</div>
+		<div class="modal-body text-center">
+			<div class="loading-box" style="text-align:center;">
+				<p style="font-size:72px;margin:30px auto 30px"><i class="icon-spinner icon-spin"></i></p>
+				<p style="line-height:28px;">正在处理，请不要关闭当前窗口……</p></div>
+		</div>
+		<div class="modal-footer" style="text-align:center;">
+			<button type="button" class="btn btn-default btn-sm close2">关闭</button>
+		</div>
+	</div>
+</div>
+<style>
+	.cover_dv1{position: absolute; top: 0; left: 0; width: 100%; height: 100%;min-height:100%; padding: 0px; background-color:#000000; z-index:9999; overflow: auto;}
+	.cover_dv2{position:absolute;width:40px;height:20px;line-height:40px;text-align:center;border:0px solid red;right:0px;top:0px;z-index:9999;color:#FFFFFF;cursor:hand;}/*退出*/
+	.cover_dv3{width:100%;mine-height:300px;height:300px;text-align:center;}
+	.cover_dv4{margin-top:100px;font-size:100px;}
+	.cover_dv5{}
+	.cover_dv6{width:100%;margin-left:auto;margin-right:auto;text-align:center;}
+</style>
+<div id="leftCover" class="cover_dv1 hide">
+	<div class="cover_dv2">X</div>
+    <div id="coverContent" class="cover_dv3">
+    	<span class="glyphicon glyphicon-info-sign cover_dv4" ></span>
+    </div>
+    <div style="padding:20px;color:#FFFFFF;" class="cover_dv5">正在处理，请不要关闭当前窗口</div>
+    <div class="cover_dv6">
+    	<button type="button" class="btn btn-primary btn-xm btn-ok">确定</button>
+    </div>
+    
+</div>
+
+-->
+
+<script type="text/javascript">
+$(document).ready(function() {
+/*
+	//弹框隐藏
+	$('.cover_dv2').click(function() {
+		$(".cover_dv1").addClass("hide");
+	});
+	
+	//弹框确定按钮
+	$('.btn-ok').click(function() {
+		$(".cover_dv1").addClass("hide");
+	});
+	
+	//弹框显示
+	$('.multi-oper').click(function() {
+		$(".cover_dv1").removeClass("hide");
+	});	
+	
+*/
+
+	
+	/* 批量操作终端（组）  */
+	$('.multi-oper').click(function() {
+		var tids = null,
+			type = $.trim($(this).attr('data-type')),
+			cmd = $.trim($(this).attr('data-cmd'));//取到命令
+			
+			var gid = '<?php echo str_replace(",","-",session("my_endpoints"));?>';//id-id-id
+			var tids = gid;
+		
+	//	alert(type+'--'+cmd+'--' + gid+'--' + tids);
+		
+	//	$.kw.confirm('确认要执行该操作吗？', function() {
+			window.parent.parent.showRuningIcon("正在执行，请不要关闭本窗口...");
+			
+			$.ajax({
+				//url:'__ROOT__/Endpoints/soapClientWay',
+				url:'__ROOT__/School/makeUpdate',
+				type:'post',
+				async:true,
+				data:{type : type, cmd : cmd, tids : tids, endType : 'azd'},
+				dataType:'json',
+				success:function(re){
+					if (re.stat*1) {
+					//	$.kw.alert(re.msg);
+						//loadingResult(1, '发布成功！');
+						window.parent.parent.showInfoIcon("发布成功，点击确定关闭本窗口!");
+					} else {
+						//$.kw.alert(re.msg);
+						//loadingResult(0, re.msg);
+						window.parent.parent.showInfoIcon(re.msg);
+					}
+				},
+				error:function(){
+					//$.kw.alert('由于网络异常导致操作失败，请刷新页面重试....');
+					window.parent.parent.showInfoIcon("由于网络异常导致操作失败，请关闭本提示窗后重试....");
+				}
+			});
+	//	});
+		
+	});	
+
+	//<button type="button" class="btn btn-success multi-oper" data-type="schoolrefresh" data-cmd="RefreshScene"  >&nbsp;发布更新</button>
+
+	
+});
+</script>

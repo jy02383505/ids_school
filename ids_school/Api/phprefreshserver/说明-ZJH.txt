@@ -1,0 +1,56 @@
+
+
+
+注意：以下bat均需修改路径
+
+_install.bat		安装服务
+_uninstall.bat		卸载服务
+_restart.bat		重启服务（先停止后启动）
+
+
+WeatherServer.xml	配置文件，
+			需要配置：
+			网址，如：192.168.1.2:8000/UtilityNoLogin/getWeather/
+			Time，如：<Time Value="00:30"></Time>
+			注意：配置文件里时间必须是递增的
+			      最后一个时间必须是<Time Value="23:59"></Time>是必须的，不允许删除
+
+			问：如何验证采集页地址是否正确？
+			答：直接在地址栏打开此链接，返回首值为1的json数据为正确，首值为0或其它报错为错误
+
+			
+
+
+
+
+WeatherServer.xml配置文件示例：*********************************
+
+<?xml version="1.0" encoding="UTF-8"?>
+<Weather Value="http://192.168.1.2/UtilityNoLogin/getWeather/">
+	<Times>
+		<Time Value="00:30"></Time>
+		<Time Value="23:59"></Time>
+	</Times>
+</Weather> 
+
+***************************************************************
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+其它：******************************************
+
+批处理命令获取当前盘符和当前目录
+%~d0 是当前盘符
+%cd% 是当前目录
+可以用echo %cd%进行打印测试

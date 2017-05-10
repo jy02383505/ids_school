@@ -1,0 +1,292 @@
+<include file="Public/header" />
+<link rel="stylesheet" href="__PUBLIC__/script/uploadify/uploadify.css">
+<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+<script src="__PUBLIC__/script/jquery/jquery.min.js"></script>
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="__PUBLIC__/bootstrap/bootstrap.min.js"></script>
+<link rel="stylesheet" href="__PUBLIC__/bootstrap/datetimepicker/bootstrap-datetimepicker.min.css">
+<script src="__PUBLIC__/bootstrap/datetimepicker/bootstrap-datetimepicker.min.js"></script>
+<script src="__PUBLIC__/bootstrap/datetimepicker/bootstrap-datetimepicker.zh-CN.js"></script>
+
+<style>
+#storeVideoUp .btn-default, #storeVideoUp .btn-default:hover, #storeVideoUp .btn-default:active, #storeVideoUp .btn-default:visited{background-color:#fff;border-color:#ccc;padding:3px 10px 4px;font-size:14px;outline:0;}
+</style>
+
+<script>
+	//在ajax后追加学生到对话框，需要绑定一下事件，此代码必须在对话框前面
+	var var_bindInModelStudent = 1;//不定义它，在学生对话框就不执行绑定，防止调用空函数
+	function bindInModelStudent(){
+		$('.chk_student').on('ifChecked', function(event){
+			var val = $(this).val();
+			var tName = $(this).attr("tName");
+			//检测list，然后加入新的
+			$("#student_list li").each(function(){
+				var tmp_bid = $(this).attr("bid");
+				if (tmp_bid == val){
+					//alert('list中已有此记录');
+					return;
+				}			
+			});
+		//	$('#student_list_v').html("");
+			$('#student_list_v').append('<li class="btn btn-warning btn-sm" bid="' + val + '">' + tName + '<i class="hide glyphicon glyphicon-remove pull-right btn-removefromlist"></i></li>');
+			
+		});		
+	}
+</script>
+
+<ol class="breadcrumb">
+	<li><a href="{:U('messageList')}">留言管理</a></li>
+	<li class="active">
+        <switch name="ACTION_NAME" >
+        <case value="addMessage" break="1">添加</case>
+        <case value="editMessage">修改</case>
+        <default />添加
+        </switch>
+        留言
+    </li>
+</ol>
+<form id="editForm" class="form-horizontal" role="form" method="post" action="__SELF__">
+
+	<div class="form-group hide">
+		<label class="col-sm-2 control-label " for="status"><span class="required">*</span>状态</label>
+		<div class="col-sm-2">
+
+            <switch name="status" >
+            <case value="0" break="1">
+            	<label class="radio-inline"><input type="radio" name="status" id="status0" value="0" checked > 待审核</label>
+                <label class="radio-inline"><input type="radio" name="status" id="status1" value="1" > 通过</label>
+                <label class="radio-inline"><input type="radio" name="status" id="status2" value="2" > 拒绝</label>
+            </case>
+            <case value="1">
+            	<label class="radio-inline"><input type="radio" name="status" id="status0" value="0" > 待审核</label>
+                <label class="radio-inline"><input type="radio" name="status" id="status1" value="1" checked > 通过</label>
+                <label class="radio-inline"><input type="radio" name="status" id="status2" value="2" > 拒绝</label>
+            </case>
+            <case value="2">
+            	<label class="radio-inline"><input type="radio" name="status" id="status0" value="0" > 待审核</label>
+                <label class="radio-inline"><input type="radio" name="status" id="status1" value="1" > 通过</label>
+                <label class="radio-inline"><input type="radio" name="status" id="status2" value="2" checked > 拒绝</label>
+            </case>
+            <default />
+            	<label class="radio-inline"><input type="radio" name="status" id="status0" value="0" checked > 待审核</label>
+                <label class="radio-inline"><input type="radio" name="status" id="status1" value="1" > 通过</label>
+                <label class="radio-inline"><input type="radio" name="status" id="status2" value="2" > 拒绝</label>
+            </switch>
+		</div>
+        <div class="col-sm-2"><span class="help-block"></span></div>
+	</div> 
+
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="content">留言内容</label>
+		<div class="col-sm-4">
+			<textarea class="form-control" name="content" id="content" rows="4"  onpropertychange="if(value.length2100) value=value.substr(0,200)" >{$datas.content}</textarea>
+			<!-- <script id="aContent" name="aContent" type="text/plain" style="height:280px;">{$actiInfo.aContent}</script> -->
+		</div>
+	</div>
+			<style>
+                #student_list li{margin-right:10px;margin-bottom:10px;}
+            </style>  
+  	<div class="form-group " style="margin-bottom:0px;">
+		<label class="col-sm-2 control-label" for="banjiId">留言给</label>
+        <div class="col-sm-10  " >
+        	<ul class="list-group" id="student_list">
+                <li type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#studentModal" id="btn-sel-student">选择学生</li>
+                <span id="student_list_v">
+                <volist name="student_list" id="vo">
+                <li class="btn btn-warning btn-sm"  type="button" bid="{$vo.id}">{$vo.name}<span class="hide" ><i class="hide glyphicon glyphicon-remove pull-right btn-removefromlist" bid="{$vo.id}"></i></span></li>
+                </volist>
+                </span>
+                    
+            </ul>
+        </div>
+	</div> 
+    
+	<div class="form-group" >
+		<label class="col-sm-2 control-label" for="btn">&nbsp;</label>
+		<div class="col-sm-4">
+			<input type="hidden" name="id" value="{$datas.id}">
+			<button type="submit" class="btn btn-info btn-sm">保存更改</button>&nbsp;&nbsp;
+			<button type="reset" class="btn btn-default btn-sm">取消</button>
+		</div>
+	</div>
+<!--zjh add start 模态对话框-->
+<include file="Public/schoolstudentModal" />
+<!--zjh add end 模态对话框-->
+    
+</form>
+
+
+
+
+<include file="Public/jsLoader" />
+<script type="text/javascript" src="__PUBLIC__/script/uploadify/jquery.uploadify.js"></script>
+<script type="text/javascript" charset="utf-8" src="__PUBLIC__/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="__PUBLIC__/ueditor/ueditor.all.js"> </script>
+<script type="text/javascript" charset="utf-8" src="__PUBLIC__/ueditor/lang/zh-cn/zh-cn.js"></script>
+<script type="text/javascript" src="__PUBLIC__/script/jquery/jquery.validate.min.js"></script>
+<script type="text/javascript">
+$(function($) {
+	$('button[type="reset"]').click(function(){
+		window.location.href = '__URL__/messageList';
+	});
+	
+	$('#editForm').validate({
+		errorElement : 'span',
+		errorClass : 'help-block',
+		focusInvalid : true,  
+        rules : {  
+			content : {
+				required : true,
+				maxlength:200,
+				minlength:1,
+			},
+        },  
+        messages : {
+        	content : {  
+                required : "内容必填.",
+				maxlength : "最长不能超过200汉字",
+				minlength : "最少不能少于一个字符",
+
+            },
+        },  
+
+        highlight : function(element) {  
+            $(element).closest('.form-group').addClass('has-error');  
+        },  
+
+        success : function(label) {  
+            label.closest('.form-group').removeClass('has-error');  
+            label.remove();  
+        },  
+
+        errorPlacement : function(error, element) {  
+            element.parent('div').append(error);  
+        },  
+		submitHandler: function(form) {
+			var student_len = $("input[name='studentIdStr[]']:checked").length;
+			if (!student_len){
+				alert("请选择学生");	
+				//$("#btn-sel-student").css("border","1px solid #843534");
+				return;
+			}	
+			form.submit();
+		}
+	});
+});
+</script>
+
+<script>
+$(document).ready(function() {
+	//班级改变后，获取本班全部学生 START
+	$('#banjiId').change(function(){
+		var banjiId = $("#banjiId").val();
+		var student_list = "";
+		$("#student_list").html("");
+		$.ajax({
+			url:'__GROUP__/Ajaxschool/studentsOneBanji',
+			type:'post',
+			data:"banjiId="+banjiId,
+			async:true,//false为同步
+			dataType:'json',
+			success:function(re) {
+				if (re.stat * 1 > 0){
+					var datas = re.data;//返回数据：re:stat,array
+					//alert(re.stat);
+					//生成班级复选框
+					student_list = "";
+					//student_list = "<input type='checkbox' value='" + banjiId + "' banji_name='' class='chk_banji'  >&nbsp;<B>全班</B><br>";//
+					
+					//服务端返回的第一个元素是stat=0或1，实际有用的数据放在第二个元素（是一个数组）
+					for(var i=0;i<datas.length;i++){
+					   var obj = datas[i];//这里获取数组内每个对象。
+					   //alert(obj.id+" "+obj.name);
+					   student_list += "<div class='col-md-1'><label style='padding-left:10px;'><input type='checkbox' name='studentId[]' value='"+ obj.id +"' banji='"+ banjiId +"' class='student_in_banji_" + banjiId + "' >"+obj.name+"</label></div>";
+					}
+					$("#student_list").html(student_list);
+			
+					//此处必须通过id指定到局部的input，否则影响切换
+					$('#student_list input').iCheck({
+						checkboxClass: 'icheckbox_flat-green ',
+						radioClass: 'iradio_flat-green',
+						increaseArea: '20%' // optional
+					});
+					
+					
+
+				}else{
+						
+				}
+
+			},
+			error:function() {
+				alert('由于网络异常导致操作失败，请刷新页面重试....');
+			}
+		}); 
+		
+		
+		
+		//var student_list = "<input type='checkbox'>";
+		//$("#student_list").html(student_list);
+	});
+	//班级改变后，获取本班全部学生　END
+	
+	
+});
+</script>
+
+
+<script>
+$(document).ready(function() {
+	//学生选择 START
+	$('.chk_student').on('ifChecked', function(event){
+		var val = $(this).val();
+		var tName = $(this).attr("tName");
+		//alert(val);
+		//检测list，然后加入新的
+		$("#student_list li").each(function(){
+			//alert($(this).attr("bid"));
+			//
+			var tmp_bid = $(this).attr("bid");
+			if (tmp_bid == val){
+				//alert('list中已有此记录');
+				return;
+			}			
+		});
+	//	$('#student_list_v').html("");
+		$('#student_list_v').append('<li class="btn btn-warning btn-sm" bid="' + val + '">' + tName + '<i class="hide glyphicon glyphicon-remove pull-right btn-removefromlist"></i></li>');
+		
+	});
+	
+	//从list中删除一条
+	$('.chk_student').on('ifUnchecked', function(event){
+		
+		var val = $(this).val();
+		var tName = $(this).attr("tName");
+		//alert(val);
+		//检测list，然后加入新的
+		$("#student_list li").each(function(){
+			//alert($(this).attr("bid"));
+			//
+			var tmp_bid = $(this).attr("bid");
+			if (tmp_bid == val){
+				//alert('list中已有此记录');
+				$(this).remove();
+			}			
+		});
+	});
+	//学生选择 END
+	
+	$('#btn_modal_student_seach').click(function(){
+		//$('#student_list_v').html("");
+	
+	});
+});
+</script>
+
+
+
+
+
+
+
+<include file="Public/footer" />

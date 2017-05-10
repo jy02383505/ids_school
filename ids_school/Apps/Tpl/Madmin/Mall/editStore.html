@@ -1,0 +1,683 @@
+<include file="Public/header" />
+<link rel="stylesheet" href="__PUBLIC__/script/uploadify/uploadify.css">
+
+
+
+<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+<script src="__PUBLIC__/script/jquery/jquery.min.js"></script>
+
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+<style>
+#storeVideoUp .btn-default, #storeVideoUp .btn-default:hover, #storeVideoUp .btn-default:active, #storeVideoUp .btn-default:visited{background-color:#fff;border-color:#ccc;padding:3px 10px 4px;font-size:14px;outline:0;}
+</style>
+<ol class="breadcrumb">
+	<li><a href="">商场管理</a></li>
+	<li><a href="">商铺管理</a></li>
+	<li class="active">
+        <switch name="ACTION_NAME" >
+        <case value="addStore" break="1">添加</case>
+        <case value="editStore">修改</case>
+        <default />添加
+        </switch>
+        商铺
+    </li>
+</ol>
+<form id="editStoreForm" class="form-horizontal" role="form" method="post" action="__SELF__">
+	<div class="form-group hide">
+		<label class="col-sm-2 control-label" for="storeType">所属类型<br><font color="red">此处不需要</font></label>
+		<div class="col-sm-2">
+			<select class="form-control input-sm" name="type_id" id="storeType">
+				<option value="">请选择</option>
+				<volist name="storeTypes" id="vo">
+					<eq name="vo.ID" value="$store.type_id">
+						<option value="{$vo.ID}" selected>{$vo.space} {$vo.tName}</option>
+					<else/>
+						<php> if ($vo['has_children'] > 0) { </php>
+						<option value="{$vo.ID}" disabled>{$vo.space} {$vo.tName}</option>
+						<php> } else { </php>
+						<option value="{$vo.ID}">{$vo.space} {$vo.tName}</option>
+						<php> } </php>
+					</eq>
+				</volist>
+			</select>
+		</div>
+	</div>
+    
+
+    
+    
+    
+    
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="storecode">商铺编号</label>
+		<div class="col-sm-3">
+			<input class="form-control input-sm" type="text" name="storecode" id="storecode" value="{$store.storecode}">
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="systemcode">zjh-系统铺位编号</label>
+		<div class="col-sm-3">
+			<input class="form-control input-sm" type="text" name="systemcode" id="systemcode" value="{$store.systemcode}">
+		</div>
+        <button type="button" class="btn btn-link" id="btnSet"  data-toggle="modal" data-target="#systemLayoutBox"> <i class="icon-pencil"></i> 设置</button>
+	</div>
+    
+    
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="storeName">商铺名称（全称）</label>
+		<div class="col-sm-3">
+			<input class="form-control input-sm" type="text" name="sname" id="sname" value="{$store.sname}">
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="shortname">商铺名称（简称）</label>
+		<div class="col-sm-3">
+			<input class="form-control input-sm" type="text" name="shortname" id="shortname" value="{$store.shortname}">
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="storePYshort">名称拼音首字母</label>
+		<div class="col-sm-3">
+			<input class="form-control input-sm" type="text" name="pyshort" id="storePYshort" value="{$store.pyshort}">
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="">商铺LOGO</label>
+		<div class="col-sm-6">
+			<div class="up-image-box" style="position:relative;">
+				<button type="button" class="btn btn-default btn-sm" id="btnSet" data-toggle="modal" data-target="#resourceModal"> <i class="glyphicon glyphicon-upload"></i> 上传图片</button>
+				<span style="position:absolute;top:8px;left:114px;"><!-- （建议上传图片尺寸：168 x 168 像素.） --></span>
+				<div id="uploadfyQueueList1"></div> 
+				<div class="showimg clearfix">
+					<notempty name="store['logo']">
+						<span><img height="80" src="/{$Think.config.upload_root_path}{$store.logoPath}?{:rand()}" /></span>
+					</notempty>
+				</div>
+				<input type="hidden" name="logo" class="gcovers" value="{$store.logo}">
+			</div>
+		</div>
+	</div>
+    
+     
+ 	<div class="form-group " style="margin-bottom:0px;">
+		<label class="col-sm-2 control-label" for="brandId">品牌设置</label>
+        <div class="col-sm-10  pre-scrollable" >
+			<style>
+                #brand_list li{margin-right:10px;}
+            </style>        
+            <ul class="list-group" id="brand_list">
+                <li type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#brandModal">选择品牌</li>
+                <volist name="brand_list" id="vo">
+                <li class="btn btn-warning btn-sm"  type="button" bid="{$vo.id}">{$vo.brandName}<span class="hide" ><i class="hide glyphicon glyphicon-remove pull-right btn-removefromlist" bid="{$vo.id}"></i></span></li>
+                </volist>
+            </ul>
+        </div>
+
+	</div>      
+    
+    
+	<!--zjh add start-->    
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="d">zjh-商铺形象照</label>
+		<div class="col-sm-6">
+			<div class="up-image-box" style="position:relative;">
+				<button type="button" class="btn btn-default btn-sm" id="btnSet" data-toggle="modal" data-target="#resourceModal"> <i class="glyphicon glyphicon-upload"></i> 上传图片</button>
+				<span style="position:absolute;top:8px;left:114px;"><!-- （建议上传图片尺寸：168 x 168 像素.） --></span>
+				<div id="uploadfyQueueList1_zjh"></div> 
+				<div class="showimg clearfix">
+					<notempty name="store['logo']">
+						<span><img height="80" src="/{$Think.config.upload_root_path}{$store.logoPath}?{:rand()}" /></span>
+					</notempty>
+				</div>
+				<input type="hidden" name="logo_zjh" class="gcovers" value="{$store.logo_zjh}">
+			</div>
+		</div>
+	</div>    
+    <!--zjh add end-->
+    
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="storeFloor">所在楼层</label>
+		<div class="col-sm-2">
+			<select class="form-control input-sm" name="floor" id="storeFloor" style="width:auto;">
+				<for start="1" end="$mallFloors" comparison="elt">
+					<eq name="i" value="$store.floor">
+					<option value="{$i}" selected>{$i}层</option>
+					<else />
+					<option value="{$i}">{$i}层</option>
+					</eq>
+				</for>
+			</select>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="adress">商铺地址</label>
+		<div class="col-sm-5">
+			<input class="form-control input-sm" type="text" name="address" id="address" value="{$store.address}">
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="manager">商铺负责人</label>
+		<div class="col-sm-5">
+			<input class="form-control input-sm" type="text" name="manager" id="manager" value="{$store.manager}">
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="contact">联系方式</label>
+		<div class="col-sm-5">
+			<input class="form-control input-sm" type="text" name="contact" id="contact" value="{$store.contact}">
+		</div>
+	</div>
+    
+    
+  
+
+	<div class="form-group " id="bdclass">
+		<label class="col-sm-2 control-label" for="storeClassId">所属分类</label>
+        <div class="col-sm-10  pre-scrollable" >
+			<style>
+                #storeClass_list li{margin-right:10px;}
+            </style>
+            <ul class="list-group " id="storeClass_list" style="margin-bottom:0px;">
+                <li type="button" class="btn btn-default" data-toggle="modal" data-target="#storeClassModal">选择分类</li>
+                <volist name="storeClass_list" id="vo">
+                    <li class="btn btn-primary" type="button" bid="{$vo.ID}" style="margin:0 10px 0 0 ">
+                    {$vo.tName} <span class="hide" ><i class="glyphicon glyphicon-remove pull-right btn-removefromlist" bid="{$vo.ID}"></i></span>
+                    </li>
+                </volist>  
+            </ul>    
+        </div>
+	</div>    
+    
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="storeNote">商铺介绍</label>
+		<div class="col-sm-8">
+			<!-- <textarea class="form-control" name="note" id="storeNote" rows="4">{$store.note}</textarea> -->
+			<script id="storeNote" name="note" type="text/plain" style="height:280px;">{$store.note}</script>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="">热点标识图标</label>
+		<div class="col-sm-3">
+			<div class="up-image-box" style="position:relative;">
+				<button type="button" class="btn btn-default btn-sm" id="btnSet" data-toggle="modal" data-target="#resourceModal"> <i class="glyphicon glyphicon-upload"></i> 上传图片</button>
+				<span style="position:absolute;top:8px;left:114px;"><!-- （建议上传图片尺寸：168 x 168 像素.） --></span>
+				<div id="uploadfyQueueList2"></div> 
+				<div class="showimg clearfix">
+					<notempty name="store['hotico']">
+						<span><img src="/{$Think.config.upload_root_path}{$store.hoticoPath}?{:rand()}" /></span>
+					</notempty>
+				</div>
+				<input type="hidden" name="hotico" class="gcovers" value="{$store.hotico}">
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="">形象宣传视频</label>
+		<!-- <div class="col-sm-6" id="storeVideoUp">
+			<input id="file_upload_video" class="btn btn-default btn-sm" name="file_upload" type="button" value="上传视频">
+			<span style="position:absolute;top:8px;left:114px;">（建议上传图片尺寸：168 x 168 像素.）</span>
+			<input type="hidden" name="hotico" class="gcovers" value="{$store.hotico}">
+		</div> -->
+		<div class="col-sm-6">
+			<div class="up-image-box" style="position:relative;">
+				<button type="button" class="btn btn-default btn-sm" id="btnSet" data-toggle="modal" data-target="#resourceModal"> <i class="glyphicon glyphicon-upload"></i> 上传图片</button>
+				<span style="position:absolute;top:8px;left:114px;">（上传限制：视频文件大小不得大于50MB.）</span>
+				<div id="uploadfyQueueList3"></div> 
+				<div class="showimg clearfix">
+					<notempty name="store['store_video']">
+						<p style="padding:10px;"><b>已上传视频文件：</b>{$store.storeVideoPath}</p>
+					</notempty>
+				</div>
+				<input type="hidden" name="store_video" class="gcovers" value="{$store.store_video}">
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="">&nbsp;</label>
+		<div class="col-sm-4">
+			<input type="hidden" name="store_id" value="{$store.Id}">
+			<input type="hidden" name="classid" value="{$unid}">
+			<input type="hidden" name="spottype" value="shop">
+			<button type="submit" class="btn btn-info btn-sm">保存更改</button>&nbsp;&nbsp;
+			<button type="reset" class="btn btn-default btn-sm">取消</button>
+		</div>
+	</div>
+    
+    
+<!-------品牌模态对话框---------->
+<div class="modal fade" id="brandModal" draggable='true' style="margin-top:200px;">
+    <div class="modal-dialog modal-lg">
+    	<div class="modal-content">
+    		<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">品牌选择</h4>
+			</div>
+			<div class="modal-body" >
+                <div class="col-sm-12  pre-scrollable" style="clear:both;height:300px;">
+					<div class="row "><br></div>
+                    <volist name="brands" id="vo">
+                        <?php                            	
+                            $brandIdArray = array();
+                            
+                            $brandIdArray = explode(',',$storeInfo['brandId']);
+                            if ( in_array($vo['id'],$brandIdArray) )
+                            {
+                                $ck="checked";
+                            }else{
+                                $ck=" ";
+                            }
+                        ?>
+                        <div class="col-md-2">
+                            <label><input type="checkbox" value="{$vo.id}" name="brandIdStr[]" id="chk_brand_{$vo.id}" tName='{$vo.brandName}'  <?php echo $ck;?>   id="chk_storeclass_{$vo.ID}" tName='{$vo.brandName}'  class='chk_brand' >{$vo.space} {$vo.brandName}</label>
+                        </div>
+                    </volist> 
+
+				</div>
+                <div style="clear:both;width:100%;height:1px;"></div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-dismiss="modal">确定</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-------品牌模态对话框---------->
+    
+<!-------店铺分类模态对话框---------->
+<div class="modal fade" id="storeClassModal" draggable='true' >
+    <div class="modal-dialog modal-lg">
+    	<div class="modal-content">
+    		<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">店铺分类</h4>
+			</div>
+			<div class="modal-body">
+                <div class="col-sm-12  pre-scrollable" >
+					<div class="row "><br></div>
+					<volist name="storeClass" id="vo">
+                        <php> if ($vo['has_children'] > 0) { </php>
+                            <div class="row ">
+                                <div class="col-md-10">
+                                    <div style="padding:10px 0 10px 0;"><b>{$vo.tName}</b></div>
+                                </div>
+                            </div>
+                        <php> } else { </php>
+                            <?php                            	
+                                $bdClassArray = array();
+                                $bdClassArray = explode(',',$storeInfo['storeClassId']);
+                                if ( in_array($vo['ID'],$bdClassArray) )
+                                {
+                                    $ck="checked";
+                                }else{
+                                    $ck=" ";
+                                }
+                            ?>
+                                <div class="col-md-2">
+                                    <label><input type="checkbox" value="{$vo.ID}" name="storeClassIdStr[]" <?php echo $ck;?>  id="chk_storeclass_{$vo.ID}" tName='{$vo.tName}' class='chk_storeClass'  > {$vo.tName}</label>
+                                </div>
+                            </in>
+                        <php> } </php>
+                    </volist> 
+				</div>
+                <div style="clear:both;width:100%;height:1px;"></div>
+			</div>
+			<div class="modal-footer" >
+				<button type="button" class="btn btn-primary" data-dismiss="modal">确定</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-------店铺分类模态对话框---------->
+</form>
+
+
+
+<!--zjh add start 模态对话框-->
+<include file="Public/resourceBox" />
+<include file="Public/systemLayoutBox" />
+<!--zjh add end 模态对话框-->
+
+
+
+
+<include file="Public/jsLoader" />
+<script type="text/javascript" src="__PUBLIC__/script/uploadify/jquery.uploadify.js"></script>
+<script type="text/javascript" charset="utf-8" src="__PUBLIC__/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="__PUBLIC__/ueditor/ueditor.all.js"> </script>
+<script type="text/javascript" charset="utf-8" src="__PUBLIC__/ueditor/lang/zh-cn/zh-cn.js"></script>
+<script type="text/javascript">
+$(function($) {
+	var tmpClassid = '{$unid|default=""}';
+	
+	$('button[type="reset"]').click(function(){
+		window.location.href = '__URL__/stores';
+	});
+	
+	var toolbars_for_txt = [['fullscreen', 'forecolor', 'fontfamily', 'fontsize', '|', 'bold', 'italic', 'underline', 'fontborder', 'strikethrough', '|', 'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', 'horizontal', 'date', 'time', '|', 'undo', 'redo',]];
+	var ueTxt = UE.getEditor('storeNote', {
+		serverUrl : '__GROUP__/Ajaxhandle/UEUploadImage',
+		toolbars : toolbars_for_txt,
+        elementPathEnabled : false,
+        wordCount : false
+	});
+	
+	// Uploadify 批量上传
+	setTimeout(function(){
+		$('#file_upload_logo').uploadify({
+			'debug' : false,
+			'multi' : false,
+			'fileObjName' : 'myUpfile',
+			'fileTypeDesc' : '图片',
+			'fileTypeExts' : '*.jpeg; *.jpg; *.png; *.bmp',
+			'buttonText' : '<i class="icon-upload"></i>上传图片',
+			'width' : 100,
+			'buttonClass' : 'uploadify',
+			'swf'      : '__PUBLIC__/script/uploadify/uploadify.swf',
+			'formData'     : {dataType : 'image', 'isDBWrite' : 1, 'appModel' : 'store', tmpClassID : tmpClassid, type : 'logo'},
+			'uploader' : '__GROUP__/Ajaxhandle/uploadify',
+			'queueID'  : 'uploadfyQueueList1',
+			'removeCompleted' : true,
+			'removeTimeout' : 3,
+			'overrideEvents' : ['onUploadSuccess', 'onSelectError'],
+			'onSelectError' : function(file, errorCode, errorMsg) {
+				//console.log(errorCode);
+				//console.log(errorMsg);
+				switch (errorCode) {
+					case -110:
+						alert('【文件上传失败提示】\n\n ' + file.name + ' : 文件大小超过最大上传限制50MB！\n\n 请示使用 [ 大文件上传 ] 工具进行上传.');
+						break;
+					case -130:
+						alert('【文件上传失败提示】\n\n ' + file.name + ' : 文件类型不正确.');
+						break;
+				}
+			},
+			'onUploadSuccess' : function(file, data, response) {
+				var re = $.parseJSON(data);
+				if (re.stat*1) {
+					$('#' + file.id).find('.data').html('<span class="text-success">&nbsp;上传成功</span>');
+					$('#file_upload_logo').closest('div.up-image-box').find(".showimg").first().html('<span><img src="' + re.url + '?' + Math.random() + '" /></span>');
+					$('#file_upload_logo').closest('div.up-image-box').find(".gcovers").first().val(re.resourceid);
+				} else {
+					$('#' + file.id).addClass('text-danger').find('.data').html('<span>&nbsp;'+re.msg+'</span>');
+					$('#' + file.id).find('.uploadify-progress-bar').first().css({width : 0});
+				}
+			}
+		});
+	}, 10);
+	
+	setTimeout(function(){
+		$('#file_upload_hotico').uploadify({
+			'debug' : false,
+			'multi' : false,
+			'fileObjName' : 'myUpfile',
+			'fileTypeDesc' : '图片',
+			'fileTypeExts' : '*.jpeg; *.jpg; *.png; *.bmp',
+			'buttonText' : '<i class="icon-upload"></i>上传图片',
+			'width' : 100,
+			'buttonClass' : 'uploadify',
+			'swf'      : '__PUBLIC__/script/uploadify/uploadify.swf',
+			'formData'     : {dataType : 'image', 'isDBWrite' : 1, 'appModel' : 'store', tmpClassID : tmpClassid, type : 'hotico'},
+			'uploader' : '__GROUP__/Ajaxhandle/uploadify',
+			'queueID'  : 'uploadfyQueueList2',
+			'removeCompleted' : true,
+			'removeTimeout' : 3,
+			'overrideEvents' : ['onUploadSuccess', 'onSelectError'],
+			'onSelectError' : function(file, errorCode, errorMsg) {
+				//console.log(errorCode);
+				//console.log(errorMsg);
+				switch (errorCode) {
+					case -110:
+						alert('【文件上传失败提示】\n\n ' + file.name + ' : 文件大小超过最大上传限制50MB！\n\n 请示使用 [ 大文件上传 ] 工具进行上传.');
+						break;
+					case -130:
+						alert('【文件上传失败提示】\n\n ' + file.name + ' : 文件类型不正确.');
+						break;
+				}
+			},
+			'onUploadSuccess' : function(file, data, response) {
+				var re = $.parseJSON(data);
+				if (re.stat*1) {
+					$('#' + file.id).find('.data').html('<span class="text-success">&nbsp;上传成功</span>');
+					$('#file_upload_hotico').closest('div.up-image-box').find(".showimg").first().html('<span><img src="' + re.url + '?' + Math.random() + '" /></span>');
+					$('#file_upload_hotico').closest('div.up-image-box').find(".gcovers").first().val(re.resourceid);
+				} else {
+					$('#' + file.id).addClass('text-danger').find('.data').html('<span>&nbsp;'+re.msg+'</span>');
+					$('#' + file.id).find('.uploadify-progress-bar').first().css({width : 0});
+				}
+			}
+		});
+	}, 10);
+	
+	setTimeout(function(){
+		$('#file_upload_store_video').uploadify({
+			'debug' : false,
+			'multi' : false,
+			'fileObjName' : 'myUpfile',
+			'fileTypeDesc' : '视频',
+			'fileTypeExts' : '*.mpeg; *.mp4; *.wmv; *.avi; *.mkv; *.3gp',
+			'buttonText' : '<i class="icon-upload"></i>上传视频',
+			'width' : 100,
+			'buttonClass' : 'uploadify',
+			'swf'      : '__PUBLIC__/script/uploadify/uploadify.swf',
+			'formData'     : {dataType : 'video', 'isDBWrite' : 1, 'appModel' : 'store', tmpClassID : tmpClassid, type : 'video'},
+			'uploader' : '__GROUP__/Ajaxhandle/uploadify',
+			'queueID'  : 'uploadfyQueueList3',
+			'removeCompleted' : true,
+			'removeTimeout' : 3,
+			'overrideEvents' : ['onUploadSuccess', 'onSelectError'],
+			'onSelectError' : function(file, errorCode, errorMsg) {
+				//console.log(errorCode);
+				//console.log(errorMsg);
+				switch (errorCode) {
+					case -110:
+						alert('【文件上传失败提示】\n\n ' + file.name + ' : 文件大小超过最大上传限制50MB！\n\n 请示使用 [ 大文件上传 ] 工具进行上传.');
+						break;
+					case -130:
+						alert('【文件上传失败提示】\n\n ' + file.name + ' : 文件类型不正确.');
+						break;
+				}
+			},
+			'onUploadSuccess' : function(file, data, response) {
+				var re = $.parseJSON(data);
+				if (re.stat*1) {
+					$('#' + file.id).find('.data').html('<span class="text-success">&nbsp;上传成功</span>');
+					$('#file_upload_store_video').closest('div.up-image-box').find(".showimg").first().html('<p style="padding:10px;"><b>已上传视频文件：</b>' + re.pic + '</p>');
+					$('#file_upload_store_video').closest('div.up-image-box').find(".gcovers").first().val(re.resourceid);
+				} else {
+					$('#' + file.id).addClass('text-danger').find('.data').html('<span>&nbsp;'+re.msg+'</span>');
+					$('#' + file.id).find('.uploadify-progress-bar').first().css({width : 0});
+				}
+			}
+		});
+	}, 10);
+	
+
+	
+});
+</script>
+
+
+
+<script type="text/javascript" src="__PUBLIC__/script/jquery/jquery.validate.min.js"></script>
+<script type="text/javascript">
+$(function($) {
+	
+	// 判断英文字符
+	jQuery.validator.addMethod("isEnglish", function(value, element) {       
+         return this.optional(element) || /^[A-Za-z]+$/.test(value);       
+    }, "只能包含英文字符。");
+	
+	
+	$('#editStoreForm').validate({
+		errorElement : 'span',
+		errorClass : 'help-block',
+		focusInvalid : true,  
+        rules : {  
+			sname:{
+				required: true,//名称带方括号验证不了
+			},
+        	shortname : {  
+                required : true,
+            },
+			address : {
+				required: true,	
+			},
+			manager : {
+				required: true,
+			},
+			contact : {
+				required: true,
+			},
+			pyshort : {  
+                required : true,isEnglish:true,
+            },
+        },  
+        messages : {
+			sname :{
+				required :"全称必须填写",	//名称带方括号验证不了
+			},
+        	shortname : {  
+                required : "简称必须填写",
+            },
+			address : {
+				required :"地址必须填写",
+			},
+			manager : {
+				required :"联系人必须填写",
+			},
+			contact : {
+				required: "联系方式必须填写",
+			},
+        	pyshort : {  
+                required : "拼音首字母简称必填.",
+            },
+        },  
+		
+
+        highlight : function(element) {  
+            $(element).closest('.form-group').addClass('has-error');  
+        },  
+
+        success : function(label) {  
+            label.closest('.form-group').removeClass('has-error');  
+            label.remove();  
+        },  
+
+        errorPlacement : function(error, element) {  
+            element.parent('div').append(error);  
+        },  
+		submitHandler: function(form) {
+			form.submit();
+		}
+	});
+});
+</script>
+
+
+<script>
+$(document).ready(function() {
+	//品牌选择 START
+	$(".btn-removefromlist").click(function(){
+		//alert($(this).parent().attr("bid"));
+		var bid = $(this).parent().attr("bid");
+		var a = "#chk_brand_" + bid;
+		//alert(a);
+		//$("input[@name =S_03_22]").parent().prev().text();
+		//$("#chkddd").prop("checked", true);//这样是操作一般复选框
+		//$(a).iCheck('check');//这是操作icheck复选框的
+		$(a).iCheck('uncheck');//这是操作icheck复选框
+		//alert($("#chkddd").prop("checked"));//返回true
+		//$("#chk8").remove();
+		$(this).parent().remove();
+	});
+
+	$('.chk_brand').on('ifChecked', function(event){
+		var val = $(this).val();
+		var tName = $(this).attr("tName");
+		//alert(val);
+		//检测list，然后加入新的
+		$("#brand_list li").each(function(){
+			//alert($(this).attr("bid"));
+			//
+			var tmp_bid = $(this).attr("bid");
+			if (tmp_bid == val){
+				//alert('list中已有此记录');
+				return;
+			}			
+		});
+		$('#brand_list').append('<li class="btn btn-warning btn-sm" bid="' + val + '">' + tName + '<i class="hide glyphicon glyphicon-remove pull-right btn-removefromlist"></i></li>');
+		
+	});
+	
+	//从list中删除一条
+	$('.chk_brand').on('ifUnchecked', function(event){
+		var val = $(this).val();
+		var tName = $(this).attr("tName");
+		//alert(val);
+		//检测list，然后加入新的
+		$("#brand_list li").each(function(){
+			//alert($(this).attr("bid"));
+			//
+			var tmp_bid = $(this).attr("bid");
+			if (tmp_bid == val){
+				//alert('list中已有此记录');
+				$(this).remove();
+			}			
+		});
+	});
+	//品牌选择 END
+	
+});
+</script>
+
+<script>
+$(document).ready(function() {
+	//店铺分类 START
+	$('.chk_storeClass').on('ifChecked', function(event){
+		var val = $(this).val();
+		var tName = $(this).attr("tName");
+		//alert(val);
+		//检测list，然后加入新的
+		$("#storeClass_list li").each(function(){
+			//alert($(this).attr("bid"));
+			//
+			var tmp_bid = $(this).attr("bid");
+			if (tmp_bid == val){
+				alert('list中已有此记录');
+				return;
+			}			
+		});
+
+		$('#storeClass_list').append('<li class="btn btn-primary" type="button" bid="'+ val +'" >' + tName + '</li>');
+		
+	});
+	
+	//从list中删除一条
+	$('.chk_storeClass').on('ifUnchecked', function(event){
+		var val = $(this).val();
+		var tName = $(this).attr("tName");
+		//alert(val);
+		//检测list，然后加入新的
+		$("#storeClass_list li").each(function(){
+			//alert($(this).attr("bid"));
+			//
+			var tmp_bid = $(this).attr("bid");
+			if (tmp_bid == val){
+				//alert('list中已有此记录');
+				$(this).remove();
+			}			
+		});
+	});
+	//店铺分类 END
+});
+</script>
+
+
+
+
+
+
+
+<include file="Public/footer" />

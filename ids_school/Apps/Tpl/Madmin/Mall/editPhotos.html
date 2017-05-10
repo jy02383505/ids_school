@@ -1,0 +1,234 @@
+<include file="Public/header" />
+<link rel="stylesheet" href="__PUBLIC__/script/uploadify/uploadify.css">
+<style>
+#storeVideoUp .btn-default, #storeVideoUp .btn-default:hover, #storeVideoUp .btn-default:active, #storeVideoUp .btn-default:visited{background-color:#fff;border-color:#ccc;padding:3px 10px 4px;font-size:14px;outline:0;}
+</style>
+<ol class="breadcrumb">
+	<li><a href="">商场管理</a></li>
+	<li><a href="">相册管理</a></li>
+	<li class="active">
+        <switch name="ACTION_NAME" >
+        <case value="addAlbum" break="1">添加</case>
+        <case value="editAlbum">修改</case>
+        <default />添加
+        </switch>相片
+    
+    </li>
+</ol>
+<form id="editForm" class="form-horizontal" role="form" method="post" action="__SELF__">
+
+<style>
+    .row {margin:0 0 10px 0;}
+	</style>
+   
+
+<div class="row">
+    <div class="col-md-2">
+    	<div id="image-box1"><img src="http://192.168.1.198:8888/JolinkTE/Uploads/logo.jpg?15528" width="100%"></div>
+    
+    </div>  
+	<div class="col-md-10"> 
+        <div class="row">
+            <div class="col-md-1"><b>相册名称</b></div>
+            <div class="col-md-4">
+                {$albumInfo.aName}
+            </div>
+        </div>
+       
+        <div class="row">
+            <div class="col-md-1"><b>相片尺寸</b></div>
+            <div class="col-md-4">
+                <label>{$albumInfo.aWidth} x {$albumInfo.aHeight} 像素 </label>       
+            </div>
+        </div>        
+      
+        <div class="row">
+            <div class="col-md-1"><b>开关</div>
+            <div class="col-md-4">
+                  <eq name="albumInfo['hide']" value="0" >启用<else/>禁用</eq>      
+            </div>
+        </div>    
+        
+        <div class="row">
+            <div class="col-md-4">
+                <div class="up-image-box" style="position:relative;">
+                    <input id="file_upload" class="btn btn-default" name="file_upload" type="file">
+                    <span style="position:absolute;top:8px;left:114px;">（建议上传图片尺寸与相册尺寸一致）</span>
+                    <div id="uploadfyQueueList"></div> 
+                    <div class="showimg clearfix">
+                        <notempty name="syscfg['b_sitelogo']">
+                            <span><img src="__GROUP__/{$Think.config.upload_comm_path}{$syscfg.b_sitelogo}?{:rand()}" /></span>
+                        </notempty>
+                    </div>
+                    <input type="hidden" name="cover_image" class="gcovers" value="{$syscfg.b_sitelogo}">
+                </div>
+            </div>
+        </div>
+	</div>  
+</div>   
+<div class="row " >
+	<div class="col-md-12 " style="background-color:#f9f9f9;border-bottom:#f9f9f9 solid 1px;">
+    	<h6>相册图片</h6>
+    </div>
+</div>
+<style>
+	.clear{float:none; clear:both;font-size:0px;line-height:0px;height:0px; min-height:0px; padding:0px; margin:0px; overflow:hidden;}
+	.image-boxs{padding:5px;border:1px solid #e0e0e0;background-color:#FFFFFF;overflow:hidden;height:200px;margin:0px;}
+	
+	.image-box{width:100%;height:160px;border:0px solid #ff0000;overflow:hidden;}
+	
+	.toolbar{clerar:both;width:200px;height:30px;position:absolute;bottom:0px;border:0px solid #ff00ff;overflow:hidden;}
+	.toolbar i{cursor:pointer;margin-top:0px;} 
+	.toolbar i.del-img{font-size:20px;color:#1abc9c;}
+	.toolbar i.icon-minus-sign{font-size:20px;color:#1abc9c;padding:0px;border:0px solid #e0e0e0;} 
+	.toolbar i.icon-bookmark{font-size:20px;color:#1abc9c;}
+	.toolbar i.icon-bookmark-empty{font-size:20px;color:#1abc9c;}
+	.is-cover{border:1px solid #cccc33;}
+	
+</style>
+<div class="row " id="allPhotos" >
+	<volist name="photos" id="vo">
+	<div class="col-md-2" style="margin:5px;">
+    	<div class="image-boxs <eq name='vo.resourceId' value='$albumInfo.coverImage'> is-cover</eq> "  >
+            	<div class="image-box">
+					<img src="__GROUP__/{$Think.config.upload_comm_path}{$vo.resFilepath}?{:rand()}"  width="100%" />
+                </div>
+				<div class="toolbar">
+                    <a href="javascript:void(0);" class="del-gallery-item" data-resid="{$vo.resourceId}" title="删除"><i class="icon-minus-sign"></i></a>
+                    <eq name="vo.resourceId" value="$albumInfo.coverImage">
+                    <a href="javascript:void(0);" class="set-as-cover is-cover-i" data-iscover="1" data-resid="{$vo.resourceId}" title="设置为商铺形象宣传封面图"><i class="icon-bookmark"></i></a>
+                    <else/>
+                    <a href="javascript:void(0);" class="set-as-cover" data-iscover="0" data-resid="{$vo.resourceId}" title="设置为商铺形象宣传封面图"><i class="icon-bookmark-empty"></i></a>
+					</eq>
+                </div>
+        </div>
+    </div>
+	</volist>
+
+    <div class="row" style="clear:both;padding-top:10px;">
+    	<div class="col-md-12 page-box">{$page}</div>
+    </div>
+    
+</div>
+</form>
+
+<include file="Public/jsLoader" />
+<script type="text/javascript" src="__PUBLIC__/script/uploadify/jquery.uploadify.js"></script>
+<script type="text/javascript" charset="utf-8" src="__PUBLIC__/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="__PUBLIC__/ueditor/ueditor.all.js"> </script>
+<script type="text/javascript" charset="utf-8" src="__PUBLIC__/ueditor/lang/zh-cn/zh-cn.js"></script>
+
+<script type="text/javascript">
+//$(document).ready(function() {
+$(function($) {
+	
+	var site_logo = "{$Think.config.b_sitelogo|default=''}";
+	var logo_src = site_logo == '' ? '__PUBLIC__/images/logo.png?{:rand()}' : '/{$Think.config.upload_comm_path}{$Think.config.b_sitelogo}?{:rand()}';
+	$('#siteLogo', window.parent.frame_top.document).children('img').first().attr('src', logo_src);
+	// Uploadify 批量上传
+	setTimeout(function(){
+		$('#file_upload').uploadify({
+			'debug' : false,
+			'multi' : false,
+			'fileObjName' : 'myUpfile',
+			'fileTypeDesc' : '图片',
+			'fileTypeExts' : '*.jpeg; *.jpg; *.png; *.bmp',
+			'buttonText' : '<i class="icon-upload"></i>上传图片',
+			'width' : 100,
+			'buttonClass' : 'uploadify',
+			'swf'      : '__PUBLIC__/script/uploadify/uploadify.swf',
+			'formData'     : {dataType : 'image', savename :'', isMyUpRoot : 1,appModel:'mall',Mall_IsDBWrite:1,Mall_ResType:'image',Mall_resModel:'album',Mall_PId:<?php echo $albumInfo['id'];?>,Mall_PName:'<?php echo $albumInfo['aName'];?>',Mall_MyName:''},//'formData'     : {dataType : 'image', savename : 'logo', isMyUpRoot : 1},
+			'uploader' : '__GROUP__/Ajaxhandle/Mall_Uploadify',
+			'queueID'  : 'uploadfyQueueList',
+			'removeCompleted' : true,
+			'removeTimeout' : 3,
+			'overrideEvents' : ['onUploadSuccess', 'onSelectError'],
+			'onSelectError' : function(file, errorCode, errorMsg) {
+				//console.log(errorCode);
+				//console.log(errorMsg);
+				switch (errorCode) {
+					case -110:
+						alert('【文件上传失败提示】\n\n ' + file.name + ' : 文件大小超过最大上传限制50MB！\n\n 请示使用 [ 大文件上传 ] 工具进行上传.');
+						break;
+					case -130:
+						alert('【文件上传失败提示】\n\n ' + file.name + ' : 文件类型不正确.');
+						break;
+				}
+			},
+			'onUploadSuccess' : function(file, data, response) {
+				var re = $.parseJSON(data);
+				if (re.stat*1) {
+					$('#' + file.id).find('.data').html('<span class="text-success">&nbsp;上传成功</span>');
+					//var out = '<span><img src="__GROUP__' + re.url + '?' + Math.random() + '" /></span>';
+					var out = ''+
+						'<div class="col-md-2 " style="margin:5px;">'+
+							'<div id="image-boxs" class="image-boxs">'+
+									'<div class="image-box">'+
+										'<img src="__GROUP__' + re.url + '"  width="100%" />'+
+								   ' </div>'+
+								'</div>'+
+								'<div class="toolbar">'+
+									'<a href="javascript:void(0);" class="del-gallery-item" data-resid="' + re.resourceId + '" title="删除"><i class="icon-minus-sign"></i></a>'+
+								'</div>'+
+						'</div>';
+					//alert(re.url);
+					
+					$("#allPhotos").prepend(out);
+					//$(".showimg").first().html(out);//显示已上传图片
+	                $(".gcovers").first().val(re.savePath);//设置隐藏表单域的值为已上传图片
+				} else {
+					//$('#' + file.id).addClass('text-danger').find('.data').html('<span>&nbsp;'+re.msg+'</span>');
+					$('#' + file.id).find('.uploadify-progress-bar').first().css({width : 0});
+				}
+			}
+		});
+	}, 10);
+	
+	
+	
+	
+});
+</script>
+
+<script language="javascript">
+$(document).ready(function() {
+	//删除相片
+	$('.del-gallery-item').click(function(){
+		//取resourceId
+		var resourceId = $(this).attr("data-resid");//alert($(this).attr("data-resid"));
+		var mythis = $(this);
+		//
+		$.get("{:U('Mall/delPhoto')}",{ resourceId: resourceId },
+		function(data){
+			//alert("Data Loaded: " + data);
+			var res = $.parseJSON(data);
+			//alert(data);//
+			
+			if (res.stat){
+				alert('1'+res.msg);//删除成功
+				$(mythis).parent().parent().parent().remove();
+			} else {
+				alert('0'+res.msg);	
+			}
+		});
+	});
+
+	//激活新增的登陆按钮的click事件
+	$("#btnLoginJquery").live("click",function(){
+
+	});
+});
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+<include file="Public/footer" />

@@ -1,0 +1,125 @@
+<include file="Public/header" />
+
+<div class="well well-sm" style="padding:10px 5px 0px 0px;">
+	<div class="row">
+    	<div class="col-md-2">
+            <h5>欢迎回来，{$Think.session.username}！</h5>
+            <p>上次登录时间：{$Think.session.last_login_time}.</p>
+    	</div>
+        <div class="col-md-10">
+            <php>	if (checkAccess('Programs', 'multiCheckPrograms,multiCheckGroup,multiCheckDir,multiCheckArticles') || checkAccess('ResLib', 'multiCheckWorldNews,multiCheckHistoric,multiCheckFamousQuotes,multiCheckBaike,multiCheckHumorJokes') ) {	</php>
+            	<a href="__GROUP__/Programs/ProgramsCheckIndex" target="frame_right_main"><button type="button" class="btn btn-info" title="包括节目、栏目组、栏目、文章、各类资源的待审核总数">待审核 <span class="badge">{$allCountDS}</span></button></a>
+                <a href="__GROUP__/Programs/ProgramsCheckIndex/type/programs/checked/bh" target="frame_right_main" title="包括节目、栏目组、栏目、文章、各类资源的被驳回总数"><button type="button" class="btn btn-info" style="margin-left:5px;">被驳回 <span class="badge">{$allCountBH}</span></button></a>
+            <php>	}	</php>
+        </div>
+    </div>
+    
+</div>
+
+<div class="data-list-table ">
+	<div class="dlt-tilbar">
+		<h5>运行环境</h5>
+	</div>
+	<table class="table">
+		<tbody>
+			<volist name="sysinfo" id="vo">
+				<tr>
+					<td>{$vo.title}</td>
+					<td>{$vo.val}</td>
+				</tr>
+                
+			</volist>
+				<tr id="trfbl">
+					<td>推荐分辨率</td>
+					<td>1920 * 1080
+                    <span id="fbl" style="padding-left:20px;"></span>
+                    </td>
+				</tr>
+             	<tr>
+                <td>代码版本号：</td>
+                <td>
+                	{$Think.config.SYSTEM_VERSION}
+                </td>
+                </tr>
+                
+             	<tr>
+                <td>您可管理的班级：</td>
+                <td><?php echo session("user_banji_list_cn").'（'.session("user_banji_list").'）';?></td>
+                </tr>
+                
+             	<tr>
+                <td>插件：</td>
+                <td><a href="__GROUP__/Home/Soft/index" target="_blank" title="服务器或客户端环境需要的插件下载">插件下载</a></td>
+                </tr>                
+                
+            	<tr>
+                <td colspan="4">
+                <?php 
+               // var_dump($_SESSION);
+                ?>
+                </td>
+				</tr>
+                
+            	<tr >
+                <td colspan="4" class="hide">
+                <?php 
+                
+                echo "<br>username=".session('username');
+                echo "<br>user_id=".session(C('USER_AUTH_KEY'));
+                echo "<br>role=".session("role");
+                echo "<br>last_login_time=".session("last_login_time");
+                echo "<br>user_type=".session("user_type");
+                echo "<br>user_banji_list=".session("user_banji_list");
+                
+                echo "<br>可管理的终端：";
+                if (session("username") == C('ADMIN_AUTH_KEY')){
+                	echo "全部终端".session("my_endpoints");
+                }else{
+                	echo "部分终端".session("my_endpoints");
+                }
+				
+                echo "<br>";
+                ?>
+                
+                <br>
+                测试：在模块管理中，将控制器以逗号分隔，一次性分配多个权限：如：模块名称中填入aaa,bbb,ccc，然后分配给一个用户，它将具有访问方法aaa、bbb、ccc的权限;
+                <a href="__GROUP__/School/aaa" target="frame_right_main">aaa</a>
+                <a href="__GROUP__/School/bbb" target="frame_right_main">bbb</a>
+                <a href="__GROUP__/School/ccc" target="frame_right_main">ccc</a>
+                <a href="__GROUP__/School/ddd" target="frame_right_main">ddd</a>
+                <br>
+                <?php
+                //var_dump($_SESSION['_ACCESS_LIST']);//配置文件中是2实时认证
+                if (session('user_type') == "teacher"){
+                	echo "<br>教师ID：".session('refer_id');
+                    
+                }
+
+                echo "<br>userid:".session(C('USER_AUTH_KEY'));
+                
+                echo "<br>checkAccess=";
+                var_dump(checkAccess('TemplateManage', 'template_index,showEach,scene_index,getSerialize,setExigent,ajax_setPlayorder,ajax_changePlayorder,ajax_setPlaytime,index_azad,scene_list'));
+                ?>
+                
+                </td>
+                </tr>
+		</tbody>
+	</table>
+</div>
+
+
+<div style="padding-top:10px;margin-top:36px;border-top:1px solid #ccc;">
+	<p class="text-center">{$Think.config.a_copyright}　{$Think.config.a_aftersales}</p>
+</div>
+
+<include file="Public/jsLoader" />
+<script type="text/javascript">
+$(function($){
+	var fbl = " 当前屏幕分辨率：" + screen.width + " * " + screen.height;
+	if (screen.width<1920){
+		$("#trfbl").css("color","red");
+	}
+	$("#fbl").html(fbl);
+});
+</script>
+<include file="Public/footer" />

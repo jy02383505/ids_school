@@ -1,0 +1,250 @@
+<include file="Public/header" />
+<link rel="stylesheet" href="__PUBLIC__/uploadifive/uploadifive.css">
+
+
+
+<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+<script src="__PUBLIC__/script/jquery/jquery.min.js"></script>
+
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+<style>
+#storeVideoUp .btn-default, #storeVideoUp .btn-default:hover, #storeVideoUp .btn-default:active, #storeVideoUp .btn-default:visited{background-color:#fff;border-color:#ccc;padding:3px 10px 4px;font-size:14px;outline:0;}
+
+
+
+</style>
+<ol class="breadcrumb">
+    <li><a href="">学校管理</a></li>
+    <li class="active">
+        <switch name="ACTION_NAME" >
+        <case value="addSchool" break="1">添加</case>
+        <case value="editSchool">修改</case>
+        <default />添加
+        </switch>
+        学校
+    </li>
+</ol>
+<form id="editForm" class="form-horizontal" role="form" method="post" action="__SELF__">
+    <input type="hidden" name="id" value='<empty name="id">{:I('get.id',0,'intval');}</empty>'>    
+    <div class="form-group">
+        <label class="col-sm-2 control-label " for="schoolName"><span class="required">*</span>学校名称</label>
+        <div class="col-sm-3">
+            <input class="form-control input-sm" type="text" name="name" id="name" value="{$datas.name}" required >
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label " for="schoolName">学校编码</label>
+        <div class="col-sm-2">
+            <input class="form-control input-sm" type="text" name="code" id="code" value="{$datas.code}" required >
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="row">
+            <label class="col-sm-2 control-label" for="">LOGO</label>
+            <div class="col-sm-5">
+                <div class="up-image-box" style="position:relative;">
+                    <input id="file_upload_photo" class="btn btn-default" name="file_upload_photo" type="file" style="float:left;">
+                    <!-- <button id="file_upload_photo" class="btn btn-default" name="file_upload_photo" type="file" style="float:left;"></button> -->
+                    
+                    <div id="uploadfyQueueList1"></div> 
+                    <div class="showimg clearfix" style="clear:both;">
+                        <notempty name="datas['logo']">
+                            <span style="margin-left:0px;"><img src="/{$datas.logo}?{:rand()}" /></span>
+                        </notempty>
+                    </div>
+                    <input type="hidden" name="photo" id="photo" value="{$datas.logo}">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+        
+        </div>       
+    </div>
+    
+    <div class="form-group">
+        <label class="col-sm-2 control-label" for="motto"><span class="required">*</span>校训</label>
+        <div class="col-sm-5">
+            <textarea class="form-control" name="motto" id="motto" rows="6" >{$datas.motto}</textarea> 
+            <!-- <script id="motto" name="motto" type="text/plain" style="height:280px;">{$datas.motto}</script>-->
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label class="col-sm-2 control-label" for="description"><span class="required">*</span>介绍</label>
+        <div class="col-sm-5">
+            <!-- <textarea class="form-control" name="note" id="storeNote" rows="4"></textarea> -->
+            <!--<script id="description" name="description" type="text/plain" style="height:280px;">{$datas.description}</script>-->
+            <textarea id="description" name="description" class="form-control" rows="3" style="height:280px;">{$datas.description}</textarea>
+        </div>
+    </div>
+
+
+   
+    <div class="form-group">
+        <label class="col-sm-2 control-label" for="">&nbsp;</label>
+        <div class="col-sm-4">
+            <button type="submit" class="btn btn-info btn-sm">保存更改</button>&nbsp;&nbsp;
+            <button type="reset" class="btn btn-info btn-sm">取消</button>
+        </div>
+    </div>
+</form>
+
+
+
+<script type="text/javascript" src="__PUBLIC__/script/jquery/jquery.validate.min.js"></script>
+<script type="text/javascript">
+$(function($) {
+    
+    // 判断英文字符
+    jQuery.validator.addMethod("isEnglish", function(value, element) {       
+         return this.optional(element) || /^[A-Za-z]+$/.test(value);       
+    }, "只能包含英文字符。");
+    
+    
+    $('#editForm').validate({
+        errorElement : 'span',
+        errorClass : 'help-block',
+        focusInvalid : true,  
+        rules : {  
+            name:{
+                required: true,//名称带方括号验证不了
+                minlength:2,
+                maxlength:15,
+            },
+            code:{
+                maxlength:15,
+            },
+            motto:{
+                minlength:2,
+                maxlength:15,
+            },
+            description:{
+                maxlength:500,
+            },          
+            
+        },  
+        messages : {
+            name :{
+                required :"学校名称必填", //名称带方括号验证不了
+                minlength:"校训长度最小2字符",
+                maxlength:"学校名称长度不能超过20个字符",
+            },
+            code :{
+                maxlength:"15个字符",
+            },  
+            motto:{
+                minlength:"校训长度最小2字符",
+                maxlength:"校训长度最大20字符",
+            },  
+            description :{
+                maxlength:"简介长度不能超过500个字符",
+            },
+        },  
+
+        highlight : function(element) {  
+            $(element).closest('.form-group').addClass('has-error');  
+        },  
+
+        success : function(label) {  
+            label.closest('.form-group').removeClass('has-error');  
+            label.remove();  
+        },  
+
+        errorPlacement : function(error, element) {  
+            element.parent('div').append(error);  
+        },  
+        submitHandler: function(form) {
+        //  var banji_len = $("input[name='banjiIdStr[]']:checked").length;
+        //  if (!banji_len){
+        //      alert("请选择班级"); 
+        //      return;
+        //  }
+            
+            form.submit();
+        }
+    });
+});
+</script>
+
+<script type="text/javascript" src="__PUBLIC__/uploadifive/jquery.uploadifive.js"></script>
+<!--
+<script type="text/javascript" charset="utf-8" src="__PUBLIC__/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="__PUBLIC__/ueditor/ueditor.all.js"> </script>
+<script type="text/javascript" charset="utf-8" src="__PUBLIC__/ueditor/lang/zh-cn/zh-cn.js"></script>
+-->
+<script type="text/javascript">
+$(function($) {
+    var tmpClassid = '{$unid|default=""}';
+    
+    
+    $('button[type="reset"]').click(function(){
+        window.location.href = '__URL__/schoolList';
+    });
+    
+    /*
+    var toolbars_for_txt = [['fullscreen', 'forecolor', 'fontfamily', 'fontsize', '|', 'bold', 'italic', 'underline', 'fontborder', 'strikethrough', '|', 'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', 'horizontal', 'date', 'time', '|', 'undo', 'redo',]];
+    var ueTxt = UE.getEditor('description', {
+        serverUrl : '__GROUP__/Ajaxhandle/UEUploadImage',
+        toolbars : toolbars_for_txt,
+        elementPathEnabled : false,
+        wordCount : false
+    });
+    */
+    
+    // Uploadify 批量上传
+    initUpload();
+    function initUpload(){
+        $('#file_upload_photo').uploadifive({
+            'debug' : true,
+            'multi' : false,
+            'auto' : true,
+            'fileObjName' : 'myUpfile',
+            'fileType' : 'image/*',
+            'buttonText' : '<i class="icon-upload"></i>上传图片',
+            'buttonClass' : 'uploadify',
+            'formData'     : {dataType : 'image', savename :'school_logo_1', isMyUpRoot : 1,appModel:'school',isDBWrite:1,dataType:'image',dataID:1,folderName:''},//'formData'     : {dataType : 'image', savename : 'logo', isMyUpRoot : 1},
+            'uploadScript' : '{:U("School/uloadify_icon")}',
+            'queueID'  : 'uploadfyQueueList1',
+            'removeCompleted' : true,
+            // 'overrideEvents' : ['onUploadSuccess', 'onSelectError'],
+            // 'onSelect' : function(queue) {
+                //console.log(errorCode);
+                //console.log(errorMsg);
+                // switch (errorCode) {
+                //     case -110:
+                //         alert('【文件上传失败提示】\n\n ' + file.name + ' : 文件大小超过最大上传限制50MB！\n\n 请示使用 [ 大文件上传 ] 工具进行上传.');
+                //         break;
+                //     case -130:
+                //         alert('【文件上传失败提示】\n\n ' + file.name + ' : 文件类型不正确.');
+                //         break;
+                // }
+            // },
+            'onUploadComplete' : function(file, data) {
+                var re = $.parseJSON(data);
+                if (re.stat*1) {
+                    $('#' + file.id).find('.data').html('<span class="text-success">&nbsp;上传成功</span>');
+                    $('#file_upload_photo').closest('div.up-image-box').find(".showimg").first().html('<span><img src="' + re.url + '?' + Math.random() + '" /></span>');
+                    $('#file_upload_photo').closest('div.up-image-box').find(".gcovers").first().val(re.resourceid);
+                    $('#photo').val(re.savePath);//图片路径存储在表单，数据库中将存它
+                } else {
+                    $('#' + file.id).addClass('text-danger').find('.data').html('<span>&nbsp;'+re.msg+'</span>');
+                    $('#' + file.id).find('.uploadify-progress-bar').first().css({width : 0});
+                }
+            }
+        });
+    }
+    
+    $("#editForm").submit(function(e){
+        $('#file_upload_photo').uploadifyUpload();
+    });
+    
+
+    
+
+    
+});
+</script>
+<include file="Public/footer" />

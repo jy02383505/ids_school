@@ -1,0 +1,269 @@
+<include file="Public/header" />
+<link rel="stylesheet" href="__PUBLIC__/script/uploadify/uploadify.css">
+<style>
+#storeVideoUp .btn-default, #storeVideoUp .btn-default:hover, #storeVideoUp .btn-default:active, #storeVideoUp .btn-default:visited{background-color:#fff;border-color:#ccc;padding:3px 10px 4px;font-size:14px;outline:0;}
+</style>
+<ol class="breadcrumb">
+	<li><a href="">商场管理</a></li>
+	<li><a href="">公共设施点位管理</a></li>
+	<li class="active">
+        <switch name="ACTION_NAME" >
+        <case value="addUtilities" break="1">添加</case>
+        <case value="editUtilities">修改</case>
+        <default />添加
+        </switch>
+        <switch name="Think.get.spottype" >
+        <case value="service" break="1">公共设施</case>
+        <case value="tep">信息班牌</case>
+        <default />其它
+        </switch>
+        点位
+    </li>
+</ol>
+<form id="editForm" class="form-horizontal" role="form" method="post" action="__SELF__">
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="storeType">所属类型</label>
+		<div class="col-sm-2">
+			<select class="form-control input-sm" name="utilityClassId" id="utilityClassId">
+				<option value="">请选择</option>
+				<volist name="utilityClass" id="vo">
+					<eq name="vo.ID" value="$utilityInfo.utilityClassId">
+						<option value="{$vo.ID}" selected>{$vo.space} {$vo.tName}</option>
+					<else/>
+						<php> if ($vo['has_children'] > 0) { </php>
+						<option value="{$vo.ID}" disabled>{$vo.space} {$vo.tName}</option>
+						<php> } else { </php>
+						<option value="{$vo.ID}">{$vo.space} {$vo.tName}</option>
+						<php> } </php>
+					</eq>
+				</volist>
+			</select>
+		</div>
+	</div>
+    
+<eq name="Think.get.type" value="tep">
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="storeType">点位班牌</label>
+		<div class="col-sm-2">
+			<select class="form-control input-sm" name="short_sname" id="posTep">
+				<option value="">请选择</option>
+				<volist name="tends" id="vo">
+					<eq name="vo.touchMainId" value="$store.short_sname">
+						<option value="{$vo.touchMainId}" selected>{$vo.touchMainId} {$vo.touchEndPointName}</option>
+					<else/>
+						<option value="{$vo.touchMainId}">{$vo.touchMainId} {$vo.touchEndPointName}</option>
+					</eq>
+				</volist>
+			</select>
+			<volist name="tends" id="vo">
+				<input type="hidden" name="" id="{$vo.touchMainId}" value="{$vo.touchEndPointName}">
+			</volist>
+		</div>
+	</div> 
+</eq>    
+    
+    
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="storeNo">点位编号</label>
+		<div class="col-sm-3">
+			<input class="form-control input-sm" type="text" name="code" id="code" value="{$utilityInfo.code}">
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="storeName">点位名称</label>
+		<div class="col-sm-3">
+			<input class="form-control input-sm" type="text" name="tName" id="tName" value="{$utilityInfo.tName}">
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="storePYshort">名称拼音首字母</label>
+		<div class="col-sm-3">
+			<input class="form-control input-sm" type="text" name="pyShortName" id="pyShortName" value="{$utilityInfo.pyShortName}">
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="storeFloor">所在楼层</label>
+		<div class="col-sm-2">
+			<select class="form-control input-sm" name="floors" id="floors" style="width:auto;">
+				<for start="1" end="$mallFloors" comparison="elt">
+					<eq name="i" value="$utilityInfo.floor">
+					<option value="{$i}" selected>{$i}层</option>
+					<else />
+					<option value="{$i}">{$i}层</option>
+					</eq>
+				</for>
+			</select>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="storeAddress">点位地址</label>
+		<div class="col-sm-5">
+			<input class="form-control input-sm" type="text" name="address" id="address" value="{$utilityInfo.address}">
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="storeNote">点位介绍</label>
+		<div class="col-sm-8">
+			<textarea class="form-control" name="introduction" id="introduction" rows="4">{$utilityInfo.introduction}</textarea>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="">点位标识图标</label>
+		<div class="col-sm-3">
+			<div class="up-image-box" style="position:relative;">
+				<input id="file_upload_hotico" class="btn btn-default" name="file_upload" type="file">
+				<span style="position:absolute;top:8px;left:114px;"><!-- （建议上传图片尺寸：168 x 168 像素.） --></span>
+				<div id="uploadfyQueueList2"></div> 
+				<div class="showimg clearfix">
+					<notempty name="store['hotico']">
+						<span><img src="/{$Think.config.upload_root_path}{$store.hoticoPath}?{:rand()}" /></span>
+					</notempty>
+				</div>
+				<input type="hidden" name="hotico" class="gcovers" value="{$store.hotico}">
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 control-label" for="">&nbsp;</label>
+		<div class="col-sm-4">
+			<input type="hidden" name="id" value="{$utilityInfo.id}">
+			<input type="hidden" name="classid" value="{$unid}">
+			<input type="hidden" name="spottype" value="{$Think.get.spottype}">
+			<button type="submit" class="btn btn-info btn-sm">保存更改</button>&nbsp;&nbsp;
+			<button type="reset" class="btn btn-default btn-sm">取消</button>
+		</div>
+	</div>
+</form>
+
+<include file="Public/jsLoader" />
+<script type="text/javascript" src="__PUBLIC__/script/uploadify/jquery.uploadify.js"></script>
+<script type="text/javascript">
+$(function($) {
+	var tmpClassid = '{$unid|default=""}';
+	
+	$('button[type="reset"]').click(function(){
+		window.location.href = '__URL__/stores';
+	});
+	
+	setTimeout(function(){
+		$('#file_upload_hotico').uploadify({
+			'debug' : false,
+			'multi' : false,
+			'fileObjName' : 'myUpfile',
+			'fileTypeDesc' : '图片',
+			'fileTypeExts' : '*.jpeg; *.jpg; *.png; *.bmp',
+			'buttonText' : '<i class="icon-upload"></i>上传图片',
+			'width' : 100,
+			'buttonClass' : 'uploadify',
+			'swf'      : '__PUBLIC__/script/uploadify/uploadify.swf',
+			'formData'     : {dataType : 'image', 'isDBWrite' : 1, 'appModel' : 'store', tmpClassID : tmpClassid, type : 'hotico'},
+			'uploader' : '__GROUP__/Ajaxhandle/uploadify',
+			'queueID'  : 'uploadfyQueueList2',
+			'removeCompleted' : true,
+			'removeTimeout' : 3,
+			'overrideEvents' : ['onUploadSuccess', 'onSelectError'],
+			'onSelectError' : function(file, errorCode, errorMsg) {
+				//console.log(errorCode);
+				//console.log(errorMsg);
+				switch (errorCode) {
+					case -110:
+						alert('【文件上传失败提示】\n\n ' + file.name + ' : 文件大小超过最大上传限制50MB！\n\n 请示使用 [ 大文件上传 ] 工具进行上传.');
+						break;
+					case -130:
+						alert('【文件上传失败提示】\n\n ' + file.name + ' : 文件类型不正确.');
+						break;
+				}
+			},
+			'onUploadSuccess' : function(file, data, response) {
+				var re = $.parseJSON(data);
+				if (re.stat*1) {
+					$('#' + file.id).find('.data').html('<span class="text-success">&nbsp;上传成功</span>');
+					$('#file_upload_hotico').closest('div.up-image-box').find(".showimg").first().html('<span><img src="' + re.url + '?' + Math.random() + '" /></span>');
+					$('#file_upload_hotico').closest('div.up-image-box').find(".gcovers").first().val(re.resourceid);
+				} else {
+					$('#' + file.id).addClass('text-danger').find('.data').html('<span>&nbsp;'+re.msg+'</span>');
+					$('#' + file.id).find('.uploadify-progress-bar').first().css({width : 0});
+				}
+			}
+		});
+	}, 10);
+});
+</script>
+
+
+<script type="text/javascript" src="__PUBLIC__/script/jquery/jquery.validate.min.js"></script>
+<script type="text/javascript">
+$(function($) {
+	
+	// 判断英文字符
+	jQuery.validator.addMethod("isEnglish", function(value, element) {       
+         return this.optional(element) || /^[A-Za-z]+$/.test(value);       
+    }, "只能包含英文字符。");
+	
+	
+	$('#editForm').validate({
+		errorElement : 'span',
+		errorClass : 'help-block',
+		focusInvalid : true,  
+        rules : {  
+			utilityClassId:{
+				required: true,//名称带方括号验证不了
+			},
+        	tName : {  
+                required : true,
+            },
+        	code : {  
+                required : true,
+            },
+			pyShortName : {  
+                required : true,isEnglish:true,maxlength:10,
+            },
+			floors : {  
+                required : true
+            },
+			address : {  
+                required : true
+            },
+        },  
+        messages : {
+			utilityClassId :{
+				required :"类别必须选择",	//名称带方括号验证不了
+			},
+        	tName : {  
+                required : "公共设施名称必填.",//
+            },
+        	code : {  
+                required : "编号必填.",//
+            },
+        	pyShortName : {  
+                required : "拼音首字母必填.",isEnglish:"只能输入英文字母",maxlength:"只能输入10个字母",
+            },
+        	floors : {  
+                required : "楼层必须填写.",Number:"必填是整数",
+            },
+			address : {  
+                required : "地址必须填写",
+            },
+        },  
+		
+
+        highlight : function(element) {  
+            $(element).closest('.form-group').addClass('has-error');  
+        },  
+
+        success : function(label) {  
+            label.closest('.form-group').removeClass('has-error');  
+            label.remove();  
+        },  
+
+        errorPlacement : function(error, element) {  
+            element.parent('div').append(error);  
+        },  
+		submitHandler: function(form) {
+			form.submit();
+		}
+	});
+});
+</script>
+
+<include file="Public/footer" />
